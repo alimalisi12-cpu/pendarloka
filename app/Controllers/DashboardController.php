@@ -396,16 +396,11 @@ class DashboardController {
             exit;
         }
 
-        $uploadDir = BASE_PATH . '/assets/uploads/events/';
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
-        }
-
         $role = sanitize($_POST['role'] ?? 'photo');
-        $filename = $role . '_' . uniqid() . '_' . time() . '.' . $ext;
+        $uploadDir = BASE_PATH . '/assets/uploads/events/';
+        $relPath = ImageOptimizer::optimizeUploadedFile($file, $uploadDir, $role, 1920, 1920, 82);
 
-        if (move_uploaded_file($file['tmp_name'], $uploadDir . $filename)) {
-            $relPath = 'assets/uploads/events/' . $filename;
+        if ($relPath) {
             header('Content-Type: application/json');
             echo json_encode([
                 'success' => true,
@@ -416,7 +411,7 @@ class DashboardController {
         }
 
         header('Content-Type: application/json');
-        echo json_encode(['success' => false, 'message' => 'Gagal memindahkan file ke direktori server.']);
+        echo json_encode(['success' => false, 'message' => 'Gagal memproses dan mengoptimalkan gambar.']);
         exit;
     }
 
@@ -471,21 +466,8 @@ class DashboardController {
         if (!isset($_FILES[$fileInputName]) || $_FILES[$fileInputName]['error'] !== UPLOAD_ERR_OK) {
             return null;
         }
-        $file = $_FILES[$fileInputName];
-        $allowedExts = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
-        $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-        if (!in_array($ext, $allowedExts)) {
-            return null;
-        }
         $uploadDir = BASE_PATH . '/assets/uploads/events/';
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
-        }
-        $filename = $prefix . '_' . uniqid() . '_' . time() . '.' . $ext;
-        if (move_uploaded_file($file['tmp_name'], $uploadDir . $filename)) {
-            return 'assets/uploads/events/' . $filename;
-        }
-        return null;
+        return ImageOptimizer::optimizeUploadedFile($_FILES[$fileInputName], $uploadDir, $prefix, 1920, 1920, 82);
     }
 
     private function handleMultipleUploads($fileInputName, $prefix = 'gallery') {
@@ -493,20 +475,20 @@ class DashboardController {
         if (!isset($_FILES[$fileInputName]) || !is_array($_FILES[$fileInputName]['name'])) {
             return $uploadedPaths;
         }
-        $allowedExts = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
         $uploadDir = BASE_PATH . '/assets/uploads/events/';
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
-        }
         $count = count($_FILES[$fileInputName]['name']);
         for ($i = 0; $i < $count; $i++) {
             if ($_FILES[$fileInputName]['error'][$i] === UPLOAD_ERR_OK) {
-                $ext = strtolower(pathinfo($_FILES[$fileInputName]['name'][$i], PATHINFO_EXTENSION));
-                if (in_array($ext, $allowedExts)) {
-                    $filename = $prefix . '_' . uniqid() . '_' . time() . '_' . $i . '.' . $ext;
-                    if (move_uploaded_file($_FILES[$fileInputName]['tmp_name'][$i], $uploadDir . $filename)) {
-                        $uploadedPaths[] = 'assets/uploads/events/' . $filename;
-                    }
+                $fileItem = [
+                    'name' => $_FILES[$fileInputName]['name'][$i],
+                    'type' => $_FILES[$fileInputName]['type'][$i] ?? '',
+                    'tmp_name' => $_FILES[$fileInputName]['tmp_name'][$i],
+                    'error' => $_FILES[$fileInputName]['error'][$i],
+                    'size' => $_FILES[$fileInputName]['size'][$i] ?? 0,
+                ];
+                $relPath = ImageOptimizer::optimizeUploadedFile($fileItem, $uploadDir, $prefix, 1920, 1920, 82);
+                if ($relPath) {
+                    $uploadedPaths[] = $relPath;
                 }
             }
         }

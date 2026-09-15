@@ -1,10 +1,68 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
+    # Otomatis fallback jika link gambar lama (.png / .jpg) meminta file yang sudah dioptimasi ke .webp
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} \.(jpe?g|png)$ [NC]
+    RewriteCond %{DOCUMENT_ROOT}/$1.webp -f
+    RewriteRule ^(.*)\.(jpe?g|png)$ $1.webp [NC,L]
+
     # Jangan rewrite jika file atau folder fisik memang ada
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
 
     # Arahkan semua request lainnya ke index.php
     RewriteRule ^(.*)$ index.php?route=$1 [QSA,L]
+</IfModule>
+
+# 1. Kompresi GZIP / Deflate untuk memperkecil transfer data website (HTML, CSS, JS, JSON, SVG)
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+    AddOutputFilterByType DEFLATE application/json
+    AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# 2. Browser Caching (Expires Headers) agar aset statis tidak perlu didownload ulang saat buka web
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresDefault "access plus 2 days"
+
+    # Gambar & WebP (1 bulan)
+    ExpiresByType image/webp "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/gif "access plus 1 month"
+    ExpiresByType image/svg+xml "access plus 1 month"
+    ExpiresByType image/x-icon "access plus 1 year"
+
+    # CSS & JavaScript (1 bulan)
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType application/x-javascript "access plus 1 month"
+
+    # Audio & Musik Undangan (1 bulan)
+    ExpiresByType audio/mpeg "access plus 1 month"
+    ExpiresByType audio/ogg "access plus 1 month"
+    ExpiresByType audio/wav "access plus 1 month"
+    ExpiresByType audio/mp4 "access plus 1 month"
+
+    # Web Fonts (1 tahun)
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType font/woff "access plus 1 year"
+    ExpiresByType font/ttf "access plus 1 year"
+</IfModule>
+
+# 3. Security & Cache Control Headers
+<IfModule mod_headers.c>
+    <FilesMatch "\.(ico|jpe?g|png|gif|webp|svg|css|js|woff2?|mp3)$">
+        Header set Cache-Control "max-age=2592000, public"
+    </FilesMatch>
 </IfModule>

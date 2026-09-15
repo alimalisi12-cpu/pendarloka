@@ -23,6 +23,7 @@ define('BASE_PATH', dirname(__DIR__));
 
 // Load Dynamic Settings from Database
 require_once __DIR__ . '/../app/Models/Setting.php';
+require_once __DIR__ . '/../app/Helpers/ImageOptimizer.php';
 require_once __DIR__ . '/presets.php';
 
 $dynAppName = Setting::get('app_name', 'PENDAR LOKA');
