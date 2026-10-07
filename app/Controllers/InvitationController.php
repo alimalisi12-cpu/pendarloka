@@ -138,6 +138,12 @@ class InvitationController {
                 require_once $partialPath;
             }
         }
+
+        // Bridge sinkronisasi live visual builder (click-to-edit & custom element styles)
+        $bridgePath = BASE_PATH . '/views/partials/live_builder_bridge.php';
+        if (file_exists($bridgePath)) {
+            require_once $bridgePath;
+        }
     }
 
     public function rsvp($slug) {

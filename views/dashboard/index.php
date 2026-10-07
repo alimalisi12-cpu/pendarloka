@@ -60,9 +60,12 @@ require_once BASE_PATH . '/views/layouts/header.php';
                                 </div>
 
                                 <div class="d-flex flex-column gap-2">
+                                    <a href="<?= base_url('dashboard/builder/' . $ev['id']) ?>" class="btn btn-warning btn-sm rounded-pill py-2 fw-bold text-dark shadow-sm text-center">
+                                        <i class="bi bi-palette2 me-1"></i> Buka Visual Live Builder
+                                    </a>
                                     <div class="d-flex gap-2">
-                                        <a href="<?= base_url('dashboard/edit/' . $ev['id']) ?>" class="btn btn-outline-primary btn-sm flex-fill rounded-pill py-2">
-                                            <i class="bi bi-pencil-square me-1"></i> Edit Data
+                                        <a href="<?= base_url('dashboard/edit/' . $ev['id']) ?>" class="btn btn-outline-secondary btn-sm flex-fill rounded-pill py-2">
+                                            <i class="bi bi-pencil-square me-1"></i> Form Edit
                                         </a>
                                         <a href="<?= base_url('dashboard/guests/' . $ev['id']) ?>" class="btn btn-secondary-cta btn-sm flex-fill rounded-pill py-2">
                                             <i class="bi bi-people me-1"></i> Buku Tamu

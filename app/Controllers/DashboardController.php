@@ -544,4 +544,123 @@ class DashboardController {
 
         require_once BASE_PATH . '/views/dashboard/print_guests.php';
     }
+
+    public function builder($eventId) {
+        $userId = $_SESSION['user_id'];
+        $event = $this->eventModel->findById($eventId);
+
+        if (!$event || (!is_admin() && $event['user_id'] != $userId)) {
+            set_flash('error', 'Acara tidak ditemukan atau akses ditolak.');
+            redirect('dashboard');
+        }
+
+        $templates = $this->templateModel->getAll();
+        $categories = $this->templateModel->getCategories();
+        $themeConfig = json_decode($event['theme_config_json'] ?? '[]', true) ?: [];
+
+        require_once BASE_PATH . '/views/dashboard/builder.php';
+    }
+
+    public function ajaxSaveBuilder($eventId) {
+        header('Content-Type: application/json');
+        $userId = $_SESSION['user_id'];
+        $event = $this->eventModel->findById($eventId);
+
+        if (!$event || (!is_admin() && $event['user_id'] != $userId)) {
+            echo json_encode(['success' => false, 'message' => 'Akses ditolak atau acara tidak ditemukan.']);
+            exit;
+        }
+
+        $input = json_decode(file_get_contents('php://input'), true);
+        if (!$input) {
+            $input = $_POST;
+        }
+
+        if (empty($input)) {
+            echo json_encode(['success' => false, 'message' => 'Data tidak boleh kosong.']);
+            exit;
+        }
+
+        // Update data utama events
+        $eventData = [
+            'title' => sanitize($input['title'] ?? $event['title']),
+            'event_date' => sanitize($input['event_date'] ?? $event['event_date']),
+            'template_id' => (int)($input['template_id'] ?? $event['template_id']),
+            'music_url' => sanitize($input['music_url'] ?? $event['music_url']),
+            'status' => sanitize($input['status'] ?? $event['status'])
+        ];
+        $this->eventModel->updateEvent($eventId, $eventData);
+
+        // Update theme config including element styles
+        $existingConfig = json_decode($event['theme_config_json'] ?? '[]', true) ?: [];
+        if (isset($input['element_styles']) && is_array($input['element_styles'])) {
+            $existingConfig['element_styles'] = $input['element_styles'];
+        }
+        if (isset($input['primary_color'])) {
+            $existingConfig['primary_color'] = sanitize($input['primary_color']);
+        }
+        if (isset($input['font_heading'])) {
+            $existingConfig['font_heading'] = sanitize($input['font_heading']);
+        }
+        $this->eventModel->updateThemeConfig($eventId, json_encode($existingConfig, JSON_UNESCAPED_UNICODE));
+
+        // Format details
+        $details = [
+            'groom_name' => sanitize($input['groom_name'] ?? $event['groom_name']),
+            'groom_nickname' => sanitize($input['groom_nickname'] ?? $event['groom_nickname']),
+            'groom_parents' => sanitize($input['groom_parents'] ?? $event['groom_parents']),
+            'groom_instagram' => sanitize($input['groom_instagram'] ?? $event['groom_instagram']),
+            'groom_photo' => sanitize($input['groom_photo'] ?? $event['groom_photo']),
+            'bride_name' => sanitize($input['bride_name'] ?? $event['bride_name']),
+            'bride_nickname' => sanitize($input['bride_nickname'] ?? $event['bride_nickname']),
+            'bride_parents' => sanitize($input['bride_parents'] ?? $event['bride_parents']),
+            'bride_instagram' => sanitize($input['bride_instagram'] ?? $event['bride_instagram']),
+            'bride_photo' => sanitize($input['bride_photo'] ?? $event['bride_photo']),
+            'cover_photo' => sanitize($input['cover_photo'] ?? $event['cover_photo']),
+            'hero_photo' => sanitize($input['hero_photo'] ?? $event['hero_photo']),
+            'bg_photo' => sanitize($input['bg_photo'] ?? $event['bg_photo']),
+            'quote' => sanitize($input['quote'] ?? $event['quote']),
+            'akad_time' => sanitize($input['akad_time'] ?? $event['akad_time']),
+            'akad_location' => sanitize($input['akad_location'] ?? $event['akad_location']),
+            'resepsi_time' => sanitize($input['resepsi_time'] ?? $event['resepsi_time']),
+            'resepsi_location' => sanitize($input['resepsi_location'] ?? $event['resepsi_location']),
+            'maps_url' => sanitize($input['maps_url'] ?? $event['maps_url']),
+            'maps_embed' => $input['maps_embed'] ?? $event['maps_embed'],
+            'event_type_preset' => sanitize($input['event_type_preset'] ?? $event['event_type_preset']),
+            'gift_address' => sanitize($input['gift_address'] ?? $event['gift_address']),
+        ];
+
+        // Format JSON arrays
+        if (isset($input['events_schedule'])) {
+            $details['events_schedule_json'] = is_string($input['events_schedule']) ? $input['events_schedule'] : json_encode($input['events_schedule'], JSON_UNESCAPED_UNICODE);
+        } else {
+            $details['events_schedule_json'] = $event['events_schedule_json'];
+        }
+
+        if (isset($input['love_story'])) {
+            $details['love_story_json'] = is_string($input['love_story']) ? $input['love_story'] : json_encode($input['love_story'], JSON_UNESCAPED_UNICODE);
+        } else {
+            $details['love_story_json'] = $event['love_story_json'];
+        }
+
+        if (isset($input['gallery'])) {
+            $details['gallery_json'] = is_string($input['gallery']) ? $input['gallery'] : json_encode($input['gallery'], JSON_UNESCAPED_UNICODE);
+        } else {
+            $details['gallery_json'] = $event['gallery_json'];
+        }
+
+        if (isset($input['bank_accounts'])) {
+            $details['bank_accounts_json'] = is_string($input['bank_accounts']) ? $input['bank_accounts'] : json_encode($input['bank_accounts'], JSON_UNESCAPED_UNICODE);
+        } else {
+            $details['bank_accounts_json'] = $event['bank_accounts_json'];
+        }
+
+        $this->eventModel->updateDetails($eventId, $details);
+
+        echo json_encode([
+            'success' => true,
+            'message' => 'Perubahan berhasil disimpan secara permanen ke database!'
+        ]);
+        exit;
+    }
 }

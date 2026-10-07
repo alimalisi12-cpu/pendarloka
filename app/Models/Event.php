@@ -134,6 +134,11 @@ class Event {
         ]);
     }
 
+    public function updateThemeConfig($eventId, $themeConfigJson) {
+        $stmt = $this->db->prepare("UPDATE events SET theme_config_json = ? WHERE id = ?");
+        return $stmt->execute([$themeConfigJson, $eventId]);
+    }
+
     public function updateDetails($eventId, $details) {
         $stmt = $this->db->prepare("
             UPDATE event_details SET

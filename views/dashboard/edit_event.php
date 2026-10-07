@@ -43,11 +43,28 @@ if (empty($schedules)) {
             </div>
 
             <div class="d-flex gap-2">
+                <a href="<?= base_url('dashboard/builder/' . $event['id']) ?>" class="btn btn-warning rounded-pill px-3 py-2 small fw-bold text-dark shadow-sm">
+                    <i class="bi bi-palette2 me-1"></i> Visual Builder
+                </a>
                 <a href="<?= base_url('dashboard/guests/' . $event['id']) ?>" class="btn btn-secondary-cta rounded-pill px-3 py-2 small">
                     <i class="bi bi-people me-1"></i> Kelola Tamu
                 </a>
                 <a href="<?= base_url('u/' . $event['slug']) ?>" target="_blank" class="btn btn-outline-primary rounded-pill px-3 py-2 small">
                     <i class="bi bi-eye me-1"></i> Preview Live
+                </a>
+            </div>
+        </div>
+
+        <!-- Banner Visual Live Builder -->
+        <div class="card border-0 rounded-4 shadow-sm mb-4 text-white p-4" style="background: linear-gradient(135deg, #17242a 0%, #243b46 100%);">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                <div>
+                    <span class="badge bg-warning text-dark fw-bold mb-2"><i class="bi bi-stars me-1"></i> Fitur Baru</span>
+                    <h5 class="fw-bold m-0 text-white">Visual Live Builder (Klik & Edit Langsung)</h5>
+                    <p class="text-white-50 small m-0 mt-1">Edit teks, foto, tata letak, margin & padding secara visual dengan live preview seketika.</p>
+                </div>
+                <a href="<?= base_url('dashboard/builder/' . $event['id']) ?>" class="btn btn-warning rounded-pill px-4 py-2 fw-bold text-dark shadow text-nowrap">
+                    <i class="bi bi-palette2 me-1"></i> Buka Visual Builder
                 </a>
             </div>
         </div>

@@ -63,6 +63,10 @@ switch ($baseRoute) {
 
         if ($action === 'create') {
             $controller->create();
+        } elseif ($action === 'builder' && isset($segments[2])) {
+            $controller->builder((int)$segments[2]);
+        } elseif ($action === 'ajax-save-builder' && isset($segments[2])) {
+            $controller->ajaxSaveBuilder((int)$segments[2]);
         } elseif ($action === 'edit' && isset($segments[2])) {
             $controller->edit((int)$segments[2]);
         } elseif ($action === 'upload-photo' || $action === 'upload') {
