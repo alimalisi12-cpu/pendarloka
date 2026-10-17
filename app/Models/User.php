@@ -48,10 +48,8 @@ class User {
 
     public function getAllUsers() {
         $stmt = $this->db->query("
-            SELECT u.*, COUNT(e.id) as total_events 
+            SELECT u.*, (SELECT COUNT(*) FROM events WHERE user_id = u.id) as total_events 
             FROM users u 
-            LEFT JOIN events e ON u.id = e.user_id 
-            GROUP BY u.id 
             ORDER BY u.created_at DESC
         ");
         return $stmt->fetchAll();

@@ -32,6 +32,7 @@ class Database {
 
             // 2. Inisialisasi tabel otomatis jika belum ada
             $this->initSchema();
+            $this->migrateSchema();
 
         } catch (PDOException $e) {
             // Fallback: Jika database belum ada di localhost, coba buat otomatis
@@ -46,6 +47,7 @@ class Database {
                         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                     ]);
                     $this->initSchema();
+                    $this->migrateSchema();
                     return;
                 } catch (PDOException $ex) {
                     // lanjut ke pesan error utama
@@ -93,6 +95,7 @@ class Database {
             `thumbnail` VARCHAR(255) NULL,
             `tier` ENUM('free', 'basic', 'premium') DEFAULT 'free',
             `view_file` VARCHAR(100) NOT NULL,
+            `animation_config_json` LONGTEXT NULL,
             `is_active` TINYINT(1) DEFAULT 1,
             `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP
         ) ENGINE=InnoDB;
@@ -109,6 +112,7 @@ class Database {
             `status` ENUM('draft', 'published', 'archived') DEFAULT 'published',
             `is_admin_created` TINYINT(1) DEFAULT 0,
             `music_url` VARCHAR(255) NULL,
+            `theme_config_json` LONGTEXT NULL,
             `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
         ) ENGINE=InnoDB;
@@ -131,12 +135,16 @@ class Database {
             `hero_photo` VARCHAR(255) NULL,
             `bg_photo` VARCHAR(255) NULL,
             `quote` TEXT NULL,
+            `opening_text` TEXT NULL,
+            `closing_text` TEXT NULL,
             `akad_time` VARCHAR(100) NULL,
             `akad_location` TEXT NULL,
             `resepsi_time` VARCHAR(100) NULL,
             `resepsi_location` TEXT NULL,
             `maps_url` TEXT NULL,
             `maps_embed` TEXT NULL,
+            `events_schedule_json` LONGTEXT NULL,
+            `event_type_preset` VARCHAR(50) DEFAULT 'islam',
             `love_story_json` TEXT NULL,
             `gallery_json` TEXT NULL,
             `bank_accounts_json` TEXT NULL,
@@ -297,6 +305,32 @@ class Database {
                 (1, 'Dewi Sartika', 'attending', 'Happy wedding Budi & Siti! Lancar sampai hari-H ya, so happy for both of you!', 'Terima kasih banyak mba Dewi! Sampai jumpa di acara yaa.'),
                 (1, 'Rian Pratama', 'not_attending', 'Selamat ya bro Budi! Maaf banget belum bisa hadir karena dinas di luar pulau, semoga acaranya berkah dan lancar jaya.', 'Makasih banyak bro Rian, doa terbaik juga untukmu di sana!');
             ");
+        }
+    }
+
+    private function migrateSchema() {
+        $columnsToEnsure = [
+            ['templates', 'animation_config_json', "ALTER TABLE `templates` ADD COLUMN `animation_config_json` LONGTEXT NULL AFTER `view_file`"],
+            ['events', 'theme_config_json', "ALTER TABLE `events` ADD COLUMN `theme_config_json` LONGTEXT NULL AFTER `music_url`"],
+            ['event_details', 'event_type_preset', "ALTER TABLE `event_details` ADD COLUMN `event_type_preset` VARCHAR(50) DEFAULT 'islam' AFTER `maps_embed`"],
+            ['event_details', 'events_schedule_json', "ALTER TABLE `event_details` ADD COLUMN `events_schedule_json` LONGTEXT NULL AFTER `event_type_preset`"],
+            ['event_details', 'opening_text', "ALTER TABLE `event_details` ADD COLUMN `opening_text` TEXT NULL AFTER `quote`"],
+            ['event_details', 'closing_text', "ALTER TABLE `event_details` ADD COLUMN `closing_text` TEXT NULL AFTER `opening_text`"],
+        ];
+
+        foreach ($columnsToEnsure as $col) {
+            $this->ensureColumnExists($col[0], $col[1], $col[2]);
+        }
+    }
+
+    private function ensureColumnExists($table, $column, $alterSql) {
+        try {
+            $check = $this->pdo->query("SHOW COLUMNS FROM `{$table}` LIKE '{$column}'");
+            if ($check && $check->rowCount() === 0) {
+                $this->pdo->exec($alterSql);
+            }
+        } catch (Exception $e) {
+            // Abaikan jika query SHOW COLUMNS gagal atau kolom sudah ada
         }
     }
 }
