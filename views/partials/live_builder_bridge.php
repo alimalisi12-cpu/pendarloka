@@ -26,6 +26,7 @@ $customElementStyles = $themeConfig['element_styles'] ?? [];
             <?= !empty($st['color']) ? 'color: ' . htmlspecialchars($st['color']) . ' !important;' : '' ?>
             <?= !empty($st['background_color']) ? 'background-color: ' . htmlspecialchars($st['background_color']) . ' !important;' : '' ?>
             <?= !empty($st['font_size']) ? 'font-size: ' . htmlspecialchars($st['font_size']) . ' !important;' : '' ?>
+            <?= !empty($st['line_height']) ? 'line-height: ' . htmlspecialchars($st['line_height']) . ' !important;' : '' ?>
             <?= !empty($st['text_align']) ? 'text-align: ' . htmlspecialchars($st['text_align']) . ' !important;' : '' ?>
         }
     <?php endforeach; ?>
@@ -97,9 +98,19 @@ $customElementStyles = $themeConfig['element_styles'] ?? [];
                 selectors: ['#couple', '#mempelai', '.couple-section', '.mempelai-card', '.groom-card', '.bride-card', '[data-builder="couple"]']
             },
             {
+                key: 'pembuka',
+                label: 'Kata-Kata Pembuka',
+                selectors: ['[data-builder="pembuka"]', '.opening-text', '.greeting-text', 'section#sec-hero p.text-muted.small', 'section#opening p']
+            },
+            {
                 key: 'quote',
-                label: 'Kutipan / Doa',
-                selectors: ['#quote', '#ayat', '.quote-section', '.ayat-section', 'blockquote', '[data-builder="quote"]']
+                label: 'Doa / Ayat Suci',
+                selectors: ['[data-builder="quote"]', '#quote', '#ayat', '#sec-quote', '.quote-section', '.ayat-section', '.luxury-quote-box', '.bj-holy-card', 'blockquote']
+            },
+            {
+                key: 'penutup',
+                label: 'Kata-Kata Penutup',
+                selectors: ['[data-builder="penutup"]', '.closing-text', '.invitation-closing', 'footer p.text-white-muted']
             },
             {
                 key: 'schedule',
@@ -197,6 +208,7 @@ $customElementStyles = $themeConfig['element_styles'] ?? [];
                 if (styles.color) el.style.color = styles.color;
                 if (styles.background_color) el.style.backgroundColor = styles.background_color;
                 if (styles.font_size) el.style.fontSize = styles.font_size;
+                if (styles.line_height) el.style.lineHeight = styles.line_height;
                 if (styles.text_align) el.style.textAlign = styles.text_align;
             }
 
@@ -207,8 +219,16 @@ $customElementStyles = $themeConfig['element_styles'] ?? [];
                     if (textNode) textNode.textContent = data.title;
                 }
                 if (section === 'quote' && data.quote) {
-                    const textNode = el.querySelector('p, blockquote, .quote-text') || el;
-                    if (textNode) textNode.textContent = data.quote;
+                    const textNode = el.querySelector('p, blockquote, .quote-text, .luxury-quote-text') || el;
+                    if (textNode) textNode.innerHTML = data.quote.replace(/\n/g, '<br>');
+                }
+                if (section === 'pembuka' && data.opening_text) {
+                    const textNode = el.querySelector('p') || el;
+                    if (textNode) textNode.innerHTML = data.opening_text.replace(/\n/g, '<br>');
+                }
+                if (section === 'penutup' && data.closing_text) {
+                    const textNode = el.querySelector('p') || el;
+                    if (textNode) textNode.innerHTML = data.closing_text.replace(/\n/g, '<br>');
                 }
                 if (section === 'couple') {
                     if (data.groom_nickname) {

@@ -118,6 +118,7 @@ class AdminController {
     // ==========================================
     public function traditions() {
         $presets = get_wedding_presets();
+        $textTemplates = get_text_templates();
         $events = $this->eventModel->getAllEvents();
         require_once BASE_PATH . '/views/admin/traditions.php';
     }
@@ -202,6 +203,64 @@ class AdminController {
     public function resetTraditions() {
         reset_wedding_presets();
         set_flash('success', 'Seluruh preset tradisi acara telah di-reset ke konfigurasi awal bawaan sistem.');
+        redirect('admin/traditions');
+    }
+
+    public function saveTextTemplate() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            redirect('admin/traditions');
+        }
+
+        $category = sanitize($_POST['category'] ?? 'doa');
+        if (!in_array($category, ['doa', 'pembuka', 'penutup'])) {
+            $category = 'doa';
+        }
+
+        $title = sanitize($_POST['title'] ?? '');
+        $rawKey = trim($_POST['template_key'] ?? '');
+        if (empty($rawKey)) {
+            $rawKey = strtolower(preg_replace('/[^a-zA-Z0-9_]/', '_', $title));
+        }
+        $key = strtolower(preg_replace('/[^a-zA-Z0-9_]/', '_', $rawKey));
+        $key = trim($key, '_');
+
+        $content = trim($_POST['content'] ?? '');
+
+        if (empty($title) || empty($content)) {
+            set_flash('error', 'Judul template dan isi teks tidak boleh kosong.');
+            redirect('admin/traditions');
+        }
+
+        $all = get_text_templates();
+        $all[$category][$key] = [
+            'title' => $title,
+            'category' => $category,
+            'content' => $content
+        ];
+
+        save_text_templates($all);
+        set_flash('success', "Text template \"{$title}\" pada kategori " . strtoupper($category) . " berhasil disimpan!");
+        redirect('admin/traditions');
+    }
+
+    public function deleteTextTemplate($category, $key) {
+        $category = sanitize($category);
+        $key = sanitize($key);
+        $all = get_text_templates();
+        if (isset($all[$category][$key])) {
+            $title = $all[$category][$key]['title'] ?? $key;
+            unset($all[$category][$key]);
+            save_text_templates($all);
+            set_flash('success', "Text template \"{$title}\" berhasil dihapus.");
+        } else {
+            set_flash('error', 'Text template tidak ditemukan.');
+        }
+        redirect('admin/traditions');
+    }
+
+    public function resetTextTemplates() {
+        reset_text_templates();
+        set_flash('success', 'Seluruh koleksi text template telah di-reset ke bawaan default sistem.');
         redirect('admin/traditions');
     }
 
@@ -952,6 +1011,11 @@ class AdminController {
     public function settings() {
         require_once dirname(__DIR__) . '/Models/Setting.php';
         $settings = Setting::getAll();
+
+        $realCounts = $this->eventModel->getCounts();
+        $realCounts['total_templates'] = count($this->templateModel->getAll());
+        $statsData = get_site_stats_data($realCounts);
+
         require_once BASE_PATH . '/views/admin/settings.php';
     }
 
@@ -1064,6 +1128,33 @@ class AdminController {
         $heroPillBadge = trim($_POST['hero_pill_badge'] ?? 'Anti Rugi');
         $heroPillText = trim($_POST['hero_pill_text'] ?? 'Dibuatin admin dulu, bayar setelah jadi & suka hasilnya!');
 
+        // 5. Handle Counter Statistik Halaman Beranda (Stats Counter Section)
+        $statsEnabled = isset($_POST['stats_enabled']) ? '1' : '0';
+
+        $statsItem1Mode = in_array($_POST['stats_item1_mode'] ?? '', ['manual', 'auto', 'auto_plus_base']) ? $_POST['stats_item1_mode'] : 'manual';
+        $statsItem1Value = trim($_POST['stats_item1_value'] ?? '> 1.400.000');
+        $statsItem1Base = (int)preg_replace('/[^0-9]/', '', $_POST['stats_item1_base'] ?? '1400000');
+        $statsItem1Label = trim($_POST['stats_item1_label'] ?? 'Undangan Dibuat');
+        $statsItem1Prefix = trim($_POST['stats_item1_prefix'] ?? '> ');
+        $statsItem1Suffix = trim($_POST['stats_item1_suffix'] ?? '');
+
+        $statsItem2Mode = in_array($_POST['stats_item2_mode'] ?? '', ['manual', 'auto', 'auto_plus_base']) ? $_POST['stats_item2_mode'] : 'manual';
+        $statsItem2Value = trim($_POST['stats_item2_value'] ?? '> 4.5 Juta');
+        $statsItem2Base = (int)preg_replace('/[^0-9]/', '', $_POST['stats_item2_base'] ?? '4500000');
+        $statsItem2Label = trim($_POST['stats_item2_label'] ?? 'Tamu Undangan Tersebar');
+        $statsItem2Prefix = trim($_POST['stats_item2_prefix'] ?? '> ');
+        $statsItem2Suffix = trim($_POST['stats_item2_suffix'] ?? '');
+
+        $statsItem3Mode = in_array($_POST['stats_item3_mode'] ?? '', ['manual', 'auto', 'auto_plus_base']) ? $_POST['stats_item3_mode'] : 'manual';
+        $statsItem3Value = trim($_POST['stats_item3_value'] ?? '100+');
+        $statsItem3Base = (int)preg_replace('/[^0-9]/', '', $_POST['stats_item3_base'] ?? '100');
+        $statsItem3Label = trim($_POST['stats_item3_label'] ?? 'Tema Siap Pakai');
+        $statsItem3Prefix = trim($_POST['stats_item3_prefix'] ?? '');
+        $statsItem3Suffix = trim($_POST['stats_item3_suffix'] ?? '+');
+
+        $statsItem4Value = trim($_POST['stats_item4_value'] ?? '24/7');
+        $statsItem4Label = trim($_POST['stats_item4_label'] ?? 'Bantuan Admin & Support');
+
         $dataToSave = [
             'app_name' => $appName,
             'app_tagline' => $appTagline,
@@ -1084,12 +1175,33 @@ class AdminController {
             'hero_btn_register_text' => $heroBtnRegisterText,
             'hero_btn_wa_text' => $heroBtnWaText,
             'hero_pill_badge' => $heroPillBadge,
-            'hero_pill_text' => $heroPillText
+            'hero_pill_text' => $heroPillText,
+            'stats_enabled' => $statsEnabled,
+            'stats_item1_mode' => $statsItem1Mode,
+            'stats_item1_value' => $statsItem1Value,
+            'stats_item1_base' => $statsItem1Base,
+            'stats_item1_label' => $statsItem1Label,
+            'stats_item1_prefix' => $statsItem1Prefix,
+            'stats_item1_suffix' => $statsItem1Suffix,
+            'stats_item2_mode' => $statsItem2Mode,
+            'stats_item2_value' => $statsItem2Value,
+            'stats_item2_base' => $statsItem2Base,
+            'stats_item2_label' => $statsItem2Label,
+            'stats_item2_prefix' => $statsItem2Prefix,
+            'stats_item2_suffix' => $statsItem2Suffix,
+            'stats_item3_mode' => $statsItem3Mode,
+            'stats_item3_value' => $statsItem3Value,
+            'stats_item3_base' => $statsItem3Base,
+            'stats_item3_label' => $statsItem3Label,
+            'stats_item3_prefix' => $statsItem3Prefix,
+            'stats_item3_suffix' => $statsItem3Suffix,
+            'stats_item4_value' => $statsItem4Value,
+            'stats_item4_label' => $statsItem4Label
         ];
 
         Setting::setMultiple($dataToSave);
 
-        set_flash('success', 'Pengaturan identitas website, logo, favicon, serta banner dan deskripsi web berhasil diperbarui!');
+        set_flash('success', 'Pengaturan identitas website, logo, banner, serta counter statistik beranda berhasil diperbarui!');
         redirect('admin/settings');
     }
 

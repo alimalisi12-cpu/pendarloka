@@ -557,6 +557,7 @@ class DashboardController {
         $templates = $this->templateModel->getAll();
         $categories = $this->templateModel->getCategories();
         $themeConfig = json_decode($event['theme_config_json'] ?? '[]', true) ?: [];
+        $textTemplates = get_text_templates();
 
         require_once BASE_PATH . '/views/dashboard/builder.php';
     }
@@ -620,6 +621,8 @@ class DashboardController {
             'hero_photo' => sanitize($input['hero_photo'] ?? $event['hero_photo']),
             'bg_photo' => sanitize($input['bg_photo'] ?? $event['bg_photo']),
             'quote' => sanitize($input['quote'] ?? $event['quote']),
+            'opening_text' => sanitize($input['opening_text'] ?? ($event['opening_text'] ?? '')),
+            'closing_text' => sanitize($input['closing_text'] ?? ($event['closing_text'] ?? '')),
             'akad_time' => sanitize($input['akad_time'] ?? $event['akad_time']),
             'akad_location' => sanitize($input['akad_location'] ?? $event['akad_location']),
             'resepsi_time' => sanitize($input['resepsi_time'] ?? $event['resepsi_time']),

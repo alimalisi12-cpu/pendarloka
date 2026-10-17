@@ -806,8 +806,8 @@ $quoteText = $event['quote'] ?? '';
     <section id="couple" class="bj-section bj-section-dark">
         <img src="<?= htmlspecialchars($wayangOrnament) ?>" style="width: 55px; opacity: 0.8;" class="mb-3" alt="Wayang">
         <h2 class="bj-section-title">Pasangan Pengantin</h2>
-        <p class="text-white-muted mb-5" style="font-size: 13px; max-width: 90%; margin: 0 auto;">
-            Atas Rahmat Tuhan Yang Maha Esa, kami bermaksud mengundang Anda dalam momen sakral nan bahagia pernikahan kami:
+        <p class="text-white-muted mb-5" style="font-size: 13px; max-width: 90%; margin: 0 auto;" data-builder="pembuka" data-builder-label="Kata Pembuka">
+            <?= nl2br(htmlspecialchars($event['opening_text'] ?: 'Atas Rahmat Tuhan Yang Maha Esa, kami bermaksud mengundang Anda dalam momen sakral nan bahagia pernikahan kami:')) ?>
         </p>
 
         <!-- Groom Profile -->
@@ -882,7 +882,7 @@ $quoteText = $event['quote'] ?? '';
         </div>
 
         <!-- Holy Verse / Quote -->
-        <div class="bj-holy-card">
+        <div class="bj-holy-card" data-builder="quote" data-builder-label="Doa / Ayat Suci">
             <?php if (!empty($quoteText)): ?>
                 <p class="fst-italic text-white-muted mb-0" style="font-size: 13px; line-height: 1.7;">
                     <?= nl2br(htmlspecialchars($quoteText)) ?>
@@ -1160,8 +1160,8 @@ $quoteText = $event['quote'] ?? '';
     <footer class="bj-section bj-section-stone text-center pb-5">
         <img src="<?= htmlspecialchars($wayangOrnament) ?>" style="width: 70px;" class="mb-3" alt="Wayang">
         <h2 class="bj-section-title mb-2"><?= htmlspecialchars($coupleTitle) ?></h2>
-        <p class="text-white-muted mb-4" style="font-size: 13px; max-width: 85%; margin: 0 auto;">
-            Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu.
+        <p class="text-white-muted mb-4" style="font-size: 13px; max-width: 85%; margin: 0 auto;" data-builder="penutup" data-builder-label="Kata Penutup">
+            <?= nl2br(htmlspecialchars($event['closing_text'] ?: 'Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu.')) ?>
         </p>
         <div style="font-size: 11px; color: #888888;">
             &copy; <?= date('Y') ?> <?= htmlspecialchars(site_name()) ?>. All Rights Reserved.

@@ -12,26 +12,45 @@ class Database {
         $pass = '';
         $dbname = 'reninvite_db';
 
+        // Mendukung file konfigurasi terpisah untuk hosting/cPanel (tidak tertimpa saat git pull)
+        if (file_exists(__DIR__ . '/db_custom.php')) {
+            require __DIR__ . '/db_custom.php';
+        } elseif (getenv('DB_NAME')) {
+            $host = getenv('DB_HOST') ?: $host;
+            $port = getenv('DB_PORT') ?: $port;
+            $user = getenv('DB_USER') ?: $user;
+            $pass = getenv('DB_PASS') !== false ? getenv('DB_PASS') : $pass;
+            $dbname = getenv('DB_NAME') ?: $dbname;
+        }
+
         try {
-            // 1. Coba koneksi ke server MySQL
-            $tempPdo = new PDO("mysql:host={$host};port={$port};charset=utf8mb4", $user, $pass, [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            ]);
-
-            // 2. Buat database jika belum ada
-            $tempPdo->exec("CREATE DATABASE IF NOT EXISTS `{$dbname}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
-
-            // 3. Sambungkan ke database `reninvite_db`
+            // 1. Sambungkan langsung ke database yang ditentukan
             $this->pdo = new PDO("mysql:host={$host};port={$port};dbname={$dbname};charset=utf8mb4", $user, $pass, [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             ]);
 
-            // 4. Inisialisasi tabel otomatis
+            // 2. Inisialisasi tabel otomatis jika belum ada
             $this->initSchema();
 
         } catch (PDOException $e) {
+            // Fallback: Jika database belum ada di localhost, coba buat otomatis
+            if ($host === '127.0.0.1' || $host === 'localhost') {
+                try {
+                    $tempPdo = new PDO("mysql:host={$host};port={$port};charset=utf8mb4", $user, $pass, [
+                        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    ]);
+                    $tempPdo->exec("CREATE DATABASE IF NOT EXISTS `{$dbname}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
+                    $this->pdo = new PDO("mysql:host={$host};port={$port};dbname={$dbname};charset=utf8mb4", $user, $pass, [
+                        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                    ]);
+                    $this->initSchema();
+                    return;
+                } catch (PDOException $ex) {
+                    // lanjut ke pesan error utama
+                }
+            }
             die("Koneksi Database Gagal: " . $e->getMessage());
         }
     }

@@ -112,6 +112,127 @@ function site_description() {
     return 'Platform Undangan Digital Modern & Elegan. Buat undangan pernikahan, khitanan, aqiqah, dan event spesial cepat berkualitas.';
 }
 
+/**
+ * Mengambil data statistik counter beranda (mendukung mode manual & otomatis dari database)
+ */
+function get_site_stats_data($realCounts = null) {
+    if ($realCounts === null) {
+        try {
+            if (class_exists('Database')) {
+                $db = Database::getInstance();
+                $totalEvents = (int)$db->query("SELECT COUNT(*) FROM events")->fetchColumn();
+                $totalGuests = (int)$db->query("SELECT COUNT(*) FROM guests")->fetchColumn();
+                $totalTemplates = (int)$db->query("SELECT COUNT(*) FROM templates WHERE is_active = 1")->fetchColumn();
+                $realCounts = [
+                    'total_events' => $totalEvents,
+                    'total_guests' => $totalGuests,
+                    'total_templates' => $totalTemplates
+                ];
+            }
+        } catch (Exception $e) {
+            $realCounts = ['total_events' => 0, 'total_guests' => 0, 'total_templates' => 0];
+        }
+    }
+
+    $totalEvents = (int)($realCounts['total_events'] ?? 0);
+    $totalGuests = (int)($realCounts['total_guests'] ?? 0);
+    $totalTemplates = (int)($realCounts['total_templates'] ?? 0);
+
+    // 1. Undangan Dibuat
+    $item1Mode = site_setting('stats_item1_mode', 'manual');
+    $item1Val = site_setting('stats_item1_value', '> 1.400.000');
+    $item1Label = site_setting('stats_item1_label', 'Undangan Dibuat');
+    $item1Base = (int)site_setting('stats_item1_base', 1400000);
+    $item1Prefix = site_setting('stats_item1_prefix', '> ');
+    $item1Suffix = site_setting('stats_item1_suffix', '');
+
+    if ($item1Mode === 'auto') {
+        $finalVal1 = $item1Prefix . number_format($totalEvents, 0, ',', '.') . $item1Suffix;
+    } elseif ($item1Mode === 'auto_plus_base') {
+        $finalVal1 = $item1Prefix . number_format($item1Base + $totalEvents, 0, ',', '.') . $item1Suffix;
+    } else {
+        $finalVal1 = $item1Val;
+    }
+
+    // 2. Tamu Undangan Tersebar
+    $item2Mode = site_setting('stats_item2_mode', 'manual');
+    $item2Val = site_setting('stats_item2_value', '> 4.5 Juta');
+    $item2Label = site_setting('stats_item2_label', 'Tamu Undangan Tersebar');
+    $item2Base = (int)site_setting('stats_item2_base', 4500000);
+    $item2Prefix = site_setting('stats_item2_prefix', '> ');
+    $item2Suffix = site_setting('stats_item2_suffix', '');
+
+    if ($item2Mode === 'auto') {
+        $finalVal2 = $item2Prefix . number_format($totalGuests, 0, ',', '.') . $item2Suffix;
+    } elseif ($item2Mode === 'auto_plus_base') {
+        $finalVal2 = $item2Prefix . number_format($item2Base + $totalGuests, 0, ',', '.') . $item2Suffix;
+    } else {
+        $finalVal2 = $item2Val;
+    }
+
+    // 3. Tema Siap Pakai
+    $item3Mode = site_setting('stats_item3_mode', 'manual');
+    $item3Val = site_setting('stats_item3_value', '100+');
+    $item3Label = site_setting('stats_item3_label', 'Tema Siap Pakai');
+    $item3Base = (int)site_setting('stats_item3_base', 100);
+    $item3Prefix = site_setting('stats_item3_prefix', '');
+    $item3Suffix = site_setting('stats_item3_suffix', '+');
+
+    if ($item3Mode === 'auto') {
+        $finalVal3 = $item3Prefix . number_format($totalTemplates, 0, ',', '.') . $item3Suffix;
+    } elseif ($item3Mode === 'auto_plus_base') {
+        $finalVal3 = $item3Prefix . number_format($item3Base + $totalTemplates, 0, ',', '.') . $item3Suffix;
+    } else {
+        $finalVal3 = $item3Val;
+    }
+
+    // 4. Bantuan Admin & Support
+    $item4Val = site_setting('stats_item4_value', '24/7');
+    $item4Label = site_setting('stats_item4_label', 'Bantuan Admin & Support');
+
+    return [
+        'enabled' => site_setting('stats_enabled', '1') !== '0',
+        'item1' => [
+            'value' => $finalVal1,
+            'label' => $item1Label,
+            'mode' => $item1Mode,
+            'raw_value' => $item1Val,
+            'base' => $item1Base,
+            'prefix' => $item1Prefix,
+            'suffix' => $item1Suffix,
+        ],
+        'item2' => [
+            'value' => $finalVal2,
+            'label' => $item2Label,
+            'mode' => $item2Mode,
+            'raw_value' => $item2Val,
+            'base' => $item2Base,
+            'prefix' => $item2Prefix,
+            'suffix' => $item2Suffix,
+        ],
+        'item3' => [
+            'value' => $finalVal3,
+            'label' => $item3Label,
+            'mode' => $item3Mode,
+            'raw_value' => $item3Val,
+            'base' => $item3Base,
+            'prefix' => $item3Prefix,
+            'suffix' => $item3Suffix,
+        ],
+        'item4' => [
+            'value' => $item4Val,
+            'label' => $item4Label,
+            'mode' => 'manual',
+            'raw_value' => $item4Val
+        ],
+        'real_counts' => [
+            'total_events' => $totalEvents,
+            'total_guests' => $totalGuests,
+            'total_templates' => $totalTemplates,
+        ]
+    ];
+}
+
 function base_url($path = '') {
     return APP_URL . ($path ? '/' . ltrim($path, '/') : '');
 }

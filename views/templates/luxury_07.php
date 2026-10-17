@@ -658,8 +658,8 @@ $gcalUrl = "https://www.google.com/calendar/render?action=TEMPLATE&text={$calTit
                 </div>
             <?php endif; ?>
 
-            <p class="text-muted small mt-3 mx-auto px-2" style="max-width: 480px; font-size: 13px;">
-                Tanpa mengurangi rasa hormat, kami bermaksud mengundang Bapak/Ibu/Saudara/i untuk hadir dan memberikan doa restu pada hari bahagia pernikahan kami.
+            <p class="text-muted small mt-3 mx-auto px-2" style="max-width: 480px; font-size: 13px;" data-builder="pembuka" data-builder-label="Kata-Kata Pembuka">
+                <?= nl2br(htmlspecialchars($event['opening_text'] ?: 'Tanpa mengurangi rasa hormat, kami bermaksud mengundang Bapak/Ibu/Saudara/i untuk hadir dan memberikan doa restu pada hari bahagia pernikahan kami.')) ?>
             </p>
         </section>
 
@@ -772,7 +772,7 @@ $gcalUrl = "https://www.google.com/calendar/render?action=TEMPLATE&text={$calTit
             $defaultQuote = 'Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang.';
             $displayQuote = !empty($event['quote']) ? $event['quote'] : $defaultQuote;
             ?>
-            <div class="luxury-quote-box mx-auto text-center" style="max-width: 500px;">
+            <div class="luxury-quote-box mx-auto text-center" style="max-width: 500px;" data-builder="quote" data-builder-label="Doa / Ayat Suci">
                 <i class="bi bi-quote fs-1 text-gold d-block mb-2"></i>
                 <p class="fst-italic lh-lg mb-2 luxury-quote-text typewriter-target">
                     "<?= nl2br(htmlspecialchars($displayQuote)) ?>"

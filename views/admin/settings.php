@@ -372,6 +372,231 @@ require_once BASE_PATH . '/views/layouts/header.php';
                         </div>
                     </div>
 
+                    <!-- 6. PENGATURAN COUNTER STATISTIK BERANDA -->
+                    <div class="card border-0 rounded-4 shadow-sm p-4 bg-white mb-4">
+                        <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+                            <div class="d-flex align-items-center">
+                                <span class="p-2 rounded-3 me-2" style="background-color: rgba(13, 110, 253, 0.15); color: #0d6efd;">
+                                    <i class="bi bi-graph-up-arrow fs-5"></i>
+                                </span>
+                                <div>
+                                    <h5 class="fw-bold text-dark m-0">6. Counter Statistik Halaman Beranda (Stats Counter)</h5>
+                                    <small class="text-muted">Atur angka dan label counter yang tampil di beranda (bisa otomatis dari database maupun edit manual).</small>
+                                </div>
+                            </div>
+                            <div class="form-check form-switch m-0">
+                                <input class="form-check-input" type="checkbox" role="switch" name="stats_enabled" id="switchStatsEnabled" value="1" <?= ($statsData['enabled'] ?? true) ? 'checked' : '' ?> onchange="updateStatsPreview()">
+                                <label class="form-check-label small fw-bold text-secondary" for="switchStatsEnabled">Tampilkan Counter</label>
+                            </div>
+                        </div>
+
+                        <!-- Data Riil Database Saat Ini (Status Bar) -->
+                        <div class="alert alert-primary bg-primary bg-opacity-10 border border-primary border-opacity-25 rounded-4 p-3 mb-4">
+                            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                                <div>
+                                    <h6 class="fw-bold text-primary mb-1 d-flex align-items-center">
+                                        <i class="bi bi-database-check me-2"></i> Data Riil Sistem Saat Ini (Real-time Database)
+                                    </h6>
+                                    <span class="small text-muted" style="font-size: 11.5px;">Jumlah data asli yang tercatat dalam sistem saat ini:</span>
+                                </div>
+                                <div class="d-flex gap-2 flex-wrap">
+                                    <span class="badge bg-white text-dark border px-3 py-2 rounded-pill shadow-xs">
+                                        <i class="bi bi-envelope-paper text-primary me-1"></i> <b class="text-primary"><?= number_format($realCounts['total_events'] ?? 0, 0, ',', '.') ?></b> Undangan Dibuat
+                                    </span>
+                                    <span class="badge bg-white text-dark border px-3 py-2 rounded-pill shadow-xs">
+                                        <i class="bi bi-people text-success me-1"></i> <b class="text-success"><?= number_format($realCounts['total_guests'] ?? 0, 0, ',', '.') ?></b> Tamu Tersebar
+                                    </span>
+                                    <span class="badge bg-white text-dark border px-3 py-2 rounded-pill shadow-xs">
+                                        <i class="bi bi-palette text-warning me-1"></i> <b class="text-warning"><?= number_format($realCounts['total_templates'] ?? 0, 0, ',', '.') ?></b> Tema Aktif
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Preset Cepat Semua Statistik -->
+                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 p-3 rounded-3 bg-light mb-4 border">
+                            <div class="small fw-bold text-secondary">
+                                <i class="bi bi-magic me-1 text-primary"></i> Preset Cepat Mode Statistik:
+                            </div>
+                            <div class="d-flex gap-2 flex-wrap">
+                                <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3" onclick="applyStatsPreset('manual')">
+                                    <i class="bi bi-pencil-square me-1"></i> Semua Manual
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-success rounded-pill px-3" onclick="applyStatsPreset('auto')">
+                                    <i class="bi bi-cpu me-1"></i> Semua Otomatis DB
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-warning rounded-pill px-3" onclick="applyStatsPreset('auto_plus_base')">
+                                    <i class="bi bi-rocket-takeoff me-1"></i> Smart Booster (Dasar + DB)
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 4 Item Counter -->
+                        <div class="row g-3">
+                            <!-- Item 1: Undangan Dibuat -->
+                            <div class="col-md-6">
+                                <div class="card h-100 border rounded-3 p-3 bg-light bg-opacity-50">
+                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                        <span class="badge bg-primary rounded-pill px-2.5 py-1">Statistik 1</span>
+                                        <span class="small text-muted" style="font-size: 11px;">Terkait Jumlah Undangan</span>
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="form-label small fw-bold text-secondary mb-1">Sumber Data</label>
+                                        <select name="stats_item1_mode" id="statsItem1Mode" class="form-select form-select-sm rounded-3" onchange="toggleStatsItemMode(1); updateStatsPreview();">
+                                            <option value="manual" <?= ($statsData['item1']['mode'] ?? '') === 'manual' ? 'selected' : '' ?>>✍️ Manual / Teks Kustom Bebas</option>
+                                            <option value="auto" <?= ($statsData['item1']['mode'] ?? '') === 'auto' ? 'selected' : '' ?>>⚡ Otomatis Data Asli DB (<?= number_format($realCounts['total_events'] ?? 0, 0, ',', '.') ?>)</option>
+                                            <option value="auto_plus_base" <?= ($statsData['item1']['mode'] ?? '') === 'auto_plus_base' ? 'selected' : '' ?>>🚀 Smart Booster (Angka Dasar + Real DB)</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Nilai Manual -->
+                                    <div class="mb-2" id="groupItem1Manual">
+                                        <label class="form-label small fw-bold text-secondary mb-1">Nilai / Teks Counter</label>
+                                        <input type="text" name="stats_item1_value" id="statsItem1Value" class="form-control form-control-sm rounded-3" value="<?= htmlspecialchars($statsData['item1']['raw_value'] ?? '> 1.400.000') ?>" placeholder="Contoh: > 1.400.000" oninput="updateStatsPreview()">
+                                    </div>
+
+                                    <!-- Nilai Booster Base -->
+                                    <div class="mb-2 d-none" id="groupItem1Base">
+                                        <label class="form-label small fw-bold text-secondary mb-1">Angka Dasar Booster (Base Count)</label>
+                                        <div class="input-group input-group-sm">
+                                            <input type="number" name="stats_item1_base" id="statsItem1Base" class="form-control rounded-start-3" value="<?= htmlspecialchars($statsData['item1']['base'] ?? 1400000) ?>" placeholder="1400000" oninput="updateStatsPreview()">
+                                            <span class="input-group-text bg-white small text-muted">+ <?= (int)($realCounts['total_events'] ?? 0) ?> DB</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Prefix & Suffix (Untuk Auto & Booster) -->
+                                    <div class="row g-2 mb-2 d-none" id="groupItem1Affix">
+                                        <div class="col-6">
+                                            <label class="form-label small fw-bold text-secondary mb-1" style="font-size: 10px;">Awalan (Prefix)</label>
+                                            <input type="text" name="stats_item1_prefix" id="statsItem1Prefix" class="form-control form-control-sm rounded-3" value="<?= htmlspecialchars($statsData['item1']['prefix'] ?? '> ') ?>" placeholder="> " oninput="updateStatsPreview()">
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label small fw-bold text-secondary mb-1" style="font-size: 10px;">Akhiran (Suffix)</label>
+                                            <input type="text" name="stats_item1_suffix" id="statsItem1Suffix" class="form-control form-control-sm rounded-3" value="<?= htmlspecialchars($statsData['item1']['suffix'] ?? '') ?>" placeholder="+" oninput="updateStatsPreview()">
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="form-label small fw-bold text-secondary mb-1">Label Keterangan</label>
+                                        <input type="text" name="stats_item1_label" id="statsItem1Label" class="form-control form-control-sm rounded-3" value="<?= htmlspecialchars($statsData['item1']['label'] ?? 'Undangan Dibuat') ?>" placeholder="Undangan Dibuat" oninput="updateStatsPreview()">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Item 2: Tamu Undangan Tersebar -->
+                            <div class="col-md-6">
+                                <div class="card h-100 border rounded-3 p-3 bg-light bg-opacity-50">
+                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                        <span class="badge bg-success rounded-pill px-2.5 py-1">Statistik 2</span>
+                                        <span class="small text-muted" style="font-size: 11px;">Terkait Tamu Undangan</span>
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="form-label small fw-bold text-secondary mb-1">Sumber Data</label>
+                                        <select name="stats_item2_mode" id="statsItem2Mode" class="form-select form-select-sm rounded-3" onchange="toggleStatsItemMode(2); updateStatsPreview();">
+                                            <option value="manual" <?= ($statsData['item2']['mode'] ?? '') === 'manual' ? 'selected' : '' ?>>✍️ Manual / Teks Kustom Bebas</option>
+                                            <option value="auto" <?= ($statsData['item2']['mode'] ?? '') === 'auto' ? 'selected' : '' ?>>⚡ Otomatis Data Asli DB (<?= number_format($realCounts['total_guests'] ?? 0, 0, ',', '.') ?>)</option>
+                                            <option value="auto_plus_base" <?= ($statsData['item2']['mode'] ?? '') === 'auto_plus_base' ? 'selected' : '' ?>>🚀 Smart Booster (Angka Dasar + Real DB)</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-2" id="groupItem2Manual">
+                                        <label class="form-label small fw-bold text-secondary mb-1">Nilai / Teks Counter</label>
+                                        <input type="text" name="stats_item2_value" id="statsItem2Value" class="form-control form-control-sm rounded-3" value="<?= htmlspecialchars($statsData['item2']['raw_value'] ?? '> 4.5 Juta') ?>" placeholder="Contoh: > 4.5 Juta" oninput="updateStatsPreview()">
+                                    </div>
+
+                                    <div class="mb-2 d-none" id="groupItem2Base">
+                                        <label class="form-label small fw-bold text-secondary mb-1">Angka Dasar Booster (Base Count)</label>
+                                        <div class="input-group input-group-sm">
+                                            <input type="number" name="stats_item2_base" id="statsItem2Base" class="form-control rounded-start-3" value="<?= htmlspecialchars($statsData['item2']['base'] ?? 4500000) ?>" placeholder="4500000" oninput="updateStatsPreview()">
+                                            <span class="input-group-text bg-white small text-muted">+ <?= (int)($realCounts['total_guests'] ?? 0) ?> DB</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="row g-2 mb-2 d-none" id="groupItem2Affix">
+                                        <div class="col-6">
+                                            <label class="form-label small fw-bold text-secondary mb-1" style="font-size: 10px;">Awalan (Prefix)</label>
+                                            <input type="text" name="stats_item2_prefix" id="statsItem2Prefix" class="form-control form-control-sm rounded-3" value="<?= htmlspecialchars($statsData['item2']['prefix'] ?? '> ') ?>" placeholder="> " oninput="updateStatsPreview()">
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label small fw-bold text-secondary mb-1" style="font-size: 10px;">Akhiran (Suffix)</label>
+                                            <input type="text" name="stats_item2_suffix" id="statsItem2Suffix" class="form-control form-control-sm rounded-3" value="<?= htmlspecialchars($statsData['item2']['suffix'] ?? '') ?>" placeholder="" oninput="updateStatsPreview()">
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="form-label small fw-bold text-secondary mb-1">Label Keterangan</label>
+                                        <input type="text" name="stats_item2_label" id="statsItem2Label" class="form-control form-control-sm rounded-3" value="<?= htmlspecialchars($statsData['item2']['label'] ?? 'Tamu Undangan Tersebar') ?>" placeholder="Tamu Undangan Tersebar" oninput="updateStatsPreview()">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Item 3: Tema Siap Pakai -->
+                            <div class="col-md-6">
+                                <div class="card h-100 border rounded-3 p-3 bg-light bg-opacity-50">
+                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                        <span class="badge bg-warning text-dark rounded-pill px-2.5 py-1">Statistik 3</span>
+                                        <span class="small text-muted" style="font-size: 11px;">Terkait Koleksi Tema</span>
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="form-label small fw-bold text-secondary mb-1">Sumber Data</label>
+                                        <select name="stats_item3_mode" id="statsItem3Mode" class="form-select form-select-sm rounded-3" onchange="toggleStatsItemMode(3); updateStatsPreview();">
+                                            <option value="manual" <?= ($statsData['item3']['mode'] ?? '') === 'manual' ? 'selected' : '' ?>>✍️ Manual / Teks Kustom Bebas</option>
+                                            <option value="auto" <?= ($statsData['item3']['mode'] ?? '') === 'auto' ? 'selected' : '' ?>>⚡ Otomatis Data Asli DB (<?= number_format($realCounts['total_templates'] ?? 0, 0, ',', '.') ?>)</option>
+                                            <option value="auto_plus_base" <?= ($statsData['item3']['mode'] ?? '') === 'auto_plus_base' ? 'selected' : '' ?>>🚀 Smart Booster (Angka Dasar + Real DB)</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-2" id="groupItem3Manual">
+                                        <label class="form-label small fw-bold text-secondary mb-1">Nilai / Teks Counter</label>
+                                        <input type="text" name="stats_item3_value" id="statsItem3Value" class="form-control form-control-sm rounded-3" value="<?= htmlspecialchars($statsData['item3']['raw_value'] ?? '100+') ?>" placeholder="Contoh: 100+" oninput="updateStatsPreview()">
+                                    </div>
+
+                                    <div class="mb-2 d-none" id="groupItem3Base">
+                                        <label class="form-label small fw-bold text-secondary mb-1">Angka Dasar Booster (Base Count)</label>
+                                        <div class="input-group input-group-sm">
+                                            <input type="number" name="stats_item3_base" id="statsItem3Base" class="form-control rounded-start-3" value="<?= htmlspecialchars($statsData['item3']['base'] ?? 100) ?>" placeholder="100" oninput="updateStatsPreview()">
+                                            <span class="input-group-text bg-white small text-muted">+ <?= (int)($realCounts['total_templates'] ?? 0) ?> DB</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="row g-2 mb-2 d-none" id="groupItem3Affix">
+                                        <div class="col-6">
+                                            <label class="form-label small fw-bold text-secondary mb-1" style="font-size: 10px;">Awalan (Prefix)</label>
+                                            <input type="text" name="stats_item3_prefix" id="statsItem3Prefix" class="form-control form-control-sm rounded-3" value="<?= htmlspecialchars($statsData['item3']['prefix'] ?? '') ?>" placeholder="" oninput="updateStatsPreview()">
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label small fw-bold text-secondary mb-1" style="font-size: 10px;">Akhiran (Suffix)</label>
+                                            <input type="text" name="stats_item3_suffix" id="statsItem3Suffix" class="form-control form-control-sm rounded-3" value="<?= htmlspecialchars($statsData['item3']['suffix'] ?? '+') ?>" placeholder="+" oninput="updateStatsPreview()">
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="form-label small fw-bold text-secondary mb-1">Label Keterangan</label>
+                                        <input type="text" name="stats_item3_label" id="statsItem3Label" class="form-control form-control-sm rounded-3" value="<?= htmlspecialchars($statsData['item3']['label'] ?? 'Tema Siap Pakai') ?>" placeholder="Tema Siap Pakai" oninput="updateStatsPreview()">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Item 4: Bantuan Admin & Support -->
+                            <div class="col-md-6">
+                                <div class="card h-100 border rounded-3 p-3 bg-light bg-opacity-50">
+                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                        <span class="badge bg-secondary rounded-pill px-2.5 py-1">Statistik 4</span>
+                                        <span class="small text-muted" style="font-size: 11px;">Layanan / Dukungan</span>
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="form-label small fw-bold text-secondary mb-1">Nilai / Teks Counter</label>
+                                        <input type="text" name="stats_item4_value" id="statsItem4Value" class="form-control form-control-sm rounded-3" value="<?= htmlspecialchars($statsData['item4']['raw_value'] ?? '24/7') ?>" placeholder="Contoh: 24/7" oninput="updateStatsPreview()">
+                                    </div>
+                                    <div class="mt-auto">
+                                        <label class="form-label small fw-bold text-secondary mb-1">Label Keterangan</label>
+                                        <input type="text" name="stats_item4_label" id="statsItem4Label" class="form-control form-control-sm rounded-3" value="<?= htmlspecialchars($statsData['item4']['label'] ?? 'Bantuan Admin & Support') ?>" placeholder="Bantuan Admin & Support" oninput="updateStatsPreview()">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Tombol Simpan -->
                     <div class="d-flex justify-content-end gap-2 mb-5">
                         <button type="reset" class="btn btn-light rounded-pill px-4 py-2.5 fw-semibold text-secondary">
@@ -498,6 +723,42 @@ require_once BASE_PATH . '/views/layouts/header.php';
                                 <div class="p-1.5 px-2 rounded-2 d-flex align-items-center gap-1.5 border" style="background-color: #ffffff; color: #17242A; font-size: 9px; border-color: #E2E8F0 !important;">
                                     <span class="badge bg-danger text-white px-1.5 py-0.5" style="font-size: 8px;" id="previewHeroPillBadge"><?= htmlspecialchars($settings['hero_pill_badge'] ?? 'Anti Rugi') ?></span>
                                     <span class="text-truncate text-muted" id="previewHeroPillText"><?= htmlspecialchars($settings['hero_pill_text'] ?? 'Dibuatin admin dulu, bayar setelah jadi & suka hasilnya!') ?></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mockup 4: Counter Statistik Beranda -->
+                        <div class="card border-0 rounded-4 shadow-sm bg-white p-3 mb-4">
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <h6 class="fw-bold text-dark m-0 d-flex align-items-center">
+                                    <i class="bi bi-speedometer2 text-primary me-2"></i> Live Preview: Counter Beranda
+                                </h6>
+                                <span class="badge rounded-pill bg-primary-subtle text-primary small fw-semibold" style="font-size: 10px;">Real-Time</span>
+                            </div>
+                            <small class="text-muted d-block mb-3" style="font-size: 11px;">Simulasi bar counter di bawah hero section:</small>
+
+                            <!-- Counter Bar Simulation -->
+                            <div id="statsPreviewBox" class="p-3 bg-white border rounded-3 shadow-xs">
+                                <div class="row text-center gy-3" id="statsPreviewRow">
+                                    <div class="col-6 col-md-3">
+                                        <div class="fw-extrabold text-primary mb-0" style="font-size: 13px;" id="prevStat1Val">> 1.400.000</div>
+                                        <div class="text-muted" style="font-size: 9.5px;" id="prevStat1Lbl">Undangan Dibuat</div>
+                                    </div>
+                                    <div class="col-6 col-md-3">
+                                        <div class="fw-extrabold text-primary mb-0" style="font-size: 13px;" id="prevStat2Val">> 4.5 Juta</div>
+                                        <div class="text-muted" style="font-size: 9.5px;" id="prevStat2Lbl">Tamu Undangan Tersebar</div>
+                                    </div>
+                                    <div class="col-6 col-md-3">
+                                        <div class="fw-extrabold text-primary mb-0" style="font-size: 13px;" id="prevStat3Val">100+</div>
+                                        <div class="text-muted" style="font-size: 9.5px;" id="prevStat3Lbl">Tema Siap Pakai</div>
+                                    </div>
+                                    <div class="col-6 col-md-3">
+                                        <div class="fw-extrabold text-primary mb-0" style="font-size: 13px;" id="prevStat4Val">24/7</div>
+                                        <div class="text-muted" style="font-size: 9.5px;" id="prevStat4Lbl">Bantuan Admin & Support</div>
+                                    </div>
+                                </div>
+                                <div id="statsDisabledNotice" class="text-center py-2 text-muted small d-none" style="font-size: 11px;">
+                                    <i class="bi bi-eye-slash me-1"></i> Bagian counter dinonaktifkan (disembunyikan dari beranda)
                                 </div>
                             </div>
                         </div>
@@ -692,18 +953,149 @@ function updateMockupPreview() {
     }
 }
 
+// ==========================================
+// STATS COUNTER PREVIEW & CONTROLLER
+// ==========================================
+const realDatabaseCounts = {
+    events: <?= (int)($realCounts['total_events'] ?? 0) ?>,
+    guests: <?= (int)($realCounts['total_guests'] ?? 0) ?>,
+    templates: <?= (int)($realCounts['total_templates'] ?? 0) ?>
+};
+
+function formatNumberId(num) {
+    return new Intl.NumberFormat('id-ID').format(num);
+}
+
+function toggleStatsItemMode(itemNum) {
+    const select = document.getElementById('statsItem' + itemNum + 'Mode');
+    if (!select) return;
+    const mode = select.value;
+    const manualGroup = document.getElementById('groupItem' + itemNum + 'Manual');
+    const baseGroup = document.getElementById('groupItem' + itemNum + 'Base');
+    const affixGroup = document.getElementById('groupItem' + itemNum + 'Affix');
+
+    if (mode === 'manual') {
+        if (manualGroup) manualGroup.classList.remove('d-none');
+        if (baseGroup) baseGroup.classList.add('d-none');
+        if (affixGroup) affixGroup.classList.add('d-none');
+    } else if (mode === 'auto') {
+        if (manualGroup) manualGroup.classList.add('d-none');
+        if (baseGroup) baseGroup.classList.add('d-none');
+        if (affixGroup) affixGroup.classList.remove('d-none');
+    } else if (mode === 'auto_plus_base') {
+        if (manualGroup) manualGroup.classList.add('d-none');
+        if (baseGroup) baseGroup.classList.remove('d-none');
+        if (affixGroup) affixGroup.classList.remove('d-none');
+    }
+}
+
+function applyStatsPreset(mode) {
+    [1, 2, 3].forEach(function(i) {
+        const select = document.getElementById('statsItem' + i + 'Mode');
+        if (select) {
+            select.value = mode;
+            toggleStatsItemMode(i);
+        }
+    });
+    updateStatsPreview();
+}
+
+function updateStatsPreview() {
+    const isEnabled = document.getElementById('switchStatsEnabled') ? document.getElementById('switchStatsEnabled').checked : true;
+    const statsRow = document.getElementById('statsPreviewRow');
+    const notice = document.getElementById('statsDisabledNotice');
+
+    if (!isEnabled) {
+        if (statsRow) statsRow.classList.add('d-none');
+        if (notice) notice.classList.remove('d-none');
+        return;
+    } else {
+        if (statsRow) statsRow.classList.remove('d-none');
+        if (notice) notice.classList.add('d-none');
+    }
+
+    // Item 1
+    const mode1El = document.getElementById('statsItem1Mode');
+    if (mode1El) {
+        const mode1 = mode1El.value;
+        const pref1 = document.getElementById('statsItem1Prefix') ? document.getElementById('statsItem1Prefix').value : '> ';
+        const suff1 = document.getElementById('statsItem1Suffix') ? document.getElementById('statsItem1Suffix').value : '';
+        let val1 = document.getElementById('statsItem1Value') ? document.getElementById('statsItem1Value').value.trim() : '> 1.400.000';
+        if (mode1 === 'auto') {
+            val1 = pref1 + formatNumberId(realDatabaseCounts.events) + suff1;
+        } else if (mode1 === 'auto_plus_base') {
+            const base1 = parseInt(document.getElementById('statsItem1Base').value) || 0;
+            val1 = pref1 + formatNumberId(base1 + realDatabaseCounts.events) + suff1;
+        }
+        const lbl1 = document.getElementById('statsItem1Label') ? document.getElementById('statsItem1Label').value.trim() : 'Undangan Dibuat';
+        if (document.getElementById('prevStat1Val')) document.getElementById('prevStat1Val').innerText = val1 || '> 1.400.000';
+        if (document.getElementById('prevStat1Lbl')) document.getElementById('prevStat1Lbl').innerText = lbl1 || 'Undangan Dibuat';
+    }
+
+    // Item 2
+    const mode2El = document.getElementById('statsItem2Mode');
+    if (mode2El) {
+        const mode2 = mode2El.value;
+        const pref2 = document.getElementById('statsItem2Prefix') ? document.getElementById('statsItem2Prefix').value : '> ';
+        const suff2 = document.getElementById('statsItem2Suffix') ? document.getElementById('statsItem2Suffix').value : '';
+        let val2 = document.getElementById('statsItem2Value') ? document.getElementById('statsItem2Value').value.trim() : '> 4.5 Juta';
+        if (mode2 === 'auto') {
+            val2 = pref2 + formatNumberId(realDatabaseCounts.guests) + suff2;
+        } else if (mode2 === 'auto_plus_base') {
+            const base2 = parseInt(document.getElementById('statsItem2Base').value) || 0;
+            val2 = pref2 + formatNumberId(base2 + realDatabaseCounts.guests) + suff2;
+        }
+        const lbl2 = document.getElementById('statsItem2Label') ? document.getElementById('statsItem2Label').value.trim() : 'Tamu Undangan Tersebar';
+        if (document.getElementById('prevStat2Val')) document.getElementById('prevStat2Val').innerText = val2 || '> 4.5 Juta';
+        if (document.getElementById('prevStat2Lbl')) document.getElementById('prevStat2Lbl').innerText = lbl2 || 'Tamu Undangan Tersebar';
+    }
+
+    // Item 3
+    const mode3El = document.getElementById('statsItem3Mode');
+    if (mode3El) {
+        const mode3 = mode3El.value;
+        const pref3 = document.getElementById('statsItem3Prefix') ? document.getElementById('statsItem3Prefix').value : '';
+        const suff3 = document.getElementById('statsItem3Suffix') ? document.getElementById('statsItem3Suffix').value : '+';
+        let val3 = document.getElementById('statsItem3Value') ? document.getElementById('statsItem3Value').value.trim() : '100+';
+        if (mode3 === 'auto') {
+            val3 = pref3 + formatNumberId(realDatabaseCounts.templates) + suff3;
+        } else if (mode3 === 'auto_plus_base') {
+            const base3 = parseInt(document.getElementById('statsItem3Base').value) || 0;
+            val3 = pref3 + formatNumberId(base3 + realDatabaseCounts.templates) + suff3;
+        }
+        const lbl3 = document.getElementById('statsItem3Label') ? document.getElementById('statsItem3Label').value.trim() : 'Tema Siap Pakai';
+        if (document.getElementById('prevStat3Val')) document.getElementById('prevStat3Val').innerText = val3 || '100+';
+        if (document.getElementById('prevStat3Lbl')) document.getElementById('prevStat3Lbl').innerText = lbl3 || 'Tema Siap Pakai';
+    }
+
+    // Item 4
+    const val4 = document.getElementById('statsItem4Value') ? document.getElementById('statsItem4Value').value.trim() : '24/7';
+    const lbl4 = document.getElementById('statsItem4Label') ? document.getElementById('statsItem4Label').value.trim() : 'Bantuan Admin & Support';
+    if (document.getElementById('prevStat4Val')) document.getElementById('prevStat4Val').innerText = val4 || '24/7';
+    if (document.getElementById('prevStat4Lbl')) document.getElementById('prevStat4Lbl').innerText = lbl4 || 'Bantuan Admin & Support';
+}
+
 // Initialize preview on page load
 document.addEventListener('DOMContentLoaded', function() {
     updateMockupPreview();
+    [1, 2, 3].forEach(toggleStatsItemMode);
+    updateStatsPreview();
 });
 
 // Event Listeners for real-time typing
 ['inputAppName', 'inputAppTagline', 'inputTitleFormat', 'inputHeroDescription', 'inputHeroBadge', 
  'inputHeroTitle1', 'inputHeroTitleHighlight', 'inputHeroTitle2', 'inputHeroBtnRegister', 
- 'inputHeroBtnWa', 'inputHeroPillBadge', 'inputHeroPillText'].forEach(function(id) {
+ 'inputHeroBtnWa', 'inputHeroPillBadge', 'inputHeroPillText',
+ 'statsItem1Value', 'statsItem1Base', 'statsItem1Label', 'statsItem1Prefix', 'statsItem1Suffix',
+ 'statsItem2Value', 'statsItem2Base', 'statsItem2Label', 'statsItem2Prefix', 'statsItem2Suffix',
+ 'statsItem3Value', 'statsItem3Base', 'statsItem3Label', 'statsItem3Prefix', 'statsItem3Suffix',
+ 'statsItem4Value', 'statsItem4Label'].forEach(function(id) {
     const el = document.getElementById(id);
     if (el) {
-        el.addEventListener('input', updateMockupPreview);
+        el.addEventListener('input', function() {
+            updateMockupPreview();
+            updateStatsPreview();
+        });
     }
 });
 </script>

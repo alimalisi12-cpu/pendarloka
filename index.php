@@ -109,6 +109,12 @@ switch ($baseRoute) {
                 $controller->applyTraditionToEvent((int)$segments[3]);
             } elseif ($subAction === 'reset') {
                 $controller->resetTraditions();
+            } elseif ($subAction === 'save-text-template') {
+                $controller->saveTextTemplate();
+            } elseif ($subAction === 'delete-text-template' && isset($segments[3], $segments[4])) {
+                $controller->deleteTextTemplate($segments[3], $segments[4]);
+            } elseif ($subAction === 'reset-text-templates') {
+                $controller->resetTextTemplates();
             } else {
                 $controller->traditions();
             }

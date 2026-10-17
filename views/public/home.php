@@ -75,29 +75,34 @@ require_once BASE_PATH . '/views/layouts/header.php';
     </div>
 </section>
 
+<?php 
+$statsData = get_site_stats_data($counts ?? null);
+if ($statsData['enabled']): 
+?>
 <!-- Stats Counter Section -->
-<section class="py-4 border-top border-bottom bg-white">
+<section class="py-4 border-top border-bottom bg-white stats-counter-section">
     <div class="container">
         <div class="row text-center gy-4">
             <div class="col-6 col-md-3">
-                <h3 class="fw-extrabold text-primary mb-1">> 1.400.000</h3>
-                <p class="text-muted small m-0">Undangan Dibuat</p>
+                <h3 class="fw-extrabold text-primary mb-1"><?= htmlspecialchars($statsData['item1']['value']) ?></h3>
+                <p class="text-muted small m-0"><?= htmlspecialchars($statsData['item1']['label']) ?></p>
             </div>
             <div class="col-6 col-md-3">
-                <h3 class="fw-extrabold text-primary mb-1">> 4.5 Juta</h3>
-                <p class="text-muted small m-0">Tamu Undangan Tersebar</p>
+                <h3 class="fw-extrabold text-primary mb-1"><?= htmlspecialchars($statsData['item2']['value']) ?></h3>
+                <p class="text-muted small m-0"><?= htmlspecialchars($statsData['item2']['label']) ?></p>
             </div>
             <div class="col-6 col-md-3">
-                <h3 class="fw-extrabold text-primary mb-1">100+</h3>
-                <p class="text-muted small m-0">Tema Siap Pakai</p>
+                <h3 class="fw-extrabold text-primary mb-1"><?= htmlspecialchars($statsData['item3']['value']) ?></h3>
+                <p class="text-muted small m-0"><?= htmlspecialchars($statsData['item3']['label']) ?></p>
             </div>
             <div class="col-6 col-md-3">
-                <h3 class="fw-extrabold text-primary mb-1">24/7</h3>
-                <p class="text-muted small m-0">Bantuan Admin & Support</p>
+                <h3 class="fw-extrabold text-primary mb-1"><?= htmlspecialchars($statsData['item4']['value']) ?></h3>
+                <p class="text-muted small m-0"><?= htmlspecialchars($statsData['item4']['label']) ?></p>
             </div>
         </div>
     </div>
 </section>
+<?php endif; ?>
 
 <!-- Category Badges -->
 <section class="py-5 bg-light">

@@ -249,3 +249,143 @@ function get_curated_wedding_music() {
         ]
     ];
 }
+
+// ==========================================
+// MASTER TEXT TEMPLATE KATA-KATA (DOA, PEMBUKA, PENUTUP)
+// ==========================================
+function get_default_text_templates() {
+    return [
+        'doa' => [
+            'nikah_islam_arrum' => [
+                'title' => 'Nikah Islam (Ar-Rum 21)',
+                'category' => 'doa',
+                'content' => 'Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang. Sesungguhnya pada yang demikian itu benar-benar terdapat tanda-tanda bagi kaum yang berpikir. (QS. Ar-Rum: 21)'
+            ],
+            'nikah_islam_yasiin' => [
+                'title' => 'Nikah Islam (Yasiin)',
+                'category' => 'doa',
+                'content' => 'Maha Suci Allah yang telah menciptakan semuanya berpasang-pasangan, baik dari apa yang ditumbuhkan oleh bumi dan dari diri mereka sendiri, maupun dari apa yang tidak mereka ketahui. (QS. Ya Sin: 36)'
+            ],
+            'nikah_hindu' => [
+                'title' => 'Nikah Hindu',
+                'category' => 'doa',
+                'content' => 'Ihaiva stam ma vi yaustam visvam ayur vyasnutam kridantau putrair naptrbhih modamanau sve grhe. (Wahai mempelai, hiduplah tenteram, jangan terpisahkan, capailah usia penuh, bergembiralah bersama anak cucu di dalam rumah tanggamu. - Rgveda X.85.42)'
+            ],
+            'nikah_kristen' => [
+                'title' => 'Nikah Kristen',
+                'category' => 'doa',
+                'content' => 'Kasih itu sabar; kasih itu murah hati; ia tidak cemburu. Ia tidak memegahkan diri dan tidak sombong. Demikianlah tinggal ketiga hal ini, yaitu iman, pengharapan dan kasih, dan yang paling besar di antaranya ialah kasih. (1 Korintus 13:4, 13)'
+            ],
+            'nikah_katolik' => [
+                'title' => 'Nikah Katolik',
+                'category' => 'doa',
+                'content' => 'Demikianlah mereka bukan lagi dua, melainkan satu. Karena itu, apa yang telah dipersatukan Allah, tidak boleh diceraikan manusia. (Matius 19:6)'
+            ],
+            'nikah_buddha' => [
+                'title' => 'Nikah Buddha',
+                'category' => 'doa',
+                'content' => 'Hidup berbahagia bersama pasangan yang sepadan keyakinannya, sepadan kebajikannya, sepadan kemurah-hatiannya, dan sepadan kebijaksanaannya. (Samajivina Sutta)'
+            ],
+            'khitan' => [
+                'title' => 'Khitan',
+                'category' => 'doa',
+                'content' => 'Peristiwa penting dalam perjalanan hidup lelaki muslim adalah menjelang akil baligh, saat manis dalam kenangan sejarah panjang seorang muslim adalah untuk pertama dan cuma sekali ketika ia dikhitan, Ya Allah perkenankan kami mengkhitankan putra kami'
+            ],
+            'aqiqah' => [
+                'title' => 'Aqiqah',
+                'category' => 'doa',
+                'content' => 'Setiap anak tergadai dengan aqiqahnya, disembelihkan untuknya pada hari ketujuh, dicukur rambutnya dan diberi nama. Semoga ananda tumbuh menjadi anak yang sholeh/sholehah, berbakti kepada orang tua, agama, dan bangsa.'
+            ]
+        ],
+        'pembuka' => [
+            'nikah_islam' => [
+                'title' => 'Nikah Islam',
+                'category' => 'pembuka',
+                'content' => 'Assalamu’alaikum Warahmatullahi Wabarakatuh. Dengan memohon rahmat dan ridho Allah Subhanahu Wa Ta\'ala, kami bermaksud mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan putra-putri kami:'
+            ],
+            'khitan' => [
+                'title' => 'Khitan',
+                'category' => 'pembuka',
+                'content' => 'Assalamu’alaikum Warahmatullahi Wabarakatuh. Dengan memohon petunjuk dan ridho Allah SWT, kami mengundang Bapak/Ibu/Saudara/i untuk hadir dalam acara Tasyakuran Khitanan putra kami:'
+            ],
+            'nikah_hindu' => [
+                'title' => 'Nikah Hindu',
+                'category' => 'pembuka',
+                'content' => 'Om Swastyastu. Atas Asung Kertha Wara Nugaha Ida Sang Hyang Widhi Wasa/Tuhan Yang Maha Esa, kami bermaksud menyelenggarakan Upacara Pawiwahan (Pernikahan) putra-putri kami:'
+            ],
+            'aqiqah' => [
+                'title' => 'Aqiqah',
+                'category' => 'pembuka',
+                'content' => 'Assalamu’alaikum Warahmatullahi Wabarakatuh. Puji syukur kami panjatkan ke hadirat Allah SWT, dengan rasa bahagia kami bermaksud mengundang Bapak/Ibu/Saudara/i dalam acara Tasyakuran Aqiqah putra/putri kami:'
+            ],
+            '3_oton' => [
+                'title' => '3 Oton',
+                'category' => 'pembuka',
+                'content' => 'Om Swastyastu. Atas Asung Kertha Wara Nugraha Ida Sang Hyang Widhi Wasa, kami sekeluarga bermaksud menyelenggarakan Upacara Manusa Yadnya (3 Otonan) putra/putri kami:'
+            ],
+            'kristen' => [
+                'title' => 'Kristen / Protestan',
+                'category' => 'pembuka',
+                'content' => 'Salam damai sejahtera dalam kasih Tuhan kita Yesus Kristus. Dengan penuh rasa syukur, kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri Pemberkatan Pernikahan putra-putri kami:'
+            ],
+            'universal' => [
+                'title' => 'Universal',
+                'category' => 'pembuka',
+                'content' => 'Tanpa mengurangi rasa hormat, kami bermaksud mengundang Bapak/Ibu/Saudara/i untuk hadir dan memberikan doa restu pada hari bahagia pernikahan kami:'
+            ]
+        ],
+        'penutup' => [
+            'nikah_islam' => [
+                'title' => 'Nikah Islam',
+                'category' => 'penutup',
+                'content' => 'Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu kepada kedua mempelai. Wassalamu’alaikum Warahmatullahi Wabarakatuh.'
+            ],
+            'universal' => [
+                'title' => 'Universal',
+                'category' => 'penutup',
+                'content' => 'Ungkapan terima kasih yang tulus dari kami atas kehadiran dan doa restu Bapak/Ibu/Saudara/i sekalian. Semoga Tuhan senantiasa melimpahkan berkah dan kebahagiaan untuk kita semua.'
+            ],
+            'formal' => [
+                'title' => 'Formal',
+                'category' => 'penutup',
+                'content' => 'Atas kehadiran serta doa restu yang Bapak/Ibu/Saudara/i berikan, kami sekeluarga mengucapkan terima kasih yang sebesar-besarnya.'
+            ],
+            'aqiqah' => [
+                'title' => 'Aqiqah',
+                'category' => 'penutup',
+                'content' => 'Merupakan suatu kebahagiaan dan kehormatan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu kepada ananda tercinta. Terima kasih.'
+            ],
+            'nikah_hindu' => [
+                'title' => 'Nikah Hindu',
+                'category' => 'penutup',
+                'content' => 'Merupakan suatu kehormatan dan kebahagiaan bagi kami sekeluarga apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu. Om Shanti, Shanti, Shanti Om.'
+            ]
+        ]
+    ];
+}
+
+function get_text_templates() {
+    $defaults = get_default_text_templates();
+    $customJson = Setting::get('invitation_text_templates_json');
+    if (!empty($customJson)) {
+        $custom = json_decode($customJson, true);
+        if (is_array($custom)) {
+            foreach ($custom as $cat => $items) {
+                if (is_array($items)) {
+                    foreach ($items as $k => $item) {
+                        $defaults[$cat][$k] = $item;
+                    }
+                }
+            }
+        }
+    }
+    return $defaults;
+}
+
+function save_text_templates(array $templates) {
+    return Setting::set('invitation_text_templates_json', json_encode($templates, JSON_UNESCAPED_UNICODE));
+}
+
+function reset_text_templates() {
+    return Setting::set('invitation_text_templates_json', '');
+}

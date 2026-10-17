@@ -44,8 +44,24 @@ require_once BASE_PATH . '/views/layouts/header.php';
             </div>
         <?php endif; ?>
 
-        <!-- Grid Kartu Master Preset Tradisi -->
-        <div class="row g-4 mb-5">
+        <!-- Navigation Tabs: Preset Tradisi & Text Template Kata-Kata -->
+        <ul class="nav nav-pills mb-4 gap-2 bg-white p-2 rounded-4 shadow-sm border" id="traditionTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active rounded-pill px-4 py-2 fw-bold" id="tab-presets-btn" data-bs-toggle="pill" data-bs-target="#tab-presets" type="button" role="tab">
+                    <i class="bi bi-calendar2-heart me-1 text-warning"></i> Preset Acara & Tradisi (<?= count($presets) ?>)
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link rounded-pill px-4 py-2 fw-bold" id="tab-text-templates-btn" data-bs-toggle="pill" data-bs-target="#tab-text-templates" type="button" role="tab">
+                    <i class="bi bi-chat-quote-fill me-1 text-primary"></i> Text Template Kata-Kata (Doa, Pembuka, Penutup)
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="traditionTabsContent">
+            <!-- TAB 1: PRESET TRADISI ACARA -->
+            <div class="tab-pane fade show active" id="tab-presets" role="tabpanel">
+                <div class="row g-4 mb-5">
             <?php foreach ($presets as $key => $preset): 
                 $color = $preset['color'] ?? 'secondary';
                 $sessions = $preset['sessions'] ?? [];
@@ -107,7 +123,140 @@ require_once BASE_PATH . '/views/layouts/header.php';
                         </div>
                     </div>
                 </div>
-            <?php endforeach; ?>
+                </div>
+            </div>
+
+            <!-- TAB 2: TEXT TEMPLATE KATA-KATA (DOA, PEMBUKA, PENUTUP) -->
+            <div class="tab-pane fade" id="tab-text-templates" role="tabpanel">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3 bg-white p-4 rounded-4 shadow-sm border">
+                    <div>
+                        <h5 class="fw-bold text-dark m-0"><i class="bi bi-chat-quote-fill text-primary me-2"></i>Kelola Text Template Kata-Kata</h5>
+                        <p class="text-muted small m-0 mt-1">Daftar pilihan template doa, pembuka, dan penutup yang dapat dipilih user langsung di Live Builder</p>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-primary rounded-pill px-4 py-2 fw-bold shadow-sm" onclick="openCreateTextTemplateModal('doa')">
+                            <i class="bi bi-plus-circle me-1"></i> Tambah Template Baru
+                        </button>
+                        <a href="<?= base_url('admin/traditions/reset-text-templates') ?>" class="btn btn-outline-secondary rounded-pill px-3 py-2 fw-semibold small" onclick="return confirm('Reset seluruh text template ke bawaan sistem?')">
+                            <i class="bi bi-arrow-counterclockwise me-1"></i> Reset ke Bawaan
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 1. Kategori Doa -->
+                <div class="mb-5">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <h6 class="fw-bold text-dark m-0 d-flex align-items-center gap-2">
+                            <span class="badge bg-success-subtle text-success rounded-pill px-3 py-1.5 fs-6">🕌 Kategori Doa & Ayat Suci</span>
+                            <span class="badge bg-light text-muted border"><?= count($textTemplates['doa'] ?? []) ?> Template</span>
+                        </h6>
+                        <button type="button" class="btn btn-outline-success btn-sm rounded-pill" onclick="openCreateTextTemplateModal('doa')">
+                            <i class="bi bi-plus-lg"></i> Tambah Doa
+                        </button>
+                    </div>
+                    <div class="row g-3">
+                        <?php foreach (($textTemplates['doa'] ?? []) as $tKey => $tpl): ?>
+                            <div class="col-md-6 col-lg-4">
+                                <div class="card border-0 rounded-4 shadow-sm p-3 h-100 bg-white d-flex flex-column justify-content-between">
+                                    <div>
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <span class="fw-bold text-dark fs-6"><?= htmlspecialchars($tpl['title'] ?? '') ?></span>
+                                            <span class="badge bg-light text-muted border font-monospace small"><?= htmlspecialchars($tKey) ?></span>
+                                        </div>
+                                        <p class="text-muted small fst-italic p-2.5 bg-light rounded-3 border mb-3" style="max-height: 90px; overflow-y: auto; line-height: 1.6;">
+                                            "<?= htmlspecialchars($tpl['content'] ?? '') ?>"
+                                        </p>
+                                    </div>
+                                    <div class="d-flex justify-content-end gap-2 pt-2 border-top">
+                                        <button type="button" class="btn btn-outline-primary btn-sm rounded-pill px-3" onclick="openEditTextTemplateModal('doa', '<?= $tKey ?>', '<?= htmlspecialchars($tpl['title'] ?? '', ENT_QUOTES) ?>', <?= htmlspecialchars(json_encode($tpl['content'] ?? ''), ENT_QUOTES) ?>)">
+                                            <i class="bi bi-pencil me-1"></i> Edit
+                                        </button>
+                                        <a href="<?= base_url('admin/traditions/delete-text-template/doa/' . $tKey) ?>" class="btn btn-outline-danger btn-sm rounded-pill px-3" onclick="return confirm('Hapus template ini?')">
+                                            <i class="bi bi-trash me-1"></i> Hapus
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+
+                <!-- 2. Kategori Pembuka -->
+                <div class="mb-5">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <h6 class="fw-bold text-dark m-0 d-flex align-items-center gap-2">
+                            <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-1.5 fs-6">📜 Kategori Kata-Kata Pembuka</span>
+                            <span class="badge bg-light text-muted border"><?= count($textTemplates['pembuka'] ?? []) ?> Template</span>
+                        </h6>
+                        <button type="button" class="btn btn-outline-primary btn-sm rounded-pill" onclick="openCreateTextTemplateModal('pembuka')">
+                            <i class="bi bi-plus-lg"></i> Tambah Pembuka
+                        </button>
+                    </div>
+                    <div class="row g-3">
+                        <?php foreach (($textTemplates['pembuka'] ?? []) as $tKey => $tpl): ?>
+                            <div class="col-md-6 col-lg-4">
+                                <div class="card border-0 rounded-4 shadow-sm p-3 h-100 bg-white d-flex flex-column justify-content-between">
+                                    <div>
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <span class="fw-bold text-dark fs-6"><?= htmlspecialchars($tpl['title'] ?? '') ?></span>
+                                            <span class="badge bg-light text-muted border font-monospace small"><?= htmlspecialchars($tKey) ?></span>
+                                        </div>
+                                        <p class="text-muted small p-2.5 bg-light rounded-3 border mb-3" style="max-height: 90px; overflow-y: auto; line-height: 1.6;">
+                                            <?= htmlspecialchars($tpl['content'] ?? '') ?>
+                                        </p>
+                                    </div>
+                                    <div class="d-flex justify-content-end gap-2 pt-2 border-top">
+                                        <button type="button" class="btn btn-outline-primary btn-sm rounded-pill px-3" onclick="openEditTextTemplateModal('pembuka', '<?= $tKey ?>', '<?= htmlspecialchars($tpl['title'] ?? '', ENT_QUOTES) ?>', <?= htmlspecialchars(json_encode($tpl['content'] ?? ''), ENT_QUOTES) ?>)">
+                                            <i class="bi bi-pencil me-1"></i> Edit
+                                        </button>
+                                        <a href="<?= base_url('admin/traditions/delete-text-template/pembuka/' . $tKey) ?>" class="btn btn-outline-danger btn-sm rounded-pill px-3" onclick="return confirm('Hapus template ini?')">
+                                            <i class="bi bi-trash me-1"></i> Hapus
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+
+                <!-- 3. Kategori Penutup -->
+                <div class="mb-5">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <h6 class="fw-bold text-dark m-0 d-flex align-items-center gap-2">
+                            <span class="badge bg-warning-subtle text-dark rounded-pill px-3 py-1.5 fs-6">🙏 Kategori Kata-Kata Penutup</span>
+                            <span class="badge bg-light text-muted border"><?= count($textTemplates['penutup'] ?? []) ?> Template</span>
+                        </h6>
+                        <button type="button" class="btn btn-outline-warning btn-sm rounded-pill text-dark" onclick="openCreateTextTemplateModal('penutup')">
+                            <i class="bi bi-plus-lg"></i> Tambah Penutup
+                        </button>
+                    </div>
+                    <div class="row g-3">
+                        <?php foreach (($textTemplates['penutup'] ?? []) as $tKey => $tpl): ?>
+                            <div class="col-md-6 col-lg-4">
+                                <div class="card border-0 rounded-4 shadow-sm p-3 h-100 bg-white d-flex flex-column justify-content-between">
+                                    <div>
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <span class="fw-bold text-dark fs-6"><?= htmlspecialchars($tpl['title'] ?? '') ?></span>
+                                            <span class="badge bg-light text-muted border font-monospace small"><?= htmlspecialchars($tKey) ?></span>
+                                        </div>
+                                        <p class="text-muted small p-2.5 bg-light rounded-3 border mb-3" style="max-height: 90px; overflow-y: auto; line-height: 1.6;">
+                                            <?= htmlspecialchars($tpl['content'] ?? '') ?>
+                                        </p>
+                                    </div>
+                                    <div class="d-flex justify-content-end gap-2 pt-2 border-top">
+                                        <button type="button" class="btn btn-outline-primary btn-sm rounded-pill px-3" onclick="openEditTextTemplateModal('penutup', '<?= $tKey ?>', '<?= htmlspecialchars($tpl['title'] ?? '', ENT_QUOTES) ?>', <?= htmlspecialchars(json_encode($tpl['content'] ?? ''), ENT_QUOTES) ?>)">
+                                            <i class="bi bi-pencil me-1"></i> Edit
+                                        </button>
+                                        <a href="<?= base_url('admin/traditions/delete-text-template/penutup/' . $tKey) ?>" class="btn btn-outline-danger btn-sm rounded-pill px-3" onclick="return confirm('Hapus template ini?')">
+                                            <i class="bi bi-trash me-1"></i> Hapus
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -340,6 +489,90 @@ function updateApplyFormAction(eventId) {
     if (eventId) {
         document.getElementById('formApplyPreset').action = '<?= base_url('admin/traditions/apply/') ?>' + eventId;
     }
+}
+
+<!-- MODAL: EDIT / BUAT TEXT TEMPLATE KATA-KATA -->
+<div class="modal fade" id="modalTextTemplateEditor" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
+            <form action="<?= base_url('admin/traditions/save-text-template') ?>" method="POST" id="formTextTemplateEditor">
+                <div class="modal-header bg-dark text-white border-0 py-3 px-4">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="rounded-circle bg-white bg-opacity-10 p-2 text-warning fs-4 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
+                            <i class="bi bi-chat-quote-fill"></i>
+                        </div>
+                        <div>
+                            <h5 class="modal-title fw-bold m-0" id="modalTextTemplateTitle">Text Template Kata-Kata</h5>
+                            <small class="text-white-50">Kelola pilihan template doa/kata-kata untuk live builder user</small>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body p-4 bg-light">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Kategori Template</label>
+                        <select name="category" id="editorTplCategory" class="form-select rounded-3" required>
+                            <option value="doa">🕌 Doa & Ayat Suci (Quote)</option>
+                            <option value="pembuka">📜 Kata-Kata Pembuka Undangan</option>
+                            <option value="penutup">🙏 Kata-Kata Penutup & Doa Restu</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Judul / Label Template</label>
+                        <input type="text" name="title" id="editorTplTitle" class="form-control rounded-3 fw-semibold" placeholder="contoh: Nikah Islam (Ar-Rum 21)" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Kunci ID Template (Opsional)</label>
+                        <input type="text" name="template_key" id="editorTplKey" class="form-control form-control-sm rounded-3 font-monospace" placeholder="otomatis dibuat jika dikosongkan">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Isi Teks Template Lengkap</label>
+                        <textarea name="content" id="editorTplContent" class="form-control rounded-3" rows="5" placeholder="Masukkan susunan kata-kata doa, pembuka, atau penutup..." required></textarea>
+                    </div>
+                </div>
+
+                <div class="modal-footer border-0 bg-white py-3 px-4">
+                    <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold">
+                        <i class="bi bi-check-circle-fill me-1"></i> Simpan Template
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+let modalTextTemplateInstance = null;
+
+function openCreateTextTemplateModal(category = 'doa') {
+    document.getElementById('modalTextTemplateTitle').innerText = 'Tambah Text Template Baru';
+    document.getElementById('editorTplCategory').value = category;
+    document.getElementById('editorTplTitle').value = '';
+    document.getElementById('editorTplKey').value = '';
+    document.getElementById('editorTplContent').value = '';
+
+    if (!modalTextTemplateInstance) {
+        modalTextTemplateInstance = new bootstrap.Modal(document.getElementById('modalTextTemplateEditor'));
+    }
+    modalTextTemplateInstance.show();
+}
+
+function openEditTextTemplateModal(category, key, title, content) {
+    document.getElementById('modalTextTemplateTitle').innerText = 'Edit Text Template: ' + title;
+    document.getElementById('editorTplCategory').value = category;
+    document.getElementById('editorTplTitle').value = title;
+    document.getElementById('editorTplKey').value = key;
+    document.getElementById('editorTplContent').value = content;
+
+    if (!modalTextTemplateInstance) {
+        modalTextTemplateInstance = new bootstrap.Modal(document.getElementById('modalTextTemplateEditor'));
+    }
+    modalTextTemplateInstance.show();
 }
 
 function escapeHtml(text) {
