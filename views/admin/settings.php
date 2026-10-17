@@ -5,7 +5,7 @@ require_once BASE_PATH . '/views/layouts/header.php';
 ?>
 
 <div class="py-5 bg-light min-vh-100">
-    <div class="container">
+    <div class="container" style="padding-bottom: 90px;">
         <!-- Breadcrumb & Header -->
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
             <div>
@@ -21,13 +21,16 @@ require_once BASE_PATH . '/views/layouts/header.php';
                 </div>
                 <p class="text-muted small m-0 mt-1">Ubah nama web, logo, favicon, dan format title browser untuk seluruh platform secara instan.</p>
             </div>
-            <div class="d-flex gap-2">
+            <div class="d-flex align-items-center gap-2">
                 <a href="<?= base_url('admin') ?>" class="btn btn-outline-secondary rounded-pill px-3 py-2 small fw-semibold">
-                    <i class="bi bi-arrow-left me-1"></i> Kembali ke Dashboard
+                    <i class="bi bi-arrow-left me-1"></i> Dashboard
                 </a>
                 <a href="<?= base_url() ?>" target="_blank" class="btn btn-outline-primary rounded-pill px-3 py-2 small fw-semibold">
-                    <i class="bi bi-box-arrow-up-right me-1"></i> Lihat Web Utama
+                    <i class="bi bi-box-arrow-up-right me-1"></i> Lihat Web
                 </a>
+                <button type="submit" form="formSettings" class="btn btn-primary rounded-pill px-4 py-2 small fw-bold shadow-sm d-flex align-items-center">
+                    <i class="bi bi-floppy-fill me-1.5"></i> Simpan Perubahan
+                </button>
             </div>
         </div>
 
@@ -205,6 +208,14 @@ require_once BASE_PATH . '/views/layouts/header.php';
                             </div>
 
                         </div>
+
+                        <!-- Tombol Simpan Bagian Logo -->
+                        <div class="d-flex justify-content-between align-items-center pt-3 border-top mt-3">
+                            <span class="small text-muted"><i class="bi bi-info-circle me-1"></i> Logo otomatis disesuaikan di latar terang & gelap</span>
+                            <button type="submit" form="formSettings" class="btn btn-primary rounded-pill px-4 py-2 small fw-bold shadow-sm d-flex align-items-center">
+                                <i class="bi bi-floppy-fill me-1.5"></i> Simpan Perubahan Logo
+                            </button>
+                        </div>
                     </div>
 
                     <!-- 3. FAVICON WEBSITE -->
@@ -247,6 +258,14 @@ require_once BASE_PATH . '/views/layouts/header.php';
                                 </div>
                             </div>
                         <?php endif; ?>
+
+                        <!-- Tombol Simpan Bagian Favicon -->
+                        <div class="d-flex justify-content-between align-items-center pt-3 border-top mt-3">
+                            <span class="small text-muted"><i class="bi bi-info-circle me-1"></i> Ikon favicon akan muncul di tab browser</span>
+                            <button type="submit" form="formSettings" class="btn btn-primary rounded-pill px-4 py-2 small fw-bold shadow-sm d-flex align-items-center">
+                                <i class="bi bi-floppy-fill me-1.5"></i> Simpan Favicon
+                            </button>
+                        </div>
                     </div>
 
                     <!-- 4. PAGE TITLE FORMAT & METADATA SEO -->
@@ -611,8 +630,23 @@ require_once BASE_PATH . '/views/layouts/header.php';
 
                 <!-- Kolom Kanan: Real-Time Live Preview Mockup -->
                 <div class="col-lg-4">
-                    <div class="position-sticky" style="top: 90px;">
+                    <div class="position-sticky" style="top: 90px; z-index: 10;">
                         
+                        <!-- Card Aksi Simpan Cepat (Sticky di Kolom Kanan) -->
+                        <div class="card border-0 rounded-4 shadow-sm p-3 mb-4 text-white" style="background: linear-gradient(135deg, #17242A 0%, #20353F 100%); border-left: 4px solid #D5A84A !important;">
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <span class="badge rounded-pill px-2.5 py-1" style="background-color: #D5A84A; color: #17242A; font-weight: 700; font-size: 11px;">
+                                    <i class="bi bi-shield-check me-1"></i> Mode Admin
+                                </span>
+                                <small class="text-white-50" style="font-size: 11px;">Siap disimpan</small>
+                            </div>
+                            <h6 class="fw-bold mb-1 text-white">Simpan Pengaturan</h6>
+                            <p class="text-white-50 small mb-3" style="font-size: 12px; line-height: 1.4;">Perubahan nama, logo, favicon & identitas akan langsung aktif di web utama.</p>
+                            <button type="submit" form="formSettings" class="btn btn-primary rounded-pill w-100 py-2.5 fw-bold shadow-sm d-flex align-items-center justify-content-center">
+                                <i class="bi bi-floppy-fill me-2 fs-6"></i> Simpan Semua Perubahan
+                            </button>
+                        </div>
+
                         <!-- Mockup 1: Tab Browser -->
                         <div class="card border-0 rounded-4 shadow-sm bg-white p-3 mb-4">
                             <h6 class="fw-bold text-dark mb-3 d-flex align-items-center">
@@ -774,6 +808,29 @@ require_once BASE_PATH . '/views/layouts/header.php';
                     </div>
                 </div>
 
+            </div>
+
+            <!-- Floating Sticky Action Bar (Melayang di Bawah Layar, Selalu Terlihat di Mode Terang & Gelap) -->
+            <div class="position-fixed bottom-0 start-0 end-0 py-2.5 px-3 z-3 shadow-lg" style="background-color: var(--pendar-card-bg, #ffffff); border-top: 1px solid var(--pendar-card-border, #e2e8f0); color: var(--pendar-text, #17242a); box-shadow: 0 -5px 25px rgba(0,0,0,0.18) !important; z-index: 1050;">
+                <div class="container d-flex justify-content-between align-items-center">
+                    <div class="d-none d-sm-flex align-items-center gap-2">
+                        <span class="p-1.5 bg-primary-subtle text-primary rounded-circle d-inline-flex">
+                            <i class="bi bi-gear-wide-connected"></i>
+                        </span>
+                        <span class="small fw-bold">Pengaturan Identitas & Branding Web</span>
+                        <span class="badge bg-warning-subtle text-dark border border-warning-subtle rounded-pill px-2.5 py-1 small">
+                            Superadmin
+                        </span>
+                    </div>
+                    <div class="d-flex align-items-center gap-2 ms-auto">
+                        <button type="reset" class="btn btn-outline-secondary rounded-pill px-3 py-1.5 small fw-semibold">
+                            Reset
+                        </button>
+                        <button type="submit" class="btn btn-primary rounded-pill px-4 py-2 small fw-bold shadow-sm d-flex align-items-center">
+                            <i class="bi bi-floppy-fill me-1.5"></i> Simpan Semua Perubahan
+                        </button>
+                    </div>
+                </div>
             </div>
         </form>
 
