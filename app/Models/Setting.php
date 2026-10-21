@@ -39,7 +39,7 @@ class Setting {
         $stmt = $pdo->prepare("
             INSERT INTO `settings` (`key`, `value`) 
             VALUES (:key, :val) 
-            ON DUPLICATE KEY UPDATE `value` = :val
+            ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)
         ");
         $stmt->execute([':key' => $key, ':val' => $value]);
 
@@ -59,7 +59,7 @@ class Setting {
             $stmt = $pdo->prepare("
                 INSERT INTO `settings` (`key`, `value`) 
                 VALUES (:key, :val) 
-                ON DUPLICATE KEY UPDATE `value` = :val
+                ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)
             ");
             foreach ($data as $key => $val) {
                 $stmt->execute([':key' => $key, ':val' => $val]);
@@ -71,6 +71,7 @@ class Setting {
             return true;
         } catch (Exception $e) {
             $pdo->rollBack();
+            error_log("Setting::setMultiple error: " . $e->getMessage());
             return false;
         }
     }

@@ -1024,7 +1024,8 @@ class AdminController {
             redirect('admin/settings');
         }
 
-        require_once dirname(__DIR__) . '/Models/Setting.php';
+        try {
+            require_once dirname(__DIR__) . '/Models/Setting.php';
 
         $appName = trim($_POST['app_name'] ?? 'PENDAR LOKA');
         if (empty($appName)) {
@@ -1201,9 +1202,28 @@ class AdminController {
 
         Setting::setMultiple($dataToSave);
 
+        if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+            header('Content-Type: application/json; charset=UTF-8');
+            echo json_encode(['success' => true, 'message' => 'Pengaturan identitas website & branding berhasil disimpan!']);
+            exit;
+        }
+
         set_flash('success', 'Pengaturan identitas website, logo, banner, serta counter statistik beranda berhasil diperbarui!');
         redirect('admin/settings');
+    } catch (Throwable $e) {
+        error_log("Error in saveSettings: " . $e->getMessage());
+        @file_put_contents(BASE_PATH . '/debug_save.log', date('Y-m-d H:i:s') . " - Error: " . $e->getMessage() . "\n" . $e->getTraceAsString() . "\n", FILE_APPEND);
+
+        if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+            header('Content-Type: application/json; charset=UTF-8', true, 500);
+            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+            exit;
+        }
+
+        set_flash('error', 'Gagal menyimpan pengaturan: ' . $e->getMessage());
+        redirect('admin/settings');
     }
+}
 
     // ==========================================
     // 6. PENGATURAN PLUGIN ALA WORDPRESS

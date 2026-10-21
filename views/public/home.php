@@ -22,7 +22,8 @@ require_once BASE_PATH . '/views/layouts/header.php';
                     if (empty($rawHeroDesc)) {
                         $rawHeroDesc = 'Solusi praktis bikin undangan website & video untuk <b>Pernikahan, Khitanan, Aqiqah, Ulang Tahun</b>, hingga peresmian acara. Bebas sebar nama tamu tanpa batas, gratis uji coba!';
                     }
-                    echo strip_tags($rawHeroDesc, '<b><strong><i><em><u><span><br><mark>');
+                    $formattedHeroDesc = preg_replace('/\*\*(.*?)\*\*/', '<b>$1</b>', $rawHeroDesc);
+                    echo strip_tags($formattedHeroDesc, '<b><strong><i><em><u><span><br><mark>');
                     ?>
                 </p>
 

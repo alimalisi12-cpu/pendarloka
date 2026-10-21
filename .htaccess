@@ -1,3 +1,13 @@
+# 0. Nonaktifkan ModSecurity jika didukung server hosting untuk mencegah ERR_CONNECTION_RESET saat simpan pengaturan
+<IfModule mod_security.c>
+    SecFilterEngine Off
+    SecFilterScanPOST Off
+</IfModule>
+<IfModule mod_security2.c>
+    SecRuleEngine Off
+    SecRequestBodyAccess Off
+</IfModule>
+
 <IfModule mod_rewrite.c>
     RewriteEngine On
 

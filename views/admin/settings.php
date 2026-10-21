@@ -327,11 +327,16 @@ require_once BASE_PATH . '/views/layouts/header.php';
                                 <label class="form-label small fw-bold text-secondary m-0">
                                     Deskripsi Web / Paragraf Sambutan Utama <span class="text-danger">*</span>
                                 </label>
-                                <span class="badge bg-secondary-subtle text-secondary" style="font-size: 10px;">Mendukung Tag &lt;b&gt;teks tebal&lt;/b&gt;</span>
+                                <span class="badge bg-secondary-subtle text-secondary" style="font-size: 10px;">Gunakan **kata tebal** untuk efek tebal</span>
                             </div>
-                            <textarea name="hero_description" id="inputHeroDescription" class="form-control rounded-3" rows="3" placeholder="Solusi praktis bikin undangan website & video untuk Pernikahan, Khitanan, Aqiqah, Ulang Tahun..." oninput="updateMockupPreview()"><?= htmlspecialchars($settings['hero_description'] ?? 'Solusi praktis bikin undangan website & video untuk <b>Pernikahan, Khitanan, Aqiqah, Ulang Tahun</b>, hingga peresmian acara. Bebas sebar nama tamu tanpa batas, gratis uji coba!') ?></textarea>
+                            <?php
+                            $heroDescVal = $settings['hero_description'] ?? 'Solusi praktis bikin undangan website & video untuk **Pernikahan, Khitanan, Aqiqah, Ulang Tahun**, hingga peresmian acara. Bebas sebar nama tamu tanpa batas, gratis uji coba!';
+                            $heroDescClean = str_ireplace(['<b>', '<strong>'], '**', $heroDescVal);
+                            $heroDescClean = str_ireplace(['</b>', '</strong>'], '**', $heroDescClean);
+                            ?>
+                            <textarea name="hero_description" id="inputHeroDescription" class="form-control rounded-3" rows="3" placeholder="Solusi praktis bikin undangan website & video..." oninput="updateMockupPreview()"><?= htmlspecialchars($heroDescClean) ?></textarea>
                             <div class="form-text" style="font-size: 11px;">
-                                Teks ini ditampilkan tepat di bawah judul besar pada halaman utama pengunjung. Anda bisa memberi efek tulisan tebal dengan membungkus kata menggunakan <code>&lt;b&gt;kata tebal&lt;/b&gt;</code>.
+                                Teks ini ditampilkan tepat di bawah judul besar pada halaman utama pengunjung. Gunakan tanda bintang dua <code>**kata tebal**</code> untuk efek tebal.
                             </div>
                         </div>
 
@@ -742,7 +747,11 @@ require_once BASE_PATH . '/views/layouts/header.php';
                                 </h6>
                                 <!-- Description Preview -->
                                 <div class="small mb-3" style="color: #A0B2BA; font-size: 11px; line-height: 1.45;" id="previewHeroDescription">
-                                    <?= $settings['hero_description'] ?? 'Solusi praktis bikin undangan website & video untuk <b>Pernikahan, Khitanan, Aqiqah, Ulang Tahun</b>, hingga peresmian acara. Bebas sebar nama tamu tanpa batas, gratis uji coba!' ?>
+                                    <?php
+                                    $prevHeroDesc = $settings['hero_description'] ?? 'Solusi praktis bikin undangan website & video untuk **Pernikahan, Khitanan, Aqiqah, Ulang Tahun**, hingga peresmian acara. Bebas sebar nama tamu tanpa batas, gratis uji coba!';
+                                    $prevHeroDesc = preg_replace('/\*\*(.*?)\*\*/', '<b>$1</b>', $prevHeroDesc);
+                                    echo strip_tags($prevHeroDesc, '<b><strong><i><em><u><span><br><mark>');
+                                    ?>
                                 </div>
                                 <!-- Buttons Preview -->
                                 <div class="d-flex flex-wrap gap-1.5 mb-2.5">
@@ -985,7 +994,8 @@ function updateMockupPreview() {
 
     const heroDesc = document.getElementById('inputHeroDescription');
     if (heroDesc) {
-        const rawDesc = heroDesc.value.trim() || 'Solusi praktis bikin undangan website & video untuk <b>Pernikahan, Khitanan, Aqiqah, Ulang Tahun</b>, hingga peresmian acara. Bebas sebar nama tamu tanpa batas, gratis uji coba!';
+        let rawDesc = heroDesc.value.trim() || 'Solusi praktis bikin undangan website & video untuk **Pernikahan, Khitanan, Aqiqah, Ulang Tahun**, hingga peresmian acara. Bebas sebar nama tamu tanpa batas, gratis uji coba!';
+        rawDesc = rawDesc.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
         document.getElementById('previewHeroDescription').innerHTML = rawDesc;
     }
 
@@ -1155,6 +1165,61 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// AJAX Form Submission Handler (Mencegah ERR_CONNECTION_RESET dan memberikan feedback instan)
+const formSettings = document.getElementById('formSettings');
+if (formSettings) {
+    formSettings.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const form = this;
+        const allSubmitBtns = document.querySelectorAll('button[type="submit"], button[form="formSettings"]');
+
+        allSubmitBtns.forEach(btn => {
+            btn.dataset.origHtml = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1.5" role="status" aria-hidden="true"></span> Menyimpan...';
+        });
+
+        try {
+            const formData = new FormData(form);
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+
+            if (response.ok) {
+                window.location.href = '<?= base_url("admin/settings") ?>';
+                return;
+            }
+
+            const resData = await response.json().catch(() => ({}));
+            alert('Gagal menyimpan: ' + (resData.message || response.statusText || 'Terjadi kesalahan pada server.'));
+        } catch (err) {
+            console.error('Submit error:', err);
+            const confirmRetry = confirm(
+                "Koneksi terputus saat menyimpan (ERR_CONNECTION_RESET).\n\n" +
+                "Penyebab:\n" +
+                "Firewall cPanel (ModSecurity) memblokir pengiriman formulir.\n\n" +
+                "Solusi:\n" +
+                "1. Buka cPanel hosting Anda -> Klik menu 'ModSecurity'.\n" +
+                "2. Nonaktifkan (OFF) untuk domain pendarloka.biz.id.\n\n" +
+                "Klik OK jika ingin mencoba kirim ulang langsung."
+            );
+            if (confirmRetry) {
+                form.submit();
+                return;
+            }
+        } finally {
+            allSubmitBtns.forEach(btn => {
+                btn.disabled = false;
+                if (btn.dataset.origHtml) btn.innerHTML = btn.dataset.origHtml;
+            });
+        }
+    });
+}
 </script>
 
 <?php require_once BASE_PATH . '/views/layouts/footer.php'; ?>
