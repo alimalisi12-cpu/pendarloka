@@ -24,8 +24,14 @@ class InvitationController {
             die("Undangan tidak ditemukan atau tautan salah.");
         }
 
-        // Tangkap nama tamu dari query param: ?kpd=Nama+Tamu
-        $guestName = isset($_GET['kpd']) && trim($_GET['kpd']) !== '' ? sanitize($_GET['kpd']) : 'Tamu Undangan';
+        // Tangkap nama tamu dari query param: ?to=Nama+Tamu atau ?kpd=Nama+Tamu
+        if (isset($_GET['to']) && trim($_GET['to']) !== '') {
+            $guestName = sanitize($_GET['to']);
+        } elseif (isset($_GET['kpd']) && trim($_GET['kpd']) !== '') {
+            $guestName = sanitize($_GET['kpd']);
+        } else {
+            $guestName = 'Tamu Undangan';
+        }
 
         // Ambil daftar ucapan & buku tamu
         $wishes = $this->wishModel->getByEventId($event['id']);

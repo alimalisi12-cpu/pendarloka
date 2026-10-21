@@ -236,7 +236,8 @@ class Database {
                 (1, 1, 'Elegan Romance Gold', 'elegan-romance', 'https://images.unsplash.com/photo-1519741497674-611481863552?w=600&auto=format&fit=crop&q=80', 'premium', 'elegan_romance'),
                 (2, 1, 'Rustic Floral Botanical', 'rustic-floral', 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=600&auto=format&fit=crop&q=80', 'basic', 'rustic_floral'),
                 (3, 1, 'Aesthetic Modern Pink', 'aesthetic-pink', 'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=600&auto=format&fit=crop&q=80', 'free', 'elegan_romance'),
-                (4, 2, 'Islamic Khitanan Modern', 'khitanan-modern', 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=600&auto=format&fit=crop&q=80', 'basic', 'rustic_floral');
+                (4, 2, 'Islamic Khitanan Modern', 'khitanan-modern', 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=600&auto=format&fit=crop&q=80', 'basic', 'rustic_floral'),
+                (5, 1, 'Wedding Premium 045', 'wedding-premium045', 'assets/templates/wedding_premium045/framecover2.png', 'premium', 'wedding_premium045');
             ");
 
             // Demo Event
@@ -321,6 +322,14 @@ class Database {
         foreach ($columnsToEnsure as $col) {
             $this->ensureColumnExists($col[0], $col[1], $col[2]);
         }
+
+        // Ensure Wedding Premium 045 template is registered
+        try {
+            $checkTmpl = $this->pdo->query("SELECT COUNT(*) FROM `templates` WHERE `view_file` = 'wedding_premium045'")->fetchColumn();
+            if ($checkTmpl == 0) {
+                $this->pdo->exec("INSERT INTO `templates` (`category_id`, `name`, `slug`, `thumbnail`, `tier`, `view_file`, `is_active`) VALUES (1, 'Wedding Premium 045', 'wedding-premium045', 'assets/templates/wedding_premium045/framecover2.png', 'premium', 'wedding_premium045', 1)");
+            }
+        } catch (Exception $e) {}
     }
 
     private function ensureColumnExists($table, $column, $alterSql) {

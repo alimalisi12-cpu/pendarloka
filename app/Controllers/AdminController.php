@@ -774,7 +774,7 @@ class AdminController {
             'gift_address' => "Penerima: Romeo & Juliet\nJl. Melati No. 45, Kebayoran Baru, Jakarta Selatan (0812-3456-7890)"
         ];
 
-        $guestName = isset($_GET['kpd']) && trim($_GET['kpd']) !== '' ? sanitize($_GET['kpd']) : 'Bpk. Andre & Keluarga';
+        $guestName = isset($_GET['to']) && trim($_GET['to']) !== '' ? sanitize($_GET['to']) : (isset($_GET['kpd']) && trim($_GET['kpd']) !== '' ? sanitize($_GET['kpd']) : 'Bpk. Andre & Keluarga');
         $wishes = [
             ['guest_name' => 'Hendra Setiawan', 'name' => 'Hendra Setiawan', 'attendance' => 'attending', 'message' => 'Selamat menempuh hidup baru! Semoga selalu berbahagia dan rukun.', 'reply' => 'Terima kasih banyak Mas Hendra!', 'created_at' => date('Y-m-d H:i:s')],
             ['guest_name' => 'Maya Kartika', 'name' => 'Maya Kartika', 'attendance' => 'attending', 'message' => 'Happy wedding Romeo & Juliet! Sakinah, mawaddah, warahmah.', 'reply' => '', 'created_at' => date('Y-m-d H:i:s')]
