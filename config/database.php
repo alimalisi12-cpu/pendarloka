@@ -312,6 +312,7 @@ class Database {
     private function migrateSchema() {
         $columnsToEnsure = [
             ['templates', 'animation_config_json', "ALTER TABLE `templates` ADD COLUMN `animation_config_json` LONGTEXT NULL AFTER `view_file`"],
+            ['templates', 'theme_config_json', "ALTER TABLE `templates` ADD COLUMN `theme_config_json` LONGTEXT NULL AFTER `animation_config_json`"],
             ['events', 'theme_config_json', "ALTER TABLE `events` ADD COLUMN `theme_config_json` LONGTEXT NULL AFTER `music_url`"],
             ['event_details', 'event_type_preset', "ALTER TABLE `event_details` ADD COLUMN `event_type_preset` VARCHAR(50) DEFAULT 'islam' AFTER `maps_embed`"],
             ['event_details', 'events_schedule_json', "ALTER TABLE `event_details` ADD COLUMN `events_schedule_json` LONGTEXT NULL AFTER `event_type_preset`"],

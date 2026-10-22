@@ -527,6 +527,10 @@ if (empty($schedules)) {
                 <i class="bi bi-grid-fill"></i>
                 <span>Menu</span>
             </button>
+            <button type="button" class="dock-item text-warning" onclick="openStudioModal()" title="Studio Desain & Ornamen">
+                <i class="bi bi-magic text-warning"></i>
+                <span class="text-warning">Studio</span>
+            </button>
             <button type="button" class="dock-item" onclick="openSettingsModal()">
                 <i class="bi bi-sliders"></i>
                 <span>Pengaturan</span>
@@ -554,6 +558,13 @@ if (empty($schedules)) {
             <button type="button" class="btn-close" onclick="toggleDrawer(false)"></button>
         </div>
         <div class="drawer-body">
+            <button type="button" class="drawer-section-btn bg-warning-subtle text-dark border-warning mb-3" onclick="openStudioModal(); toggleDrawer(false);">
+                <i class="bi bi-magic fs-4 text-warning"></i>
+                <div>
+                    <div class="fw-bold text-dark">Studio Desain & Ornamen</div>
+                    <small class="text-muted">Warna, font, efek partikel, ornamen & seksi</small>
+                </div>
+            </button>
             <button type="button" class="drawer-section-btn" onclick="openModalForSection('title', 'Nama Acara')">
                 <i class="bi bi-type-h1"></i>
                 <div>
@@ -871,7 +882,8 @@ if (empty($schedules)) {
             template_id: <?= (int)$event['template_id'] ?>,
             music_url: <?= json_encode($event['music_url'] ?? '') ?>,
             status: <?= json_encode($event['status'] ?? 'published') ?>,
-            primary_color: <?= json_encode($themeConfig['primary_color'] ?? '#ff9c1f') ?>,
+            primary_color: <?= json_encode($themeConfig['colors']['primary'] ?? $themeConfig['primary_color'] ?? '#ff9c1f') ?>,
+            theme_config: <?= json_encode($themeConfig) ?>,
             
             groom_name: <?= json_encode($event['groom_name'] ?? '') ?>,
             groom_nickname: <?= json_encode($event['groom_nickname'] ?? '') ?>,
@@ -1464,5 +1476,6 @@ if (empty($schedules)) {
                 .replace(/'/g, "&#039;");
         }
     </script>
+<?php require_once BASE_PATH . '/views/dashboard/partials/studio_modal.php'; ?>
 </body>
 </html>

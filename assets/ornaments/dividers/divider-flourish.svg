@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 40" width="100%" height="40" fill="none" stroke="currentColor">
+  <!-- Calligraphy Flourish Divider -->
+  <line x1="20" y1="20" x2="140" y2="20" stroke-width="1.2" stroke-linecap="round"/>
+  <line x1="260" y1="20" x2="380" y2="20" stroke-width="1.2" stroke-linecap="round"/>
+  <!-- Flourish Center -->
+  <path d="M140 20 C 160 20, 170 8, 185 14 C 195 18, 190 28, 178 26 C 170 24, 172 16, 182 17" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M260 20 C 240 20, 230 8, 215 14 C 205 18, 210 28, 222 26 C 230 24, 228 16, 218 17" stroke-width="1.5" stroke-linecap="round"/>
+  <polygon points="200,14 206,20 200,26 194,20" fill="currentColor"/>
+  <circle cx="130" cy="20" r="2" fill="currentColor"/>
+  <circle cx="270" cy="20" r="2" fill="currentColor"/>
+</svg>

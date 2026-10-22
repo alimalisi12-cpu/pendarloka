@@ -603,6 +603,9 @@ class DashboardController {
         if (isset($input['font_heading'])) {
             $existingConfig['font_heading'] = sanitize($input['font_heading']);
         }
+        if (isset($input['theme_config']) && is_array($input['theme_config'])) {
+            $existingConfig = array_replace_recursive($existingConfig, $input['theme_config']);
+        }
         $this->eventModel->updateThemeConfig($eventId, json_encode($existingConfig, JSON_UNESCAPED_UNICODE));
 
         // Format details

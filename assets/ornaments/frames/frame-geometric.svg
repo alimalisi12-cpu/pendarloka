@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 260" width="200" height="260" fill="none" stroke="currentColor">
+  <!-- Modern Geometric Hexagon/Octagon Frame -->
+  <polygon points="60,15 140,15 185,60 185,200 140,245 60,245 15,200 15,60" stroke-width="2"/>
+  <polygon points="64,23 136,23 177,64 177,196 136,237 64,237 23,196 23,64" stroke-width="0.8" stroke-dasharray="3 3"/>
+  <circle cx="100" cy="15" r="3" fill="currentColor"/>
+  <circle cx="100" cy="245" r="3" fill="currentColor"/>
+</svg>

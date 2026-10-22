@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" fill="none" stroke="currentColor">
+  <!-- Double Circle Ring Frame with Leaflet -->
+  <circle cx="100" cy="100" r="88" stroke-width="2"/>
+  <circle cx="100" cy="100" r="82" stroke-width="1" stroke-dasharray="4 3"/>
+  <!-- Leaflet decoration bottom right -->
+  <path d="M165 155 C 175 145, 185 150, 188 162 C 178 165, 170 162, 165 155 Z" fill="currentColor" fill-opacity="0.4"/>
+  <path d="M155 168 C 162 178, 158 188, 146 188 C 144 178, 148 170, 155 168 Z" fill="currentColor" fill-opacity="0.4"/>
+  <circle cx="166" cy="166" r="3" fill="currentColor"/>
+</svg>

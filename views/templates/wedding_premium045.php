@@ -56,6 +56,13 @@ $initBride = strtoupper(substr($bNick, 0, 1));
 // Guest Name from query param (?to= or ?kpd=)
 $guestDisplayName = !empty($guestName) ? $guestName : 'Tamu Undangan';
 
+// Theme Config & Customizer Studio
+$themeConfig = ThemeCatalog::parseConfig($event['theme_config_json'] ?? '');
+$cfgColors = $themeConfig['colors'] ?? [];
+$cfgTypo = $themeConfig['typography'] ?? [];
+$cfgOrn = $themeConfig['ornaments'] ?? [];
+$cfgFx = $themeConfig['effects'] ?? [];
+
 // Music URL
 $musicUrl = !empty($event['music_url']) ? media_url($event['music_url']) : 'https://cdn.freesound.org/previews/469/469009_9518146-lq.mp3';
 
@@ -88,6 +95,7 @@ $quote = !empty($event['quote']) ? $event['quote'] : 'Dan di antara tanda-tanda 
     <meta property="og:description" content="Undangan Pernikahan <?= htmlspecialchars($bNick) ?> &amp; <?= htmlspecialchars($gNick) ?>. Spesial untuk <?= htmlspecialchars($guestDisplayName) ?>">
     <meta property="og:image" content="<?= htmlspecialchars($coverPhoto) ?>">
 
+    <?= ThemeCatalog::renderGoogleFontsTags($cfgTypo) ?>
     <!-- Google Fonts Referensi: Abril Fatface, Marcellus, DM Sans, Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -102,16 +110,27 @@ $quote = !empty($event['quote']) ? $event['quote'] : 'Dan di antara tanda-tanda 
 
     <style>
         :root {
-            --primaryColor: #064346;
-            --primaryDark: #042E30;
-            --primaryLight: #0C5D61;
-            --secondaryColor: #bf9e9e;
-            --accentRose: #8a6d71;
-            --accentTerracotta: #472b29;
-            --bgCanvas: #f5eee1;
-            --cardBg: #ffffff;
+            --primaryColor: <?= $cfgColors['primary'] ?? '#064346' ?>;
+            --primaryDark: <?= $cfgColors['accent'] ?? '#042E30' ?>;
+            --primaryLight: <?= $cfgColors['primary'] ?? '#0C5D61' ?>;
+            --secondaryColor: <?= $cfgColors['secondary'] ?? '#bf9e9e' ?>;
+            --accentRose: <?= $cfgColors['secondary'] ?? '#8a6d71' ?>;
+            --accentTerracotta: <?= $cfgColors['accent'] ?? '#472b29' ?>;
+            --bgCanvas: <?= $cfgColors['bg_body'] ?? '#f5eee1' ?>;
+            --cardBg: <?= $cfgColors['bg_card'] ?? '#ffffff' ?>;
             --cardRadius: 20px;
         }
+
+        <?php if (!empty($cfgTypo['font_heading'])): ?>
+        .ff-marcellus, .ff-abril, .font-heading {
+            font-family: '<?= $cfgTypo['font_heading'] ?>', serif !important;
+        }
+        <?php endif; ?>
+        <?php if (!empty($cfgTypo['font_body'])): ?>
+        body, .ff-dmsans {
+            font-family: '<?= $cfgTypo['font_body'] ?>', sans-serif !important;
+        }
+        <?php endif; ?>
 
         * {
             box-sizing: border-box;
@@ -1545,5 +1564,6 @@ $quote = !empty($event['quote']) ? $event['quote'] : 'Dan di antara tanda-tanda 
             });
         }
     </script>
+<?php require_once BASE_PATH . '/views/partials/live_builder_bridge.php'; ?>
 </body>
 </html>

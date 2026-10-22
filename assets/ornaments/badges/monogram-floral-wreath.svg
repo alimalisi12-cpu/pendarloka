@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160" fill="none" stroke="currentColor">
+  <!-- Monogram Floral Wreath Ring -->
+  <circle cx="80" cy="80" r="65" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="80" cy="80" r="60" stroke-width="0.8" stroke-dasharray="3 3"/>
+  <!-- Leaflet flourishes on left arc -->
+  <path d="M22 65 C 14 62, 12 52, 20 48 C 24 55, 25 61, 22 65 Z" fill="currentColor" fill-opacity="0.4"/>
+  <path d="M18 90 C 10 94, 12 104, 20 106 C 24 100, 24 93, 18 90 Z" fill="currentColor" fill-opacity="0.4"/>
+  <!-- Leaflet flourishes on right arc -->
+  <path d="M138 65 C 146 62, 148 52, 140 48 C 136 55, 135 61, 138 65 Z" fill="currentColor" fill-opacity="0.4"/>
+  <path d="M142 90 C 150 94, 148 104, 140 106 C 136 100, 136 93, 142 90 Z" fill="currentColor" fill-opacity="0.4"/>
+  <!-- Small top rosette -->
+  <circle cx="80" cy="15" r="4" fill="currentColor"/>
+  <circle cx="80" cy="145" r="4" fill="currentColor"/>
+</svg>

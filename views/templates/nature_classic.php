@@ -1701,5 +1701,6 @@ function openGiftModal() {
 </script>
 
 <?php do_action('invitation_footer', $event); ?>
+<?php require_once BASE_PATH . '/views/partials/live_builder_bridge.php'; ?>
 </body>
 </html>

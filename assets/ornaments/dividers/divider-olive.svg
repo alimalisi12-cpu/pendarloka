@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 40" width="100%" height="40" fill="none" stroke="currentColor">
+  <!-- Olive Branch Divider -->
+  <line x1="20" y1="20" x2="150" y2="20" stroke-width="1" stroke-linecap="round"/>
+  <line x1="250" y1="20" x2="380" y2="20" stroke-width="1" stroke-linecap="round"/>
+  <!-- Left leaves -->
+  <path d="M150 20 Q 170 12, 185 20 T 200 20" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M160 16 C 164 10, 172 10, 174 16 C 170 18, 164 18, 160 16 Z" fill="currentColor" fill-opacity="0.4" stroke-width="1"/>
+  <path d="M175 22 C 179 28, 187 28, 189 22 C 185 20, 179 20, 175 22 Z" fill="currentColor" fill-opacity="0.4" stroke-width="1"/>
+  <!-- Center olive flower / berries -->
+  <circle cx="200" cy="20" r="5" fill="currentColor" fill-opacity="0.25" stroke-width="1.5"/>
+  <circle cx="200" cy="20" r="2.5" fill="currentColor"/>
+  <!-- Right leaves -->
+  <path d="M200 20 Q 215 12, 230 20 T 250 20" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M225 22 C 221 28, 213 28, 211 22 C 215 20, 221 20, 225 22 Z" fill="currentColor" fill-opacity="0.4" stroke-width="1"/>
+  <path d="M240 16 C 236 10, 228 10, 226 16 C 230 18, 236 18, 240 16 Z" fill="currentColor" fill-opacity="0.4" stroke-width="1"/>
+</svg>

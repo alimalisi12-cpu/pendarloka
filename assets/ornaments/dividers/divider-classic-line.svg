@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 30" width="100%" height="30" fill="none" stroke="currentColor">
+  <!-- Minimalist Diamond Bar Divider -->
+  <line x1="30" y1="15" x2="175" y2="15" stroke-width="1.2" stroke-linecap="round"/>
+  <line x1="225" y1="15" x2="370" y2="15" stroke-width="1.2" stroke-linecap="round"/>
+  <!-- Diamond trio -->
+  <polygon points="186,15 190,11 194,15 190,19" fill="currentColor"/>
+  <polygon points="200,15 206,9 212,15 206,21" fill="currentColor"/>
+  <polygon points="218,15 222,11 226,15 222,19" fill="currentColor"/>
+</svg>

@@ -188,7 +188,44 @@ $customElementStyles = $themeConfig['element_styles'] ?? [];
 
     // Tangkap pesan update dari parent builder (instant live preview)
     window.addEventListener('message', function(e) {
-        if (!e.data || e.data.type !== 'BUILDER_UPDATE_ELEMENT') return;
+        if (!e.data) return;
+
+        // Tangkap Update Tema Global dari Studio
+        if (e.data.type === 'BUILDER_UPDATE_THEME') {
+            const { theme_config } = e.data;
+            if (theme_config && theme_config.colors) {
+                const c = theme_config.colors;
+                if (c.primary) {
+                    document.documentElement.style.setProperty('--primaryColor', c.primary);
+                    document.documentElement.style.setProperty('--primary-color', c.primary);
+                }
+                if (c.secondary) {
+                    document.documentElement.style.setProperty('--secondaryColor', c.secondary);
+                    document.documentElement.style.setProperty('--secondary-color', c.secondary);
+                }
+                if (c.bg_body) {
+                    document.documentElement.style.setProperty('--bgCanvas', c.bg_body);
+                    document.documentElement.style.setProperty('--bg-body', c.bg_body);
+                    document.body.style.backgroundColor = c.bg_body;
+                }
+            }
+            if (theme_config && theme_config.typography) {
+                const t = theme_config.typography;
+                if (t.font_heading) {
+                    document.querySelectorAll('.ff-marcellus, .ff-abril, .font-heading, h1, h2').forEach(el => {
+                        el.style.fontFamily = `"` + t.font_heading + `", cursive, serif`;
+                    });
+                }
+                if (t.font_body) {
+                    document.querySelectorAll('body, .ff-dmsans, p').forEach(el => {
+                        el.style.fontFamily = `"` + t.font_body + `", sans-serif`;
+                    });
+                }
+            }
+            return;
+        }
+
+        if (e.data.type !== 'BUILDER_UPDATE_ELEMENT') return;
         const { section, data, styles } = e.data;
 
         const targets = document.querySelectorAll(`[data-builder="${section}"]`);
