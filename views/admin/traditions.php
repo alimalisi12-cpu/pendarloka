@@ -123,6 +123,7 @@ require_once BASE_PATH . '/views/layouts/header.php';
                         </div>
                     </div>
                 </div>
+            <?php endforeach; ?>
                 </div>
             </div>
 
