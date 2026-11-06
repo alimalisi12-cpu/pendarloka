@@ -15,32 +15,6 @@ class HomeController {
     }
 
     public function index() {
-        $host = strtolower($_SERVER['HTTP_HOST'] ?? '');
-
-        // Jika diakses dari subdomain invite.pendarloka.biz.id atau parameter ?app=invite
-        if (str_starts_with($host, 'invite.') || (isset($_GET['app']) && $_GET['app'] === 'invite')) {
-            $categories = $this->templateModel->getCategories();
-            $selectedCat = $_GET['cat'] ?? null;
-            $templates = $this->templateModel->getAll($selectedCat);
-            $counts = $this->eventModel->getCounts();
-
-            require_once BASE_PATH . '/views/public/home.php';
-            return;
-        }
-
-        // Default landing page utama Pendar Loka: Hub Direktori & Link-in-Bio
-        require_once BASE_PATH . '/views/public/directory.php';
-    }
-
-    public function directory() {
-        require_once BASE_PATH . '/views/public/directory.php';
-    }
-
-    public function links() {
-        require_once BASE_PATH . '/views/public/directory.php';
-    }
-
-    public function invite() {
         $categories = $this->templateModel->getCategories();
         $selectedCat = $_GET['cat'] ?? null;
         $templates = $this->templateModel->getAll($selectedCat);
