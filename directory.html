@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pendar Loka &mdash; Temukan yang Berpendar</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✨</text></svg>">
+
+  <!-- Google Fonts: Playfair Display & Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       BRAND VARIABLES & BASE CONFIGURATION
+       ========================================================================== */
+    :root {
+      --bg-warm: #F7F5F0;
+      --primary-deep: #17242A;
+      --gold-accent: #D5A84A;
+      --secondary-beige: #E8D8BE;
+      --text-dark: #252525;
+
+      /* Additional design system tokens for editorial elevation */
+      --text-muted: #5A6267;
+      --surface-white: #FFFFFF;
+      --card-border: rgba(232, 216, 190, 0.45);
+      --card-border-hover: rgba(213, 168, 74, 0.65);
+      --shadow-subtle: 0 4px 20px -2px rgba(23, 36, 42, 0.04), 0 2px 6px -1px rgba(23, 36, 42, 0.02);
+      --shadow-hover: 0 12px 28px -4px rgba(23, 36, 42, 0.08), 0 4px 10px -2px rgba(23, 36, 42, 0.04);
+      --radius-sm: 8px;
+      --radius-md: 16px;
+      --radius-pill: 9999px;
+      --transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* CSS Reset */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-warm);
+      color: var(--text-dark);
+      font-family: 'Montserrat', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      line-height: 1.6;
+      padding: 3.5rem 1.25rem 2.5rem;
+      position: relative;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Subtle editorial ambient background texture */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-radial: radial-gradient(circle at 50% 0%, rgba(213, 168, 74, 0.05) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Page Container (Mobile-first, constrained editorial width) */
+    .page-wrapper {
+      width: 100%;
+      max-width: 580px;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2.25rem;
+    }
+
+    /* ==========================================================================
+       HEADER SECTION
+       ========================================================================== */
+    .brand-header {
+      text-align: center;
+      padding-bottom: 0.5rem;
+    }
+
+    /* Decorative emblem mark */
+    .brand-mark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      margin-bottom: 1rem;
+      background: rgba(232, 216, 190, 0.35);
+      border: 1px solid var(--secondary-beige);
+      border-radius: var(--radius-pill);
+      color: var(--gold-accent);
+      transition: var(--transition);
+    }
+
+    .brand-mark svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+
+    .brand-name {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2rem, 5vw, 2.5rem);
+      font-weight: 700;
+      color: var(--primary-deep);
+      letter-spacing: -0.5px;
+      line-height: 1.15;
+      margin-bottom: 0.5rem;
+    }
+
+    .brand-tagline {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2.5px;
+      color: var(--text-dark);
+      opacity: 0.85;
+    }
+
+    /* ==========================================================================
+       HIGHLIGHT CARD (LATEST FIND)
+       ========================================================================== */
+    .highlight-card {
+      display: block;
+      text-decoration: none;
+      background: var(--surface-white);
+      border: 1px solid rgba(213, 168, 74, 0.45);
+      border-radius: var(--radius-md);
+      padding: 1.25rem 1.5rem;
+      box-shadow: var(--shadow-subtle), 0 0 0 1px rgba(213, 168, 74, 0.1);
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .highlight-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 3px;
+      height: 100%;
+      background-color: var(--gold-accent);
+      border-top-left-radius: var(--radius-md);
+      border-bottom-left-radius: var(--radius-md);
+    }
+
+    .highlight-card:hover,
+    .highlight-card:focus-visible {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover), 0 0 0 1px var(--gold-accent);
+      border-color: var(--gold-accent);
+      outline: none;
+    }
+
+    .highlight-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .highlight-badge-row {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+
+    .highlight-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.75px;
+      text-transform: uppercase;
+      padding: 0.25rem 0.65rem;
+      border-radius: var(--radius-pill);
+      background-color: rgba(213, 168, 74, 0.14);
+      color: var(--primary-deep);
+      border: 1px solid rgba(213, 168, 74, 0.3);
+    }
+
+    .highlight-text {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.0625rem;
+      font-weight: 600;
+      color: var(--primary-deep);
+      line-height: 1.35;
+      margin-top: 0.35rem;
+    }
+
+    .highlight-arrow {
+      color: var(--gold-accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: var(--transition);
+    }
+
+    .highlight-card:hover .highlight-arrow {
+      transform: translateX(4px);
+      color: var(--primary-deep);
+    }
+
+    /* ==========================================================================
+       DIRECTORY SECTIONS & MODULAR CARDS
+       ========================================================================== */
+    .directory-group {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--primary-deep);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      letter-spacing: -0.2px;
+    }
+
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background-color: var(--secondary-beige);
+      opacity: 0.75;
+    }
+
+    /* Container for dynamic menu cards (auto-flow stack/grid) */
+    .link-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    /* Individual Menu Link Card */
+    .menu-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      background-color: var(--surface-white);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-md);
+      padding: 1.125rem 1.35rem;
+      text-decoration: none;
+      color: inherit;
+      box-shadow: var(--shadow-subtle);
+      transition: var(--transition);
+      cursor: pointer;
+      position: relative;
+    }
+
+    .menu-card:hover,
+    .menu-card:focus-visible {
+      transform: translateY(-2px);
+      border-color: var(--card-border-hover);
+      box-shadow: var(--shadow-hover);
+      outline: none;
+    }
+
+    .menu-card-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      min-width: 0;
+    }
+
+    .menu-icon-wrapper {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background-color: var(--bg-warm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      flex-shrink: 0;
+      border: 1px solid rgba(232, 216, 190, 0.4);
+      transition: var(--transition);
+    }
+
+    .menu-card:hover .menu-icon-wrapper {
+      background-color: rgba(232, 216, 190, 0.35);
+      border-color: var(--gold-accent);
+      transform: scale(1.04);
+    }
+
+    .menu-text-content {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .menu-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--primary-deep);
+      line-height: 1.3;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: var(--transition);
+    }
+
+    .menu-card:hover .menu-title {
+      color: var(--primary-deep);
+    }
+
+    .menu-desc {
+      font-size: 0.78125rem;
+      color: var(--text-muted);
+      margin-top: 0.15rem;
+      line-height: 1.35;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .menu-arrow {
+      color: var(--secondary-beige);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      width: 24px;
+      height: 24px;
+      transition: var(--transition);
+    }
+
+    .menu-card:hover .menu-arrow {
+      color: var(--gold-accent);
+      transform: translateX(4px);
+    }
+
+    /* ==========================================================================
+       FOOTER
+       ========================================================================== */
+    .brand-footer {
+      text-align: center;
+      padding-top: 1.5rem;
+      padding-bottom: 1rem;
+      border-top: 1px solid rgba(232, 216, 190, 0.45);
+      margin-top: 0.5rem;
+    }
+
+    .footer-text {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.3px;
+    }
+
+    /* Accessibility focus ring */
+    a:focus-visible {
+      outline: 2px solid var(--gold-accent);
+      outline-offset: 3px;
+    }
+
+    /* ==========================================================================
+       RESPONSIVE ADJUSTMENTS
+       ========================================================================== */
+    @media (min-width: 640px) {
+      body {
+        padding-top: 4.5rem;
+        padding-bottom: 3.5rem;
+      }
+
+      .page-wrapper {
+        gap: 2.5rem;
+      }
+
+      .highlight-card {
+        padding: 1.35rem 1.75rem;
+      }
+
+      .menu-card {
+        padding: 1.25rem 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-wrapper">
+
+    <!-- ====================================================================
+         HEADER
+         ==================================================================== -->
+    <header class="brand-header">
+      <div class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <!-- Clean geometric four-point star / pendar spark -->
+          <path d="M12 0L14.7 9.3L24 12L14.7 14.7L12 24L9.3 14.7L0 12L9.3 9.3L12 0Z"/>
+        </svg>
+      </div>
+      <h1 class="brand-name">PENDAR LOKA</h1>
+      <p class="brand-tagline">TEMUKAN YANG BERPENDAR.</p>
+    </header>
+
+    <main style="display: flex; flex-direction: column; gap: 2rem;">
+
+      <!-- ====================================================================
+           HIGHLIGHT SECTION (LATEST FIND)
+           ==================================================================== -->
+      <section aria-label="Temuan Terbaru">
+        <a href="#" class="highlight-card">
+          <div class="highlight-content">
+            <div>
+              <div class="highlight-badge-row">
+                <span class="highlight-badge">
+                  <span>✨</span> Temuan Terbaru
+                </span>
+              </div>
+              <div class="highlight-text">
+                7-in-1 Cleaning Kit
+              </div>
+            </div>
+            <div class="highlight-arrow" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </div>
+          </div>
+        </a>
+      </section>
+
+
+      <!-- ====================================================================
+           SECTION A: KURASI PILIHAN (SUBDOMAIN DIRECTORY)
+           ==================================================================== -->
+      <section class="directory-group" aria-labelledby="section-a-heading">
+        <h2 id="section-a-heading" class="section-title">Kurasi Pilihan</h2>
+
+        <nav class="link-list" aria-label="Navigasi Kurasi Pilihan">
+
+          <!-- ADMIN: DUPLICATE THIS BLOCK TO ADD NEW SUBDOMAIN MENUS -->
+          <a href="https://tech.pendarloka.biz.id" target="_blank" rel="noopener noreferrer" class="menu-card">
+            <div class="menu-card-left">
+              <div class="menu-icon-wrapper" aria-hidden="true">📦</div>
+              <div class="menu-text-content">
+                <span class="menu-title">Pendar Tech</span>
+                <span class="menu-desc">Gadget &amp; Setup</span>
+              </div>
+            </div>
+            <div class="menu-arrow" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </div>
+          </a>
+          <!-- /END SUBDOMAIN MENU BLOCK -->
+
+          <!-- ADMIN: DUPLICATE THIS BLOCK TO ADD NEW SUBDOMAIN MENUS -->
+          <a href="https://home.pendarloka.biz.id" target="_blank" rel="noopener noreferrer" class="menu-card">
+            <div class="menu-card-left">
+              <div class="menu-icon-wrapper" aria-hidden="true">🛋️</div>
+              <div class="menu-text-content">
+                <span class="menu-title">Pendar Home</span>
+                <span class="menu-desc">Dekorasi &amp; Rumah</span>
+              </div>
+            </div>
+            <div class="menu-arrow" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </div>
+          </a>
+          <!-- /END SUBDOMAIN MENU BLOCK -->
+
+          <!-- ADMIN: DUPLICATE THIS BLOCK TO ADD NEW SUBDOMAIN MENUS -->
+          <a href="https://daily.pendarloka.biz.id" target="_blank" rel="noopener noreferrer" class="menu-card">
+            <div class="menu-card-left">
+              <div class="menu-icon-wrapper" aria-hidden="true">🎒</div>
+              <div class="menu-text-content">
+                <span class="menu-title">Pendar Daily</span>
+                <span class="menu-desc">Solusi Harian</span>
+              </div>
+            </div>
+            <div class="menu-arrow" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </div>
+          </a>
+          <!-- /END SUBDOMAIN MENU BLOCK -->
+
+        </nav>
+      </section>
+
+
+      <!-- ====================================================================
+           SECTION B: LAYANAN KREATIF
+           ==================================================================== -->
+      <section class="directory-group" aria-labelledby="section-b-heading">
+        <h2 id="section-b-heading" class="section-title">Layanan Kreatif</h2>
+
+        <nav class="link-list" aria-label="Navigasi Layanan Kreatif">
+
+          <!-- ADMIN: DUPLICATE THIS BLOCK TO ADD NEW SUBDOMAIN MENUS -->
+          <a href="https://invite.pendarloka.biz.id" target="_blank" rel="noopener noreferrer" class="menu-card">
+            <div class="menu-card-left">
+              <div class="menu-icon-wrapper" aria-hidden="true">💌</div>
+              <div class="menu-text-content">
+                <span class="menu-title">Pendar Studio</span>
+                <span class="menu-desc">Undangan Digital Premium</span>
+              </div>
+            </div>
+            <div class="menu-arrow" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </div>
+          </a>
+          <!-- /END SUBDOMAIN MENU BLOCK -->
+
+        </nav>
+      </section>
+
+    </main>
+
+    <!-- ====================================================================
+         FOOTER
+         ==================================================================== -->
+    <footer class="brand-footer">
+      <p class="footer-text">&copy; 2026 Pendar Loka. All rights reserved.</p>
+    </footer>
+
+  </div>
+
+</body>
+</html>

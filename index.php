@@ -18,6 +18,20 @@ switch ($baseRoute) {
         (new HomeController())->index();
         break;
 
+    case 'links':
+    case 'bio':
+    case 'directory':
+        require_once __DIR__ . '/app/Controllers/HomeController.php';
+        (new HomeController())->directory();
+        break;
+
+    case 'invite':
+    case 'undangan-digital':
+    case 'wedding':
+        require_once __DIR__ . '/app/Controllers/HomeController.php';
+        (new HomeController())->invite();
+        break;
+
     case 'harga':
         require_once __DIR__ . '/app/Controllers/HomeController.php';
         (new HomeController())->harga();
