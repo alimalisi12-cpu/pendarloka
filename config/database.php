@@ -356,6 +356,15 @@ class Database {
             }
         } catch (Exception $e) {}
 
+        // Ensure Javanese Royal template is registered
+        try {
+            $checkJavanese = $this->pdo->query("SELECT COUNT(*) FROM `templates` WHERE `view_file` = 'javanese_royal'")->fetchColumn();
+            if ($checkJavanese == 0) {
+                $this->pdo->exec("INSERT INTO `templates` (`category_id`, `name`, `slug`, `thumbnail`, `tier`, `view_file`, `is_active`) VALUES (1, 'Javanese Royal Gapura', 'javanese-royal', 'https://images.unsplash.com/photo-1596402184320-417e7178b2cd?w=600&auto=format&fit=crop&q=80', 'premium', 'javanese_royal', 1)");
+            }
+        } catch (Exception $e) {}
+
+
 
     }
 
