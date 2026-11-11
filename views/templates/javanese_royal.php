@@ -1,7 +1,6 @@
 <?php
 // views/templates/javanese_royal.php
 // Template: Traditional Javanese Royal Wedding (Immersive Full-Screen Gapura Cover, Wayang Ornaments, Earthy Tones)
-// Features: Full-Screen Gapura Background, Swaying Trees, Glowing Transparent Button, Smooth Scale(3) Gate Transition, Hidden Admin (?admin=true)
 
 $bankAccounts = json_decode($event['bank_accounts_json'] ?? '[]', true) ?: [];
 $galleries = json_decode($event['gallery_json'] ?? '[]', true) ?: [];
@@ -36,7 +35,7 @@ $resepsiLocation = !empty($event['resepsi_location']) ? $event['resepsi_location
 
 $groomPhoto = !empty($event['groom_photo']) ? media_url($event['groom_photo']) : 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&auto=format&fit=crop&q=80';
 $bridePhoto = !empty($event['bride_photo']) ? media_url($event['bride_photo']) : 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=600&auto=format&fit=crop&q=80';
-$gapuraCoverPhoto = !empty($event['cover_photo']) ? media_url($event['cover_photo']) : 'https://images.unsplash.com/photo-1596402184320-417e7178b2cd?w=1600&auto=format&fit=crop&q=85';
+$gapuraCoverPhoto = !empty($event['cover_photo']) ? media_url($event['cover_photo']) : 'https://images.unsplash.com/photo-1596402184320-417e7178b2cd?w=1920&auto=format&fit=crop&q=85';
 $parentWa = !empty($event['groom_instagram']) ? preg_replace('/[^0-9]/', '', $event['groom_instagram']) : '6281234567890';
 ?>
 <!DOCTYPE html>
@@ -48,10 +47,10 @@ $parentWa = !empty($event['groom_instagram']) ? preg_replace('/[^0-9]/', '', $ev
 
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🪭</text></svg>" type="image/png">
 
-    <!-- Fonts: Cinzel Decorative, Cormorant Garamond, Playfair Display, Great Vibes, Plus Jakarta Sans -->
+    <!-- Google Fonts: Cormorant Garamond, Playfair Display, Great Vibes, Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <style>
@@ -61,7 +60,7 @@ $parentWa = !empty($event['groom_instagram']) ? preg_replace('/[^0-9]/', '', $ev
             --deep-brown: #2C1810;
             --dark-forest: #1E3326;
             --forest-soft: #284433;
-            --wood-dark: #140A06;
+            --wood-dark: #120905;
             --parang-cream: #FAF6EF;
             --parang-surface: #F3EBDD;
 
@@ -91,6 +90,10 @@ $parentWa = !empty($event['groom_instagram']) ? preg_replace('/[^0-9]/', '', $ev
             -webkit-font-smoothing: antialiased;
         }
 
+        .font-serif { font-family: 'Playfair Display', Georgia, serif; }
+        .font-cormorant { font-family: 'Cormorant Garamond', Georgia, serif; }
+        .font-script { font-family: 'Great Vibes', cursive; }
+
         .page-container {
             width: 100%;
             max-width: 520px;
@@ -105,84 +108,63 @@ $parentWa = !empty($event['groom_instagram']) ? preg_replace('/[^0-9]/', '', $ev
             z-index: 2;
         }
 
-        /* IMMERSIVE FULL-SCREEN GAPURA COVER OVERLAY */
+        /* PART 2: THE IMMERSIVE FULL-SCREEN COVER OVERLAY (GAPURA BACKGROUND) */
         #gateCoverOverlay {
             position: fixed;
             inset: 0;
             width: 100vw;
-            height: 100vh;
             min-height: 100vh;
+            height: 100vh;
             z-index: 99999;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            transition: opacity 1.4s cubic-bezier(0.16, 1, 0.3, 1), transform 1.6s cubic-bezier(0.16, 1, 0.3, 1);
+            background: transparent;
+            transform-origin: center center;
+            transition: transform 1.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.4s ease;
         }
 
         #gateCoverOverlay.gate-opened {
-            opacity: 0;
             transform: scale(3);
+            opacity: 0;
             pointer-events: none;
         }
 
-        /* Layer 1: Lowest Z-Index: Full-Screen Symmetrical Gapura Background */
+        /* Layer 1: Lowest Z-Index (1): Full-Screen Symmetrical Javanese Gate Background */
         .gate-bg-layer {
             position: absolute;
             inset: 0;
             width: 100vw;
             min-height: 100vh;
-            height: 100%;
+            height: 100vh;
             background-size: cover;
             background-position: center bottom;
             background-attachment: fixed;
             background-repeat: no-repeat;
             z-index: 1;
-            transition: transform 1.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .gate-vignette-overlay {
+        .gate-vignette {
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle at 50% 50%, rgba(20, 10, 6, 0.45) 0%, rgba(15, 8, 4, 0.8) 75%, rgba(10, 5, 2, 0.94) 100%);
+            background: radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.65) 70%, rgba(0, 0, 0, 0.85) 100%);
             z-index: 1;
         }
 
-        /* Layer 2: Middle Z-Index: Swaying Trees */
-        .gate-ambient-layer {
+        /* Layer 2: Middle Z-Index (2): Falling Leaves Animation Canvas */
+        .falling-leaves-canvas {
             position: absolute;
             inset: 0;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
             z-index: 2;
-            overflow: hidden;
         }
 
-        .tree-ambient {
-            position: absolute;
-            bottom: -20px;
-            width: 200px;
-            height: 420px;
-            pointer-events: none;
-            opacity: 0.8;
-            transform-origin: bottom center;
-        }
-
-        .tree-left { left: -40px; animation: treeSwayLeft 7s ease-in-out infinite alternate; }
-        .tree-right { right: -40px; transform: scaleX(-1); animation: treeSwayRight 8s ease-in-out infinite alternate; }
-
-        @keyframes treeSwayLeft {
-            0% { transform: rotate(0deg) skewX(0deg); }
-            50% { transform: rotate(2.5deg) skewX(1.5deg); }
-            100% { transform: rotate(-1.5deg) skewX(-1deg); }
-        }
-        @keyframes treeSwayRight {
-            0% { transform: scaleX(-1) rotate(0deg) skewX(0deg); }
-            50% { transform: scaleX(-1) rotate(3deg) skewX(2deg); }
-            100% { transform: scaleX(-1) rotate(-2deg) skewX(-1deg); }
-        }
-
-        /* Layer 3: Highest Z-Index: Centered Content Wrapper (NO BOX CONTAINER) */
-        .cover-hero-wrapper {
+        /* Layer 3: Highest Z-Index (3): Text Overlay & Readability (NO BOX CONTAINER) */
+        .cover-content-layer {
             position: relative;
             z-index: 3;
             display: flex;
@@ -191,113 +173,94 @@ $parentWa = !empty($event['groom_instagram']) ? preg_replace('/[^0-9]/', '', $ev
             justify-content: center;
             text-align: center;
             width: 100%;
-            max-width: 580px;
-            padding: 30px 20px;
-        }
-
-        .cover-gunungan-icon {
-            width: 82px;
-            height: 82px;
-            margin: 0 auto 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.5));
-            animation: pulseGunungan 4s ease-in-out infinite alternate;
-        }
-        .cover-gunungan-icon img { width: 100%; height: 100%; object-fit: contain; }
-
-        @keyframes pulseGunungan {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.08); }
+            max-width: 600px;
+            padding: 30px 24px;
         }
 
         .cover-subtitle {
-            font-family: 'Cinzel Decorative', Georgia, serif;
-            font-size: 13px;
-            letter-spacing: 5px;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 16px;
+            font-weight: 500;
+            letter-spacing: 6px;
             text-transform: uppercase;
             color: var(--gold-light);
-            font-weight: 700;
-            margin-bottom: 8px;
-            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.75), 0 0 20px rgba(0, 0, 0, 0.9);
+            margin-bottom: 12px;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
         }
 
         .cover-couple-name {
             font-family: 'Playfair Display', Georgia, serif;
-            font-size: 42px;
-            font-weight: 600;
-            line-height: 1.25;
+            font-size: 46px;
+            font-weight: 400;
+            letter-spacing: 2px;
             color: var(--gold-light);
-            letter-spacing: 1px;
-            margin: 8px 0 16px;
-            text-shadow: 2px 2px 12px rgba(0, 0, 0, 0.8), 0 0 25px rgba(0, 0, 0, 0.9), 0 0 40px rgba(212, 175, 55, 0.3);
+            line-height: 1.25;
+            margin: 0 0 16px 0;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
         }
 
         @media (max-width: 480px) {
-            .cover-couple-name { font-size: 34px; }
+            .cover-couple-name { font-size: 36px; }
         }
 
-        .cover-divider-gold {
+        .cover-ornament-divider {
             color: var(--gold-soft);
-            font-size: 20px;
-            margin-bottom: 18px;
-            text-shadow: 0 0 12px rgba(212, 175, 55, 0.6);
+            font-size: 22px;
+            margin-bottom: 22px;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
         }
 
-        .cover-recipient-block { margin-bottom: 30px; }
-
-        .cover-recipient-kicker {
-            font-size: 13px;
-            color: #E2D3C4;
+        .cover-recipient-label {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 17px;
             font-style: italic;
-            display: block;
+            font-weight: 400;
+            color: #FDFBF7;
+            letter-spacing: 1px;
             margin-bottom: 6px;
-            letter-spacing: 0.5px;
-            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.75), 0 0 20px rgba(0, 0, 0, 0.9);
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
         }
 
         .cover-recipient-name {
             font-family: 'Playfair Display', Georgia, serif;
             font-size: 22px;
-            font-weight: 600;
+            font-weight: 500;
             color: #FFFFFF;
-            letter-spacing: 0.5px;
-            margin: 0;
-            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.9);
+            letter-spacing: 1px;
+            margin: 0 0 32px 0;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
         }
 
+        /* Button Styling */
         .btn-open-gate {
-            background: rgba(0, 0, 0, 0.25);
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
+            background: transparent;
             border: 1.5px solid var(--gold-soft);
             color: var(--gold-light);
-            font-family: 'Playfair Display', Georgia, serif;
-            font-size: 14.5px;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 16px;
             font-weight: 600;
-            letter-spacing: 2.5px;
+            letter-spacing: 3px;
             text-transform: uppercase;
-            padding: 15px 40px;
+            padding: 14px 44px;
             border-radius: var(--radius-pill);
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             gap: 12px;
-            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), inset 0 0 12px rgba(212, 175, 55, 0.15);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            transition: all 0.4s ease;
         }
 
         .btn-open-gate:hover {
-            background: rgba(212, 175, 55, 0.2);
+            background: rgba(212, 175, 55, 0.15);
             color: #FFFFFF;
             border-color: #F4E2A1;
-            transform: scale(1.06) translateY(-2px);
-            box-shadow: 0 0 30px rgba(212, 175, 55, 0.65), 0 8px 25px rgba(0, 0, 0, 0.6), inset 0 0 15px rgba(212, 175, 55, 0.3);
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.8), inset 0 0 15px rgba(212, 175, 55, 0.25);
+            transform: scale(1.05);
         }
 
-        /* Floating Wayang Ornaments */
+        /* Floating Wayang */
         .wayang-float-anchor {
             position: fixed;
             top: 25%;
@@ -338,7 +301,7 @@ $parentWa = !empty($event['groom_instagram']) ? preg_replace('/[^0-9]/', '', $ev
             display: block;
             margin-bottom: 6px;
         }
-        .section-title { font-family: 'Cinzel Decorative', Georgia, serif; font-size: 24px; color: var(--deep-brown); font-weight: 700; }
+        .section-title { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 28px; color: var(--deep-brown); font-weight: 700; letter-spacing: 1px; }
         .javanese-divider { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 16px auto 0; width: 160px; }
         .javanese-divider::before, .javanese-divider::after { content: ''; height: 1.5px; flex: 1; background: linear-gradient(90deg, transparent, var(--gold-soft), transparent); }
         .javanese-divider span { color: var(--gold-deep); font-size: 16px; }
@@ -350,8 +313,8 @@ $parentWa = !empty($event['groom_instagram']) ? preg_replace('/[^0-9]/', '', $ev
             background: linear-gradient(180deg, var(--parang-surface) 0%, var(--parang-cream) 100%);
             border-bottom: 2px solid var(--gold-border);
         }
-        .gunungan-center { width: 75px; margin: 0 auto 16px; }
-        .hero-names { font-family: 'Cinzel Decorative', Georgia, serif; font-size: 30px; font-weight: 700; color: var(--terracotta-dark); margin-bottom: 4px; line-height: 1.3; }
+        .gunungan-center { width: 75px; margin: 0 auto 16px; filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2)); }
+        .hero-names { font-family: 'Playfair Display', Georgia, serif; font-size: 32px; font-weight: 600; color: var(--terracotta-dark); margin-bottom: 4px; line-height: 1.3; }
         .hero-ampersand { font-family: 'Great Vibes', cursive; font-size: 40px; color: var(--gold-deep); margin: 2px 0; }
         .hero-date-pill {
             display: inline-flex;
@@ -399,7 +362,7 @@ $parentWa = !empty($event['groom_instagram']) ? preg_replace('/[^0-9]/', '', $ev
             box-shadow: var(--shadow-deep);
             margin-bottom: 30px;
         }
-        .countdown-title-text { font-family: 'Cinzel Decorative', serif; font-size: 16px; color: var(--gold-light); margin-bottom: 20px; }
+        .countdown-title-text { font-family: 'Cormorant Garamond', serif; font-size: 19px; color: var(--gold-light); margin-bottom: 20px; letter-spacing: 1px; }
         .countdown-boxes-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
         .countdown-item { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 14px; padding: 12px 6px; }
         .countdown-number { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: var(--gold-light); line-height: 1.1; }
@@ -457,7 +420,7 @@ $parentWa = !empty($event['groom_instagram']) ? preg_replace('/[^0-9]/', '', $ev
             box-shadow: var(--shadow-deep);
         }
         .bank-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-        .bank-name { font-family: 'Cinzel Decorative', serif; font-size: 15px; color: var(--gold-light); font-weight: 700; }
+        .bank-name { font-family: 'Cormorant Garamond', serif; font-size: 17px; color: var(--gold-light); font-weight: 700; }
         .account-number { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; letter-spacing: 2px; color: #FFFFFF; margin-bottom: 4px; }
         .account-holder { font-size: 13px; color: #D6C2B4; margin-bottom: 16px; }
 
@@ -516,7 +479,7 @@ $parentWa = !empty($event['groom_instagram']) ? preg_replace('/[^0-9]/', '', $ev
 
         /* Footer */
         .javanese-footer { padding: 45px 24px; text-align: center; background: var(--deep-brown); color: #CDB79E; border-top: 2px solid var(--gold-soft); }
-        .footer-brand { font-family: 'Cinzel Decorative', serif; font-size: 18px; color: var(--gold-light); margin-bottom: 6px; font-weight: 700; }
+        .footer-brand { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: var(--gold-light); margin-bottom: 6px; font-weight: 700; letter-spacing: 1px; }
 
         /* Audio Toggle */
         .btn-audio-disc {
@@ -640,36 +603,18 @@ $parentWa = !empty($event['groom_instagram']) ? preg_replace('/[^0-9]/', '', $ev
     <!-- 1. IMMERSIVE FULL-SCREEN GAPURA COVER OVERLAY -->
     <div id="gateCoverOverlay">
         <div class="gate-bg-layer" id="gateBgLayer" style="background-image: url('<?= htmlspecialchars($gapuraCoverPhoto) ?>');">
-            <div class="gate-vignette-overlay"></div>
+            <div class="gate-vignette"></div>
         </div>
 
-        <div class="gate-ambient-layer">
-            <svg class="tree-ambient tree-left" viewBox="0 0 100 200" fill="none">
-                <path d="M50 200 Q48 120 50 60 Q30 50 20 80 Q10 40 40 30 Q50 10 70 25 Q90 35 75 75 Q90 100 55 120 L50 200 Z" fill="#1E3326" />
-                <path d="M48 60 Q25 90 15 120 Q35 110 48 100" stroke="#2B4333" stroke-width="4" stroke-linecap="round" />
-                <path d="M52 50 Q75 80 85 110 Q65 100 52 90" stroke="#2B4333" stroke-width="4" stroke-linecap="round" />
-            </svg>
+        <canvas id="fallingLeavesCanvas" class="falling-leaves-canvas"></canvas>
 
-            <svg class="tree-ambient tree-right" viewBox="0 0 100 200" fill="none">
-                <path d="M50 200 Q48 120 50 60 Q30 50 20 80 Q10 40 40 30 Q50 10 70 25 Q90 35 75 75 Q90 100 55 120 L50 200 Z" fill="#1E3326" />
-                <path d="M48 60 Q25 90 15 120 Q35 110 48 100" stroke="#2B4333" stroke-width="4" stroke-linecap="round" />
-                <path d="M52 50 Q75 80 85 110 Q65 100 52 90" stroke="#2B4333" stroke-width="4" stroke-linecap="round" />
-            </svg>
-        </div>
-
-        <div class="cover-hero-wrapper">
-            <div class="cover-gunungan-icon">
-                <img id="coverGapuraIcon" src="https://cdn-icons-png.flaticon.com/512/3252/3252199.png" alt="Gunungan Wayang">
-            </div>
-
-            <div class="cover-subtitle">PAWIWAHAN AGENG</div>
+        <div class="cover-content-layer">
+            <div class="cover-subtitle">Pawiwahan Ageng</div>
             <h1 class="cover-couple-name" id="coverCoupleNames"><?= htmlspecialchars($bNick) ?> &amp; <?= htmlspecialchars($gNick) ?></h1>
-            <div class="cover-divider-gold">❖</div>
+            <div class="cover-ornament-divider">❖</div>
 
-            <div class="cover-recipient-block">
-                <span class="cover-recipient-kicker">Katur Dhumateng Panjenenganipun:</span>
-                <h2 class="cover-recipient-name" id="coverRecipientName"><?= htmlspecialchars($guestDisplayName) ?></h2>
-            </div>
+            <div class="cover-recipient-label">Kepada Yth.</div>
+            <div class="cover-recipient-name" id="coverRecipientName"><?= htmlspecialchars($guestDisplayName) ?></div>
 
             <button type="button" class="btn-open-gate" id="btnOpenInvitation">
                 <i class="bi bi-door-open-fill"></i> Buka Undangan
@@ -1014,8 +959,6 @@ $parentWa = !empty($event['groom_instagram']) ? preg_replace('/[^0-9]/', '', $ev
                 gateBgLayer.style.backgroundImage = `url('${currentConfig.gapuraUrl}')`;
             }
 
-            document.getElementById('coverGapuraIcon').src = currentConfig.wayangLeftUrl;
-            document.getElementById('heroGununganIcon').src = currentConfig.wayangLeftUrl;
             document.getElementById('floatingWayangLeft').src = currentConfig.wayangLeftUrl;
             document.getElementById('floatingWayangRight').src = currentConfig.wayangRightUrl;
             document.getElementById('profileBridePhoto').src = currentConfig.bridePhotoUrl;
@@ -1029,7 +972,7 @@ $parentWa = !empty($event['groom_instagram']) ? preg_replace('/[^0-9]/', '', $ev
             }
         }
 
-        // Gate Opening Transition: Scale(3) & Fade Out
+        // Gate Scale Transition (scale(3) and fade out)
         const gateCoverOverlay = document.getElementById('gateCoverOverlay');
         const btnOpenInvitation = document.getElementById('btnOpenInvitation');
         const bgAudio = document.getElementById('bgAudio');
@@ -1070,6 +1013,86 @@ $parentWa = !empty($event['groom_instagram']) ? preg_replace('/[^0-9]/', '', $ev
                     audioIcon.className = 'bi bi-pause-fill';
                 }
             });
+        }
+
+        // Falling Leaves Animation (Middle Z-Index)
+        function initFallingLeaves() {
+            const canvas = document.getElementById('fallingLeavesCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let width = canvas.width = window.innerWidth;
+            let height = canvas.height = window.innerHeight;
+
+            window.addEventListener('resize', () => {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            });
+
+            const leaves = [];
+            const leafColors = [
+                'rgba(212, 175, 55, 0.75)',
+                'rgba(244, 226, 161, 0.7)',
+                'rgba(164, 74, 63, 0.65)',
+                'rgba(205, 133, 63, 0.7)',
+                'rgba(238, 203, 117, 0.8)'
+            ];
+
+            for (let i = 0; i < 35; i++) {
+                leaves.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height - height,
+                    size: Math.random() * 11 + 7,
+                    speedY: Math.random() * 1.3 + 0.7,
+                    speedX: Math.random() * 1.2 - 0.6,
+                    rotation: Math.random() * 360,
+                    rotSpeed: Math.random() * 2 - 1,
+                    swing: Math.random() * 2.2 + 1,
+                    swingSpeed: Math.random() * 0.025 + 0.015,
+                    swingAngle: Math.random() * Math.PI * 2,
+                    color: leafColors[Math.floor(Math.random() * leafColors.length)]
+                });
+            }
+
+            function drawLeaf(ctx, x, y, size, angle, color) {
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.rotate(angle * Math.PI / 180);
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                ctx.moveTo(0, -size);
+                ctx.bezierCurveTo(size * 0.75, -size * 0.35, size * 0.75, size * 0.35, 0, size);
+                ctx.bezierCurveTo(-size * 0.75, size * 0.35, -size * 0.75, -size * 0.35, 0, -size);
+                ctx.fill();
+
+                ctx.strokeStyle = 'rgba(0, 0, 0, 0.2)';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(0, -size * 0.8);
+                ctx.lineTo(0, size * 0.8);
+                ctx.stroke();
+                ctx.restore();
+            }
+
+            function animateLeaves() {
+                ctx.clearRect(0, 0, width, height);
+                leaves.forEach(leaf => {
+                    leaf.swingAngle += leaf.swingSpeed;
+                    leaf.x += leaf.speedX + Math.sin(leaf.swingAngle) * leaf.swing;
+                    leaf.y += leaf.speedY;
+                    leaf.rotation += leaf.rotSpeed;
+
+                    if (leaf.y > height + 20) {
+                        leaf.y = -20;
+                        leaf.x = Math.random() * width;
+                    }
+                    if (leaf.x > width + 20) leaf.x = -20;
+                    if (leaf.x < -20) leaf.x = width + 20;
+
+                    drawLeaf(ctx, leaf.x, leaf.y, leaf.size, leaf.rotation, leaf.color);
+                });
+                requestAnimationFrame(animateLeaves);
+            }
+            animateLeaves();
         }
 
         // Countdown
@@ -1196,6 +1219,7 @@ $parentWa = !empty($event['groom_instagram']) ? preg_replace('/[^0-9]/', '', $ev
 
         document.addEventListener('DOMContentLoaded', () => {
             applyDataToDOM();
+            initFallingLeaves();
             updateCountdown();
             checkAdminAccess();
         });
