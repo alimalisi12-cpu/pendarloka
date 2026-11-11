@@ -340,6 +340,23 @@ class Database {
             }
         } catch (Exception $e) {}
 
+        // Ensure Islamic Navy Gold template is registered
+        try {
+            $checkIslamic = $this->pdo->query("SELECT COUNT(*) FROM `templates` WHERE `view_file` = 'islamic_navy_gold'")->fetchColumn();
+            if ($checkIslamic == 0) {
+                $this->pdo->exec("INSERT INTO `templates` (`category_id`, `name`, `slug`, `thumbnail`, `tier`, `view_file`, `is_active`) VALUES (1, 'Islamic Royal Navy & Gold', 'islamic-navy-gold', 'https://images.unsplash.com/photo-1519741497674-611481863552?w=600&auto=format&fit=crop&q=80', 'premium', 'islamic_navy_gold', 1)");
+            }
+        } catch (Exception $e) {}
+
+        // Ensure Kids Birthday Wonderland template is registered
+        try {
+            $checkKids = $this->pdo->query("SELECT COUNT(*) FROM `templates` WHERE `view_file` = 'kids_birthday_wonderland'")->fetchColumn();
+            if ($checkKids == 0) {
+                $this->pdo->exec("INSERT INTO `templates` (`category_id`, `name`, `slug`, `thumbnail`, `tier`, `view_file`, `is_active`) VALUES (4, 'Pastel Wonderland Birthday', 'kids-birthday-wonderland', 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=600&auto=format&fit=crop&q=80', 'basic', 'kids_birthday_wonderland', 1)");
+            }
+        } catch (Exception $e) {}
+
+
     }
 
     private function ensureColumnExists($table, $column, $alterSql) {

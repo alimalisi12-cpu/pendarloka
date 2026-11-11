@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alana's 5th Birthday Party! 🎉</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎂</text></svg>" type="image/png">
+
+    <!-- Fonts: Fredoka & Quicksand -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap 5 & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Palette: Bubblegum Pink, Soft Yellow, Sky Blue, and White */
+            --pink-bubblegum: #FF85A1;
+            --pink-soft: #FFB3C6;
+            --pink-light: #FFF0F5;
+
+            --yellow-pastel: #FFE380;
+            --yellow-soft: #FFF4CC;
+            --yellow-warm: #FFD166;
+
+            --blue-sky: #6EC1E4;
+            --blue-soft: #D0EFFB;
+            --blue-light: #F0F9FE;
+
+            --white-pure: #FFFFFF;
+            --text-dark: #374151;
+            --text-muted: #6B7280;
+
+            --radius-bubble: 28px;
+            --radius-pill: 999px;
+            --shadow-fun: 0 12px 28px rgba(255, 133, 161, 0.2);
+            --shadow-card: 0 10px 24px rgba(110, 193, 228, 0.18);
+            --transition-bouncy: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #FFF0F5 0%, #F0F9FE 50%, #FFF9E6 100%);
+            color: var(--text-dark);
+            line-height: 1.7;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3, h4, h5, h6, .font-heading {
+            font-family: 'Fredoka', cursive, sans-serif;
+            font-weight: 700;
+        }
+
+        /* Container Limit (Mobile-First Fun Frame) */
+        .invitation-wrapper {
+            width: 100%;
+            max-width: 520px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+            background: #FFFFFF;
+            box-shadow: 0 0 50px rgba(110, 193, 228, 0.25);
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Animated Confetti Canvas */
+        #confettiCanvas {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Floating Balloon Background Elements */
+        .floating-element {
+            position: absolute;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.7;
+            animation: floatUp 6s ease-in-out infinite alternate;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-20px) rotate(8deg); }
+        }
+
+        /* ==========================================================================
+           1. COVER POPUP MODAL
+           ========================================================================== */
+        #coverModal {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            background: radial-gradient(circle at center, #FFF4CC 0%, #FFB3C6 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            transition: opacity 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        #coverModal.unlocked {
+            opacity: 0;
+            transform: scale(1.1);
+            pointer-events: none;
+        }
+
+        .cover-box {
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            background: #FFFFFF;
+            border-radius: 36px;
+            padding: 36px 24px;
+            border: 4px dashed var(--pink-bubblegum);
+            box-shadow: 0 20px 50px rgba(255, 133, 161, 0.35);
+            position: relative;
+        }
+
+        .cover-emoji-badge {
+            width: 88px;
+            height: 88px;
+            border-radius: 50%;
+            background: var(--yellow-pastel);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 44px;
+            margin: 0 auto 18px;
+            box-shadow: 0 8px 20px rgba(255, 211, 102, 0.5);
+            animation: bounceBadge 2s infinite ease-in-out;
+        }
+
+        @keyframes bounceBadge {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .cover-guest-pill {
+            background: var(--blue-soft);
+            border-radius: var(--radius-pill);
+            padding: 10px 20px;
+            display: inline-block;
+            margin-bottom: 24px;
+            color: #0284C7;
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        .btn-bounce-open {
+            background: linear-gradient(135deg, var(--pink-bubblegum), #FF5470);
+            color: #FFFFFF;
+            font-family: 'Fredoka', cursive, sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            padding: 16px 36px;
+            border-radius: var(--radius-pill);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(255, 84, 112, 0.4);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: var(--transition-bouncy);
+        }
+
+        .btn-bounce-open:hover {
+            transform: scale(1.08) rotate(-1deg);
+            box-shadow: 0 14px 30px rgba(255, 84, 112, 0.55);
+            color: #FFFFFF;
+        }
+
+        /* ==========================================================================
+           2. HERO SECTION
+           ========================================================================== */
+        .hero-section {
+            position: relative;
+            padding: 60px 24px 40px;
+            text-align: center;
+            background: radial-gradient(circle at top, #FFF4CC 0%, #FFFFFF 85%);
+            overflow: hidden;
+        }
+
+        .party-hat-icon {
+            font-size: 42px;
+            display: inline-block;
+            animation: shakeHat 2.5s infinite;
+        }
+
+        @keyframes shakeHat {
+            0%, 100% { transform: rotate(0deg); }
+            20% { transform: rotate(-15deg); }
+            40% { transform: rotate(15deg); }
+            60% { transform: rotate(0deg); }
+        }
+
+        .hero-banner-tag {
+            display: inline-block;
+            background: var(--blue-sky);
+            color: #FFFFFF;
+            font-family: 'Fredoka', cursive, sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            padding: 6px 18px;
+            border-radius: var(--radius-pill);
+            box-shadow: 0 4px 12px rgba(110, 193, 228, 0.4);
+            margin-bottom: 14px;
+        }
+
+        .hero-main-title {
+            font-size: 28px;
+            line-height: 1.3;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .hero-child-name {
+            font-size: 44px;
+            background: linear-gradient(135deg, var(--pink-bubblegum), #FF4D6D);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: block;
+            margin: 6px 0;
+            letter-spacing: 1px;
+        }
+
+        .hero-age-badge {
+            display: inline-block;
+            background: var(--yellow-pastel);
+            color: #854D0E;
+            font-family: 'Fredoka', cursive, sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            padding: 8px 24px;
+            border-radius: var(--radius-pill);
+            border: 3px solid #FFFFFF;
+            box-shadow: 0 6px 16px rgba(255, 227, 128, 0.6);
+            transform: rotate(-3deg);
+            margin-top: 6px;
+        }
+
+        .child-portrait-wrapper {
+            width: 170px;
+            height: 170px;
+            margin: 28px auto 14px;
+            position: relative;
+        }
+
+        .child-portrait-blob {
+            position: absolute;
+            inset: -8px;
+            background: linear-gradient(135deg, var(--pink-soft), var(--yellow-pastel), var(--blue-soft));
+            border-radius: 46% 54% 50% 50% / 40% 45% 55% 60%;
+            animation: blobMorph 6s ease-in-out infinite alternate;
+        }
+
+        @keyframes blobMorph {
+            0% { border-radius: 46% 54% 50% 50% / 40% 45% 55% 60%; transform: rotate(0deg); }
+            100% { border-radius: 54% 46% 45% 55% / 55% 60% 40% 45%; transform: rotate(180deg); }
+        }
+
+        .child-portrait-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            position: relative;
+            z-index: 1;
+            border: 4px solid #FFFFFF;
+            box-shadow: 0 10px 25px rgba(255, 133, 161, 0.3);
+        }
+
+        /* ==========================================================================
+           3. COUNTDOWN TIMER
+           ========================================================================== */
+        .countdown-section {
+            padding: 30px 20px;
+            background: var(--blue-light);
+            text-align: center;
+        }
+
+        .countdown-title {
+            font-size: 16px;
+            color: #0284C7;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .countdown-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            max-width: 420px;
+            margin: 0 auto;
+        }
+
+        .countdown-card {
+            background: #FFFFFF;
+            border-radius: 20px;
+            padding: 14px 6px;
+            box-shadow: 0 8px 18px rgba(110, 193, 228, 0.2);
+            border: 2px solid var(--blue-soft);
+            transition: var(--transition-bouncy);
+        }
+
+        .countdown-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .cd-number {
+            font-family: 'Fredoka', cursive, sans-serif;
+            font-size: 26px;
+            font-weight: 700;
+            color: #FF5470;
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+
+        .cd-label {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        /* ==========================================================================
+           4. PARTY DETAILS CARDS (WHEN, WHERE, DRESS CODE)
+           ========================================================================== */
+        .details-section {
+            padding: 50px 24px;
+            background: #FFFFFF;
+        }
+
+        .section-bubble-header {
+            text-align: center;
+            margin-bottom: 34px;
+        }
+
+        .section-badge-fun {
+            background: var(--yellow-pastel);
+            color: #92400E;
+            font-family: 'Fredoka', cursive, sans-serif;
+            font-size: 13px;
+            padding: 6px 18px;
+            border-radius: var(--radius-pill);
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        .section-fun-title {
+            font-size: 26px;
+            color: var(--text-dark);
+        }
+
+        .detail-card {
+            border-radius: var(--radius-bubble);
+            padding: 24px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            box-shadow: var(--shadow-card);
+            transition: var(--transition-bouncy);
+        }
+
+        .detail-card:hover {
+            transform: translateY(-5px) scale(1.02);
+        }
+
+        .detail-card-pink {
+            background: linear-gradient(135deg, #FFF0F5, #FFE4EC);
+            border: 2px solid var(--pink-soft);
+        }
+
+        .detail-card-yellow {
+            background: linear-gradient(135deg, #FFFDF0, #FFF3C4);
+            border: 2px solid var(--yellow-pastel);
+        }
+
+        .detail-card-blue {
+            background: linear-gradient(135deg, #F0F9FE, #E0F2FE);
+            border: 2px solid var(--blue-soft);
+        }
+
+        .detail-cartoon-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            flex-shrink: 0;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        .detail-info h5 {
+            font-size: 18px;
+            margin-bottom: 4px;
+            color: var(--text-dark);
+        }
+
+        .detail-info p {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin: 0;
+            line-height: 1.5;
+            font-weight: 600;
+        }
+
+        .btn-maps-fun {
+            background: var(--blue-sky);
+            color: #FFFFFF;
+            border-radius: var(--radius-pill);
+            padding: 6px 16px;
+            font-size: 12px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            margin-top: 8px;
+            box-shadow: 0 4px 12px rgba(110, 193, 228, 0.4);
+            transition: var(--transition-bouncy);
+        }
+
+        .btn-maps-fun:hover {
+            background: #0284C7;
+            color: #FFFFFF;
+            transform: scale(1.05);
+        }
+
+        /* ==========================================================================
+           5. GALLERY (ASYMMETRIC PHOTO GRID)
+           ========================================================================== */
+        .gallery-section {
+            padding: 50px 24px;
+            background: linear-gradient(180deg, #FFFFFF 0%, #FFF5F7 100%);
+        }
+
+        .fun-gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .polaroid-card {
+            background: #FFFFFF;
+            padding: 10px 10px 22px;
+            border-radius: 18px;
+            box-shadow: 0 10px 25px rgba(255, 133, 161, 0.2);
+            transition: var(--transition-bouncy);
+            position: relative;
+        }
+
+        .polaroid-card:hover {
+            transform: scale(1.06) rotate(0deg) !important;
+            z-index: 10;
+        }
+
+        .polaroid-img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 12px;
+            display: block;
+        }
+
+        .polaroid-caption {
+            font-family: 'Fredoka', cursive, sans-serif;
+            font-size: 12px;
+            color: #FF5470;
+            text-align: center;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+
+        .grid-span-2 {
+            grid-column: span 2;
+        }
+
+        .grid-span-2 .polaroid-img {
+            height: 220px;
+        }
+
+        /* Fun Asymmetric Tilts */
+        .tilt-left { transform: rotate(-3deg); }
+        .tilt-right { transform: rotate(3deg); }
+        .tilt-mild-left { transform: rotate(-1.5deg); }
+        .tilt-mild-right { transform: rotate(2deg); }
+
+        /* ==========================================================================
+           6. RSVP SECTION (WHATSAPP DIRECT FORMATTER)
+           ========================================================================== */
+        .rsvp-section {
+            padding: 60px 24px;
+            background: linear-gradient(135deg, #FFF0F5, #F0F9FE);
+            text-align: center;
+        }
+
+        .rsvp-box {
+            background: #FFFFFF;
+            border-radius: 32px;
+            padding: 34px 22px;
+            box-shadow: 0 15px 35px rgba(255, 133, 161, 0.25);
+            border: 3px solid var(--pink-soft);
+        }
+
+        .form-label-fun {
+            font-family: 'Fredoka', cursive, sans-serif;
+            font-size: 15px;
+            color: var(--text-dark);
+            text-align: left;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .form-control-fun {
+            border-radius: var(--radius-bubble);
+            border: 2px solid #E5E7EB;
+            padding: 12px 18px;
+            font-size: 14px;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 600;
+            transition: var(--transition-bouncy);
+        }
+
+        .form-control-fun:focus {
+            border-color: var(--pink-bubblegum);
+            box-shadow: 0 0 15px rgba(255, 133, 161, 0.3);
+            outline: none;
+        }
+
+        /* Bright Bouncy WhatsApp Submit Button */
+        .btn-whatsapp-submit {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: #FFFFFF;
+            font-family: 'Fredoka', cursive, sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            padding: 16px 28px;
+            border-radius: var(--radius-pill);
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 10px 25px rgba(37, 211, 102, 0.4);
+            transition: var(--transition-bouncy);
+            margin-top: 14px;
+        }
+
+        .btn-whatsapp-submit:hover {
+            transform: scale(1.05) translateY(-3px);
+            box-shadow: 0 15px 30px rgba(37, 211, 102, 0.55);
+            color: #FFFFFF;
+        }
+
+        /* ==========================================================================
+           7. FOOTER
+           ========================================================================== */
+        .kids-footer {
+            padding: 40px 20px;
+            text-align: center;
+            background: #FFFFFF;
+            border-top: 2px dashed var(--pink-soft);
+        }
+
+        .kids-footer-balloon {
+            font-size: 32px;
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+
+        /* Floating Audio Toggle */
+        .btn-music-bubble {
+            position: fixed;
+            bottom: 24px;
+            right: 20px;
+            z-index: 9999;
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--pink-bubblegum), #FF5470);
+            border: 3px solid #FFFFFF;
+            color: #FFFFFF;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 24px rgba(255, 84, 112, 0.45);
+            cursor: pointer;
+            transition: var(--transition-bouncy);
+        }
+
+        .btn-music-bubble:hover {
+            transform: scale(1.15) rotate(15deg);
+        }
+
+        .btn-music-bubble.spinning {
+            animation: spinMusic 4s linear infinite;
+        }
+
+        @keyframes spinMusic {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. POPUP OPENING MODAL -->
+    <div id="coverModal">
+        <div class="cover-box">
+            <div class="cover-emoji-badge">🎂</div>
+            <div class="hero-banner-tag">You're Invited!</div>
+            <h1 class="hero-main-title">
+                Alana's
+                <span class="hero-child-name">5th Birthday Party</span>
+            </h1>
+
+            <div class="cover-guest-pill">
+                <i class="bi bi-star-fill text-warning me-1"></i> Untuk: <strong>Teman Kecil Spesial &amp; Mama Papa</strong>
+            </div>
+
+            <div>
+                <button type="button" class="btn-bounce-open" id="btnOpenParty">
+                    <i class="bi bi-envelope-heart-fill"></i> Buka Undangan Pesta
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN FRAME -->
+    <div class="invitation-wrapper">
+        <!-- Confetti Canvas -->
+        <canvas id="confettiCanvas"></canvas>
+
+        <!-- 2. HERO SECTION -->
+        <section class="hero-section">
+            <div class="party-hat-icon">🎉</div>
+            <br>
+            <span class="hero-banner-tag">✨ Magical Pastel Wonderland ✨</span>
+            <h1 class="hero-main-title">
+                You are invited to
+                <span class="hero-child-name">Alana’s</span>
+                Birthday Party!
+            </h1>
+            <div class="hero-age-badge">Turning 5th Old! 🎈</div>
+
+            <div class="child-portrait-wrapper" data-aos="zoom-in">
+                <div class="child-portrait-blob"></div>
+                <img src="https://images.unsplash.com/photo-1513151233558-d860c5398176?w=1000&amp;auto=format&amp;fit=crop&amp;q=80" alt="Alana" class="child-portrait-img">
+            </div>
+
+            <p class="text-muted fw-bold small mt-2">
+                Bergabunglah bersama kami merayakan hari penuh keceriaan, tawa, dan petualangan manis!
+            </p>
+        </section>
+
+        <!-- 3. COUNTDOWN TIMER -->
+        <section class="countdown-section">
+            <div class="countdown-title">
+                <i class="bi bi-clock-history me-1"></i> Hitung Mundur Menuju Pesta Ajaib:
+            </div>
+            <div class="countdown-grid" data-aos="fade-up">
+                <div class="countdown-card">
+                    <div class="cd-number" id="kcdDays">00</div>
+                    <div class="cd-label">Hari</div>
+                </div>
+                <div class="countdown-card">
+                    <div class="cd-number" id="kcdHours">00</div>
+                    <div class="cd-label">Jam</div>
+                </div>
+                <div class="countdown-card">
+                    <div class="cd-number" id="kcdMinutes">00</div>
+                    <div class="cd-label">Menit</div>
+                </div>
+                <div class="countdown-card">
+                    <div class="cd-number" id="kcdSeconds">00</div>
+                    <div class="cd-label">Detik</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. PARTY DETAILS CARDS (WHEN, WHERE, DRESS CODE) -->
+        <section class="details-section">
+            <div class="section-bubble-header" data-aos="fade-up">
+                <span class="section-badge-fun">🎈 Catat Jadwalnya Ya!</span>
+                <h3 class="section-fun-title">Rincian Pesta Seru</h3>
+            </div>
+
+            <!-- When Card -->
+            <div class="detail-card detail-card-pink" data-aos="fade-up">
+                <div class="detail-cartoon-icon">📅</div>
+                <div class="detail-info">
+                    <h5>Kapan (When)?</h5>
+                    <p>Sunday, 29 November 2026</p>
+                    <p class="text-secondary small fw-bold"><i class="bi bi-clock-fill text-danger me-1"></i> Pukul 15:30 - 18:00 WIB</p>
+                </div>
+            </div>
+
+            <!-- Where Card -->
+            <div class="detail-card detail-card-blue" data-aos="fade-up">
+                <div class="detail-cartoon-icon">🏰</div>
+                <div class="detail-info">
+                    <h5>Dimana (Where)?</h5>
+                    <p>Wonderland Playland &amp; Cafe, Galaxy Mall 3 Lt. 4, Surabaya</p>
+                    <a href="https://maps.google.com/?q=Wonderland+Playland+%26+Cafe%2C+Galaxy+Mall+3+Lt.+4%2C+Surabaya" target="_blank" class="btn-maps-fun">
+                        <i class="bi bi-geo-alt-fill"></i> Buka Google Maps
+                    </a>
+                </div>
+            </div>
+
+            <!-- Dress Code Card -->
+            <div class="detail-card detail-card-yellow" data-aos="fade-up">
+                <div class="detail-cartoon-icon">👗</div>
+                <div class="detail-info">
+                    <h5>Tema Busana (Dress Code)</h5>
+                    <p>Pastel Wonderland (Bubblegum Pink, Soft Yellow, or Sky Blue)</p>
+                    <p class="small text-muted">Bebas &amp; Ceria bernuansa pastel warna-warni!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. GALLERY (ASYMMETRIC PHOTO GRID) -->
+        <section class="gallery-section">
+            <div class="section-bubble-header" data-aos="fade-up">
+                <span class="section-badge-fun">📸 Galeri Foto</span>
+                <h3 class="section-fun-title">Momen Manis Alana</h3>
+            </div>
+
+            <div class="fun-gallery-grid">
+                                    <div class="polaroid-card tilt-left grid-span-2" data-aos="zoom-in" data-aos-delay="0">
+                        <img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=800&amp;auto=format&amp;fit=crop&amp;q=80" alt="Photo 1" class="polaroid-img" loading="lazy">
+                        <div class="polaroid-caption">✨ Sweet Moment #1 ✨</div>
+                    </div>
+                                    <div class="polaroid-card tilt-right " data-aos="zoom-in" data-aos-delay="80">
+                        <img src="https://images.unsplash.com/photo-1513151233558-d860c5398176?w=800&amp;auto=format&amp;fit=crop&amp;q=80" alt="Photo 2" class="polaroid-img" loading="lazy">
+                        <div class="polaroid-caption">✨ Sweet Moment #2 ✨</div>
+                    </div>
+                                    <div class="polaroid-card tilt-mild-left " data-aos="zoom-in" data-aos-delay="160">
+                        <img src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=800&amp;auto=format&amp;fit=crop&amp;q=80" alt="Photo 3" class="polaroid-img" loading="lazy">
+                        <div class="polaroid-caption">✨ Sweet Moment #3 ✨</div>
+                    </div>
+                                    <div class="polaroid-card tilt-mild-right " data-aos="zoom-in" data-aos-delay="240">
+                        <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&amp;auto=format&amp;fit=crop&amp;q=80" alt="Photo 4" class="polaroid-img" loading="lazy">
+                        <div class="polaroid-caption">✨ Sweet Moment #4 ✨</div>
+                    </div>
+                                    <div class="polaroid-card tilt-left " data-aos="zoom-in" data-aos-delay="320">
+                        <img src="https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=800&amp;auto=format&amp;fit=crop&amp;q=80" alt="Photo 5" class="polaroid-img" loading="lazy">
+                        <div class="polaroid-caption">✨ Sweet Moment #5 ✨</div>
+                    </div>
+                            </div>
+        </section>
+
+        <!-- 6. RSVP VIA WHATSAPP -->
+        <section class="rsvp-section">
+            <div class="rsvp-box" data-aos="fade-up">
+                <div style="font-size: 38px; margin-bottom: 8px;">💌</div>
+                <h3 class="font-heading mb-2" style="font-size: 24px; color: var(--text-dark);">Konfirmasi Kehadiran</h3>
+                <p class="text-muted small mb-4">Mohon bantu kami mempersiapkan bingkisan dan camilan terbaik dengan mengonfirmasi kehadiran Anda:</p>
+
+                <form id="waRsvpForm">
+                    <div class="mb-3 text-start">
+                        <label class="form-label-fun">Nama Teman Kecil / Keluarga</label>
+                        <input type="text" id="waGuestName" class="form-control form-control-fun" value="Teman Kecil Spesial &amp; Mama Papa" placeholder="contoh: Kenzo &amp; Mama" required>
+                    </div>
+
+                    <div class="mb-3 text-start">
+                        <label class="form-label-fun">Apakah Bisa Hadir?</label>
+                        <select id="waAttendance" class="form-select form-control-fun" required>
+                            <option value="Hadir">🎉 Hore, Pasti Hadir!</option>
+                            <option value="Ragu">🤔 Masih Diusahakan</option>
+                            <option value="Tidak Bisa">😢 Maaf, Belum Bisa Hadir</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3 text-start">
+                        <label class="form-label-fun">Jumlah Anak &amp; Pendamping</label>
+                        <select id="waGuestCount" class="form-select form-control-fun">
+                            <option value="1 Anak + 1 Pendamping">1 Anak + 1 Pendamping</option>
+                            <option value="2 Anak + 1 Pendamping">2 Anak + 1 Pendamping</option>
+                            <option value="2 Anak + 2 Pendamping">2 Anak + 2 Pendamping</option>
+                            <option value="1 Keluarga">1 Keluarga</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3 text-start">
+                        <label class="form-label-fun">Pesan Ucapan / Doa Manis</label>
+                        <textarea id="waMessage" class="form-control form-control-fun" rows="3" placeholder="Tuliskan ucapan selamat ulang tahun untuk Alana..."></textarea>
+                    </div>
+
+                    <button type="button" class="btn-whatsapp-submit" id="btnSendWa">
+                        <i class="bi bi-whatsapp fs-5"></i> Kirim Konfirmasi ke WhatsApp
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- 7. FOOTER -->
+        <footer class="kids-footer">
+            <div class="kids-footer-balloon">🎈🎂🦄</div>
+            <h5 class="font-heading mb-1" style="color: #FF5470;">Sampai Jumpa di Pesta Ajaib!</h5>
+            <p class="small text-muted mb-0">Salam hangat dan penuh cinta,</p>
+            <p class="fw-bold small text-dark mt-1">Bunda Sarah &amp; Ayah Dedi</p>
+        </footer>
+    </div>
+
+    <!-- Music Player & Floating Button -->
+    <audio id="bgMusicKids" loop preload="none">
+        <source src="https://cdn.freesound.org/previews/469/469009_9518146-lq.mp3" type="audio/mpeg">
+    </audio>
+
+    <button type="button" class="btn-music-bubble" id="btnToggleMusicKids" title="Putar Musik Ceria">
+        <i class="bi bi-music-note-beamed" id="kidsMusicIcon"></i>
+    </button>
+
+    <!-- Bootstrap 5, AOS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 700, once: true });
+
+        // 1. Cover Modal Unlocker & Music
+        const coverModal = document.getElementById('coverModal');
+        const btnOpen = document.getElementById('btnOpenParty');
+        const bgMusic = document.getElementById('bgMusicKids');
+        const btnToggleMusic = document.getElementById('btnToggleMusicKids');
+        const kidsMusicIcon = document.getElementById('kidsMusicIcon');
+        let isMusicPlaying = false;
+
+        function playMusic() {
+            if (bgMusic) {
+                bgMusic.play().then(() => {
+                    isMusicPlaying = true;
+                    btnToggleMusic.classList.add('spinning');
+                    kidsMusicIcon.className = 'bi bi-pause-fill';
+                }).catch(() => {
+                    isMusicPlaying = false;
+                });
+            }
+        }
+
+        if (btnOpen) {
+            btnOpen.addEventListener('click', () => {
+                coverModal.classList.add('unlocked');
+                playMusic();
+                startConfetti();
+            });
+        }
+
+        if (btnToggleMusic) {
+            btnToggleMusic.addEventListener('click', () => {
+                if (isMusicPlaying) {
+                    bgMusic.pause();
+                    isMusicPlaying = false;
+                    btnToggleMusic.classList.remove('spinning');
+                    kidsMusicIcon.className = 'bi bi-play-fill';
+                } else {
+                    bgMusic.play();
+                    isMusicPlaying = true;
+                    btnToggleMusic.classList.add('spinning');
+                    kidsMusicIcon.className = 'bi bi-pause-fill';
+                }
+            });
+        }
+
+        // 2. Countdown Timer
+        const targetDate = new Date('2026-11-29T00:00:00').getTime();
+        function updatePartyCountdown() {
+            const now = new Date().getTime();
+            const diff = targetDate - now;
+
+            if (diff <= 0) {
+                document.getElementById('kcdDays').innerText = '00';
+                document.getElementById('kcdHours').innerText = '00';
+                document.getElementById('kcdMinutes').innerText = '00';
+                document.getElementById('kcdSeconds').innerText = '00';
+                return;
+            }
+
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('kcdDays').innerText = String(d).padStart(2, '0');
+            document.getElementById('kcdHours').innerText = String(h).padStart(2, '0');
+            document.getElementById('kcdMinutes').innerText = String(m).padStart(2, '0');
+            document.getElementById('kcdSeconds').innerText = String(s).padStart(2, '0');
+        }
+        setInterval(updatePartyCountdown, 1000);
+        updatePartyCountdown();
+
+        // 3. WhatsApp RSVP Link Formatter
+        const parentWaNumber = '6281234567890';
+        const childName = 'Alana';
+        const btnSendWa = document.getElementById('btnSendWa');
+
+        if (btnSendWa) {
+            btnSendWa.addEventListener('click', () => {
+                const guest = document.getElementById('waGuestName').value.trim();
+                const att = document.getElementById('waAttendance').value;
+                const count = document.getElementById('waGuestCount').value;
+                const msg = document.getElementById('waMessage').value.trim();
+
+                if (!guest) {
+                    alert('Mohon isi nama Anda atau nama teman kecil!');
+                    document.getElementById('waGuestName').focus();
+                    return;
+                }
+
+                let waText = `Halo Bunda / Ayah *${childName}*! 👋🎉\n\n`;
+                waText += `Saya *${guest}* ingin mengonfirmasi kehadiran untuk acara ulang tahun ${childName}:\n`;
+                waText += `• Kehadiran: *${att}*\n`;
+                waText += `• Jumlah: *${count}*\n`;
+                if (msg) {
+                    waText += `• Doa & Ucapan: "${msg}"\n`;
+                }
+                waText += `\nTerima kasih atas undangannya! ✨🎈`;
+
+                const encoded = encodeURIComponent(waText);
+                const waUrl = `https://api.whatsapp.com/send?phone=${parentWaNumber}&text=${encoded}`;
+                window.open(waUrl, '_blank');
+            });
+        }
+
+        // 4. Subtle Animated Canvas Confetti
+        function startConfetti() {
+            const canvas = document.getElementById('confettiCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.parentElement.offsetWidth;
+            canvas.height = canvas.parentElement.offsetHeight;
+
+            const pieces = [];
+            const colors = ['#FF85A1', '#FFB3C6', '#FFE380', '#6EC1E4', '#FFD166'];
+
+            for (let i = 0; i < 50; i++) {
+                pieces.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height * 0.4,
+                    size: Math.random() * 8 + 4,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    speedY: Math.random() * 1.5 + 0.8,
+                    speedX: Math.random() * 1 - 0.5,
+                    rotation: Math.random() * 360,
+                    rotationSpeed: Math.random() * 2 - 1
+                });
+            }
+
+            function animateConfetti() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                pieces.forEach(p => {
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate((p.rotation * Math.PI) / 180);
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+                    ctx.restore();
+
+                    p.y += p.speedY;
+                    p.x += p.speedX;
+                    p.rotation += p.rotationSpeed;
+
+                    if (p.y > canvas.height) {
+                        p.y = -10;
+                        p.x = Math.random() * canvas.width;
+                    }
+                });
+                requestAnimationFrame(animateConfetti);
+            }
+            animateConfetti();
+        }
+    </script>
+
+    </body>
+</html>
