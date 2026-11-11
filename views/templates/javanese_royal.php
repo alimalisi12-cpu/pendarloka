@@ -1,7 +1,7 @@
 <?php
 // views/templates/javanese_royal.php
-// Template: Traditional Javanese Royal Wedding (Gapura, Wayang Ornaments, Earthy Tones)
-// Features: Interactive Gapura Gate 3D Zoom Transition, Swaying Trees, Dynamic Asset Config, Hidden Admin (?admin=true)
+// Template: Traditional Javanese Royal Wedding (Immersive Full-Screen Gapura Cover, Wayang Ornaments, Earthy Tones)
+// Features: Full-Screen Gapura Background, Swaying Trees, Glowing Transparent Button, Smooth Scale(3) Gate Transition, Hidden Admin (?admin=true)
 
 $bankAccounts = json_decode($event['bank_accounts_json'] ?? '[]', true) ?: [];
 $galleries = json_decode($event['gallery_json'] ?? '[]', true) ?: [];
@@ -17,10 +17,10 @@ if (empty($galleries)) {
     ];
 }
 
-$gNick = !empty($event['groom_nickname']) ? trim($event['groom_nickname']) : 'Danang';
-$bNick = !empty($event['bride_nickname']) ? trim($event['bride_nickname']) : 'Sekar';
-$gName = !empty($event['groom_name']) ? trim($event['groom_name']) : 'Raden Mas Danang Joyodiningrat, S.T.';
-$bName = !empty($event['bride_name']) ? trim($event['bride_name']) : 'Raden Ajeng Sekar Arum, S.Sn.';
+$gNick = !empty($event['groom_nickname']) ? trim($event['groom_nickname']) : 'Romeo';
+$bNick = !empty($event['bride_nickname']) ? trim($event['bride_nickname']) : 'Juliet';
+$gName = !empty($event['groom_name']) ? trim($event['groom_name']) : 'Raden Mas Romeo Joyodiningrat, S.T.';
+$bName = !empty($event['bride_name']) ? trim($event['bride_name']) : 'Raden Ajeng Juliet Sekar Arum, S.Sn.';
 
 $guestDisplayName = !empty($guestName) ? $guestName : 'Bapak / Ibu / Saudara(i)';
 $musicUrl = !empty($event['music_url']) ? media_url($event['music_url']) : 'https://cdn.freesound.org/previews/469/469009_9518146-lq.mp3';
@@ -36,7 +36,7 @@ $resepsiLocation = !empty($event['resepsi_location']) ? $event['resepsi_location
 
 $groomPhoto = !empty($event['groom_photo']) ? media_url($event['groom_photo']) : 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&auto=format&fit=crop&q=80';
 $bridePhoto = !empty($event['bride_photo']) ? media_url($event['bride_photo']) : 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=600&auto=format&fit=crop&q=80';
-$gapuraCoverPhoto = !empty($event['cover_photo']) ? media_url($event['cover_photo']) : 'https://images.unsplash.com/photo-1596402184320-417e7178b2cd?w=600&auto=format&fit=crop&q=80';
+$gapuraCoverPhoto = !empty($event['cover_photo']) ? media_url($event['cover_photo']) : 'https://images.unsplash.com/photo-1596402184320-417e7178b2cd?w=1600&auto=format&fit=crop&q=85';
 $parentWa = !empty($event['groom_instagram']) ? preg_replace('/[^0-9]/', '', $event['groom_instagram']) : '6281234567890';
 ?>
 <!DOCTYPE html>
@@ -48,28 +48,26 @@ $parentWa = !empty($event['groom_instagram']) ? preg_replace('/[^0-9]/', '', $ev
 
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🪭</text></svg>" type="image/png">
 
-    <!-- Fonts: Cinzel Decorative, Great Vibes, Playfair Display, Plus Jakarta Sans -->
+    <!-- Fonts: Cinzel Decorative, Cormorant Garamond, Playfair Display, Great Vibes, Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Great+Vibes&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <style>
         :root {
-            /* Traditional Javanese Earthy Palette */
             --terracotta: #A44A3F;
             --terracotta-dark: #82342B;
             --deep-brown: #2C1810;
             --dark-forest: #1E3326;
             --forest-soft: #284433;
-            --wood-dark: #1F100B;
+            --wood-dark: #140A06;
             --parang-cream: #FAF6EF;
             --parang-surface: #F3EBDD;
 
-            /* Soft Metallic Gold */
             --gold-soft: #D4AF37;
             --gold-light: #F4E2A1;
-            --gold-deep: #9F7922;
+            --gold-deep: #AA8220;
             --gold-gradient: linear-gradient(135deg, #ECC880 0%, #D4AF37 50%, #9F7922 100%);
             --gold-border: rgba(212, 175, 55, 0.35);
 
@@ -107,36 +105,68 @@ $parentWa = !empty($event['groom_instagram']) ? preg_replace('/[^0-9]/', '', $ev
             z-index: 2;
         }
 
-        /* 3D Gate Cover Overlay */
+        /* IMMERSIVE FULL-SCREEN GAPURA COVER OVERLAY */
         #gateCoverOverlay {
             position: fixed;
             inset: 0;
+            width: 100vw;
+            height: 100vh;
+            min-height: 100vh;
             z-index: 99999;
-            background: radial-gradient(circle at 50% 35%, #3D2314 0%, #1A0D07 80%, #0D0603 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            perspective: 1200px;
             overflow: hidden;
-            transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: opacity 1.4s cubic-bezier(0.16, 1, 0.3, 1), transform 1.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         #gateCoverOverlay.gate-opened {
             opacity: 0;
-            transform: scale(2.8);
+            transform: scale(3);
             pointer-events: none;
+        }
+
+        /* Layer 1: Lowest Z-Index: Full-Screen Symmetrical Gapura Background */
+        .gate-bg-layer {
+            position: absolute;
+            inset: 0;
+            width: 100vw;
+            min-height: 100vh;
+            height: 100%;
+            background-size: cover;
+            background-position: center bottom;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            z-index: 1;
+            transition: transform 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .gate-vignette-overlay {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(20, 10, 6, 0.45) 0%, rgba(15, 8, 4, 0.8) 75%, rgba(10, 5, 2, 0.94) 100%);
+            z-index: 1;
+        }
+
+        /* Layer 2: Middle Z-Index: Swaying Trees */
+        .gate-ambient-layer {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 2;
+            overflow: hidden;
         }
 
         .tree-ambient {
             position: absolute;
             bottom: -20px;
-            width: 180px;
-            height: 380px;
+            width: 200px;
+            height: 420px;
             pointer-events: none;
-            z-index: 2;
-            opacity: 0.85;
+            opacity: 0.8;
             transform-origin: bottom center;
         }
+
         .tree-left { left: -40px; animation: treeSwayLeft 7s ease-in-out infinite alternate; }
         .tree-right { right: -40px; transform: scaleX(-1); animation: treeSwayRight 8s ease-in-out infinite alternate; }
 
@@ -151,118 +181,121 @@ $parentWa = !empty($event['groom_instagram']) ? preg_replace('/[^0-9]/', '', $ev
             100% { transform: scaleX(-1) rotate(-2deg) skewX(-1deg); }
         }
 
-        .gate-assembly {
+        /* Layer 3: Highest Z-Index: Centered Content Wrapper (NO BOX CONTAINER) */
+        .cover-hero-wrapper {
             position: relative;
-            width: 100%;
-            max-width: 440px;
-            height: 85vh;
+            z-index: 3;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: space-between;
-            padding: 30px 20px;
-            z-index: 5;
-            transform-style: preserve-3d;
-        }
-
-        .gate-portal-container {
-            position: absolute;
-            inset: 0;
-            display: flex;
             justify-content: center;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .gate-door-wing {
-            width: 50%;
-            height: 100%;
-            background-size: cover;
-            background-position: center;
-            transition: transform 1.5s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-        .gate-door-left { transform-origin: left center; }
-        .gate-door-right { transform-origin: right center; }
-
-        #gateCoverOverlay.gate-opened .gate-door-left { transform: rotateY(-110deg) translateZ(100px); }
-        #gateCoverOverlay.gate-opened .gate-door-right { transform: rotateY(110deg) translateZ(100px); }
-
-        .cover-content-card {
-            position: relative;
-            z-index: 10;
             text-align: center;
-            background: rgba(31, 16, 11, 0.88);
-            backdrop-filter: blur(10px);
-            border: 2px solid var(--gold-soft);
-            border-radius: 28px;
-            padding: 36px 24px;
             width: 100%;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 35px rgba(212, 175, 55, 0.2);
+            max-width: 580px;
+            padding: 30px 20px;
         }
 
-        .gapura-ornament-top {
-            width: 76px;
-            height: 76px;
+        .cover-gunungan-icon {
+            width: 82px;
+            height: 82px;
             margin: 0 auto 16px;
-            background: var(--gold-gradient);
-            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 0 24px rgba(212, 175, 55, 0.45);
+            filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.5));
+            animation: pulseGunungan 4s ease-in-out infinite alternate;
+        }
+        .cover-gunungan-icon img { width: 100%; height: 100%; object-fit: contain; }
+
+        @keyframes pulseGunungan {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.08); }
         }
 
-        .gapura-ornament-top img { width: 52px; height: 52px; object-fit: contain; }
-
-        .cover-sub-title {
-            font-size: 11px;
-            letter-spacing: 3.5px;
+        .cover-subtitle {
+            font-family: 'Cinzel Decorative', Georgia, serif;
+            font-size: 13px;
+            letter-spacing: 5px;
             text-transform: uppercase;
             color: var(--gold-light);
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 8px;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.75), 0 0 20px rgba(0, 0, 0, 0.9);
         }
 
         .cover-couple-name {
-            font-family: 'Cinzel Decorative', Georgia, serif;
-            font-size: 26px;
-            font-weight: 700;
-            background: var(--gold-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 22px;
-            line-height: 1.35;
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 42px;
+            font-weight: 600;
+            line-height: 1.25;
+            color: var(--gold-light);
+            letter-spacing: 1px;
+            margin: 8px 0 16px;
+            text-shadow: 2px 2px 12px rgba(0, 0, 0, 0.8), 0 0 25px rgba(0, 0, 0, 0.9), 0 0 40px rgba(212, 175, 55, 0.3);
         }
 
-        .cover-recipient-box {
-            background: rgba(13, 6, 3, 0.65);
-            border: 1px dashed var(--gold-soft);
-            border-radius: 16px;
-            padding: 14px 18px;
-            margin-bottom: 24px;
+        @media (max-width: 480px) {
+            .cover-couple-name { font-size: 34px; }
         }
 
-        .cover-recipient-label { font-size: 12px; color: #CDB79E; margin-bottom: 3px; }
-        .cover-recipient-name { font-size: 16px; font-weight: 700; color: #FFFFFF; letter-spacing: 0.5px; }
+        .cover-divider-gold {
+            color: var(--gold-soft);
+            font-size: 20px;
+            margin-bottom: 18px;
+            text-shadow: 0 0 12px rgba(212, 175, 55, 0.6);
+        }
+
+        .cover-recipient-block { margin-bottom: 30px; }
+
+        .cover-recipient-kicker {
+            font-size: 13px;
+            color: #E2D3C4;
+            font-style: italic;
+            display: block;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.75), 0 0 20px rgba(0, 0, 0, 0.9);
+        }
+
+        .cover-recipient-name {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 22px;
+            font-weight: 600;
+            color: #FFFFFF;
+            letter-spacing: 0.5px;
+            margin: 0;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.9);
+        }
 
         .btn-open-gate {
-            background: var(--gold-gradient);
-            color: var(--wood-dark);
-            font-family: 'Playfair Display', serif;
-            font-size: 15px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            padding: 14px 34px;
+            background: rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border: 1.5px solid var(--gold-soft);
+            color: var(--gold-light);
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 14.5px;
+            font-weight: 600;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            padding: 15px 40px;
             border-radius: var(--radius-pill);
-            border: none;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
-            transition: var(--transition-smooth);
+            gap: 12px;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), inset 0 0 12px rgba(212, 175, 55, 0.15);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .btn-open-gate:hover { transform: scale(1.05) translateY(-2px); }
+
+        .btn-open-gate:hover {
+            background: rgba(212, 175, 55, 0.2);
+            color: #FFFFFF;
+            border-color: #F4E2A1;
+            transform: scale(1.06) translateY(-2px);
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.65), 0 8px 25px rgba(0, 0, 0, 0.6), inset 0 0 15px rgba(212, 175, 55, 0.3);
+        }
 
         /* Floating Wayang Ornaments */
         .wayang-float-anchor {
@@ -604,42 +637,43 @@ $parentWa = !empty($event['groom_instagram']) ? preg_replace('/[^0-9]/', '', $ev
 </head>
 <body>
 
-    <!-- 1. GATE COVER OVERLAY -->
+    <!-- 1. IMMERSIVE FULL-SCREEN GAPURA COVER OVERLAY -->
     <div id="gateCoverOverlay">
-        <svg class="tree-ambient tree-left" viewBox="0 0 100 200" fill="none">
-            <path d="M50 200 Q48 120 50 60 Q30 50 20 80 Q10 40 40 30 Q50 10 70 25 Q90 35 75 75 Q90 100 55 120 L50 200 Z" fill="#1E3326" />
-            <path d="M48 60 Q25 90 15 120 Q35 110 48 100" stroke="#2B4333" stroke-width="4" stroke-linecap="round" />
-            <path d="M52 50 Q75 80 85 110 Q65 100 52 90" stroke="#2B4333" stroke-width="4" stroke-linecap="round" />
-        </svg>
+        <div class="gate-bg-layer" id="gateBgLayer" style="background-image: url('<?= htmlspecialchars($gapuraCoverPhoto) ?>');">
+            <div class="gate-vignette-overlay"></div>
+        </div>
 
-        <svg class="tree-ambient tree-right" viewBox="0 0 100 200" fill="none">
-            <path d="M50 200 Q48 120 50 60 Q30 50 20 80 Q10 40 40 30 Q50 10 70 25 Q90 35 75 75 Q90 100 55 120 L50 200 Z" fill="#1E3326" />
-            <path d="M48 60 Q25 90 15 120 Q35 110 48 100" stroke="#2B4333" stroke-width="4" stroke-linecap="round" />
-            <path d="M52 50 Q75 80 85 110 Q65 100 52 90" stroke="#2B4333" stroke-width="4" stroke-linecap="round" />
-        </svg>
+        <div class="gate-ambient-layer">
+            <svg class="tree-ambient tree-left" viewBox="0 0 100 200" fill="none">
+                <path d="M50 200 Q48 120 50 60 Q30 50 20 80 Q10 40 40 30 Q50 10 70 25 Q90 35 75 75 Q90 100 55 120 L50 200 Z" fill="#1E3326" />
+                <path d="M48 60 Q25 90 15 120 Q35 110 48 100" stroke="#2B4333" stroke-width="4" stroke-linecap="round" />
+                <path d="M52 50 Q75 80 85 110 Q65 100 52 90" stroke="#2B4333" stroke-width="4" stroke-linecap="round" />
+            </svg>
 
-        <div class="gate-assembly">
-            <div class="gate-portal-container">
-                <div class="gate-door-wing gate-door-left" id="gateDoorLeft"></div>
-                <div class="gate-door-wing gate-door-right" id="gateDoorRight"></div>
+            <svg class="tree-ambient tree-right" viewBox="0 0 100 200" fill="none">
+                <path d="M50 200 Q48 120 50 60 Q30 50 20 80 Q10 40 40 30 Q50 10 70 25 Q90 35 75 75 Q90 100 55 120 L50 200 Z" fill="#1E3326" />
+                <path d="M48 60 Q25 90 15 120 Q35 110 48 100" stroke="#2B4333" stroke-width="4" stroke-linecap="round" />
+                <path d="M52 50 Q75 80 85 110 Q65 100 52 90" stroke="#2B4333" stroke-width="4" stroke-linecap="round" />
+            </svg>
+        </div>
+
+        <div class="cover-hero-wrapper">
+            <div class="cover-gunungan-icon">
+                <img id="coverGapuraIcon" src="https://cdn-icons-png.flaticon.com/512/3252/3252199.png" alt="Gunungan Wayang">
             </div>
 
-            <div class="cover-content-card">
-                <div class="gapura-ornament-top">
-                    <img id="coverGapuraIcon" src="https://cdn-icons-png.flaticon.com/512/3252/3252199.png" alt="Gunungan Wayang">
-                </div>
-                <div class="cover-sub-title">Pawiwahan Ageng</div>
-                <h1 class="cover-couple-name" id="coverCoupleNames"><?= htmlspecialchars($bNick) ?> &amp; <?= htmlspecialchars($gNick) ?></h1>
+            <div class="cover-subtitle">PAWIWAHAN AGENG</div>
+            <h1 class="cover-couple-name" id="coverCoupleNames"><?= htmlspecialchars($bNick) ?> &amp; <?= htmlspecialchars($gNick) ?></h1>
+            <div class="cover-divider-gold">❖</div>
 
-                <div class="cover-recipient-box">
-                    <div class="cover-recipient-label">Katur Dhumateng Panjenenganipun:</div>
-                    <div class="cover-recipient-name" id="coverRecipientName"><?= htmlspecialchars($guestDisplayName) ?></div>
-                </div>
-
-                <button type="button" class="btn-open-gate" id="btnOpenInvitation">
-                    <i class="bi bi-door-open-fill"></i> Buka Undangan
-                </button>
+            <div class="cover-recipient-block">
+                <span class="cover-recipient-kicker">Katur Dhumateng Panjenenganipun:</span>
+                <h2 class="cover-recipient-name" id="coverRecipientName"><?= htmlspecialchars($guestDisplayName) ?></h2>
             </div>
+
+            <button type="button" class="btn-open-gate" id="btnOpenInvitation">
+                <i class="bi bi-door-open-fill"></i> Buka Undangan
+            </button>
         </div>
     </div>
 
@@ -891,8 +925,8 @@ $parentWa = !empty($event['groom_instagram']) ? preg_replace('/[^0-9]/', '', $ev
 
                 <div class="admin-section-title">🖼️ Media &amp; Visual Ornaments</div>
                 <div class="admin-form-group">
-                    <label class="admin-label">Gapura / Gate Center Vector URL</label>
-                    <input type="text" id="admGapuraUrl" class="admin-input" placeholder="URL Gambar Gapura">
+                    <label class="admin-label">Gapura Full-Screen Gate Image URL</label>
+                    <input type="text" id="admGapuraUrl" class="admin-input" placeholder="URL Gambar Gapura Penuh">
                 </div>
                 <div class="admin-form-group">
                     <label class="admin-label">Left Wayang Ornament URL</label>
@@ -975,11 +1009,9 @@ $parentWa = !empty($event['groom_instagram']) ? preg_replace('/[^0-9]/', '', $ev
         let currentConfig = getActiveConfig();
 
         function applyDataToDOM() {
-            const gateLeft = document.getElementById('gateDoorLeft');
-            const gateRight = document.getElementById('gateDoorRight');
-            if (gateLeft && gateRight) {
-                gateLeft.style.backgroundImage = `linear-gradient(rgba(44, 24, 16, 0.45), rgba(13, 6, 3, 0.75)), url('${currentConfig.gapuraUrl}')`;
-                gateRight.style.backgroundImage = `linear-gradient(rgba(44, 24, 16, 0.45), rgba(13, 6, 3, 0.75)), url('${currentConfig.gapuraUrl}')`;
+            const gateBgLayer = document.getElementById('gateBgLayer');
+            if (gateBgLayer) {
+                gateBgLayer.style.backgroundImage = `url('${currentConfig.gapuraUrl}')`;
             }
 
             document.getElementById('coverGapuraIcon').src = currentConfig.wayangLeftUrl;
@@ -997,7 +1029,7 @@ $parentWa = !empty($event['groom_instagram']) ? preg_replace('/[^0-9]/', '', $ev
             }
         }
 
-        // Gate Opening Transition
+        // Gate Opening Transition: Scale(3) & Fade Out
         const gateCoverOverlay = document.getElementById('gateCoverOverlay');
         const btnOpenInvitation = document.getElementById('btnOpenInvitation');
         const bgAudio = document.getElementById('bgAudio');
