@@ -331,6 +331,15 @@ class Database {
                 $this->pdo->exec("INSERT INTO `templates` (`category_id`, `name`, `slug`, `thumbnail`, `tier`, `view_file`, `is_active`) VALUES (1, 'Wedding Premium 045', 'wedding-premium045', 'assets/templates/wedding_premium045/framecover2.png', 'premium', 'wedding_premium045', 1)");
             }
         } catch (Exception $e) {}
+
+        // Ensure Sage Botanical template is registered
+        try {
+            $checkSage = $this->pdo->query("SELECT COUNT(*) FROM `templates` WHERE `view_file` = 'sage_botanical'")->fetchColumn();
+            if ($checkSage == 0) {
+                $this->pdo->exec("INSERT INTO `templates` (`category_id`, `name`, `slug`, `thumbnail`, `tier`, `view_file`, `is_active`) VALUES (1, 'Sage Botanical Elegance', 'sage-botanical', 'https://images.unsplash.com/photo-1519741497674-611481863552?w=600&auto=format&fit=crop&q=80', 'premium', 'sage_botanical', 1)");
+            }
+        } catch (Exception $e) {}
+
     }
 
     private function ensureColumnExists($table, $column, $alterSql) {
