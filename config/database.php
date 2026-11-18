@@ -360,7 +360,23 @@ class Database {
         try {
             $checkJavanese = $this->pdo->query("SELECT COUNT(*) FROM `templates` WHERE `view_file` = 'javanese_royal'")->fetchColumn();
             if ($checkJavanese == 0) {
-                $this->pdo->exec("INSERT INTO `templates` (`category_id`, `name`, `slug`, `thumbnail`, `tier`, `view_file`, `is_active`) VALUES (1, 'Javanese Royal Gapura', 'javanese-royal', 'https://images.unsplash.com/photo-1596402184320-417e7178b2cd?w=600&auto=format&fit=crop&q=80', 'premium', 'javanese_royal', 1)");
+                $this->pdo->exec("INSERT INTO `templates` (`category_id`, `name`, `slug`, `thumbnail`, `tier`, `view_file`, `is_active`) VALUES (1, 'Javanese Royal Gapura', 'javanese-royal', 'https://inv.akaddigitech.id/wp-content/uploads/2025/09/JAWA-GUNUNGAN.png', 'premium', 'javanese_royal', 1)");
+            }
+        } catch (Exception $e) {}
+
+        // Ensure Adat Jawa Akad Digitech template is registered
+        try {
+            $checkAkad = $this->pdo->query("SELECT COUNT(*) FROM `templates` WHERE `view_file` = 'jawa_akaddigitech'")->fetchColumn();
+            if ($checkAkad == 0) {
+                $this->pdo->exec("INSERT INTO `templates` (`category_id`, `name`, `slug`, `thumbnail`, `tier`, `view_file`, `is_active`) VALUES (1, 'Adat Jawa Akad Digitech', 'jawa-akaddigitech', 'https://inv.akaddigitech.id/wp-content/uploads/2025/09/JAWA-GUNUNGAN.png', 'premium', 'jawa_akaddigitech', 1)");
+            }
+        } catch (Exception $e) {}
+
+        // Ensure Cirebon Premium 5 template is registered
+        try {
+            $checkCirebon = $this->pdo->query("SELECT COUNT(*) FROM `templates` WHERE `view_file` = 'cirebon_premium5'")->fetchColumn();
+            if ($checkCirebon == 0) {
+                $this->pdo->exec("INSERT INTO `templates` (`category_id`, `name`, `slug`, `thumbnail`, `tier`, `view_file`, `is_active`) VALUES (1, 'Dark Crimson Romantic (Premium 5)', 'cirebon-premium5', 'https://undanganvideocirebon.com/wp-content/uploads/2026/07/WhatsApp-Image-2026-05-30-at-18.30.37-5-1.jpeg', 'premium', 'cirebon_premium5', 1)");
             }
         } catch (Exception $e) {}
 
