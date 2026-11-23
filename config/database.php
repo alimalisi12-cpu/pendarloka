@@ -380,6 +380,14 @@ class Database {
             }
         } catch (Exception $e) {}
 
+        // Ensure Romano Classical Luxury template is registered
+        try {
+            $checkRomano = $this->pdo->query("SELECT COUNT(*) FROM `templates` WHERE `view_file` = 'romano_luxury'")->fetchColumn();
+            if ($checkRomano == 0) {
+                $this->pdo->exec("INSERT INTO `templates` (`category_id`, `name`, `slug`, `thumbnail`, `tier`, `view_file`, `is_active`) VALUES (1, 'Romano Classical Luxury (Tibra Theme)', 'romano-luxury', 'https://tibrainvitation.id/wp-content/uploads/2026/11/BG-SS-15.jpg', 'premium', 'romano_luxury', 1)");
+            }
+        } catch (Exception $e) {}
+
 
 
     }
