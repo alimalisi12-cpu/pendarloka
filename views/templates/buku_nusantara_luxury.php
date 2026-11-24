@@ -29,7 +29,9 @@ $gMother = !empty($event['groom_mother']) ? $event['groom_mother'] : 'Ibu Hj. Si
 $bFather = !empty($event['bride_father']) ? $event['bride_father'] : 'Bapak Drs. Bambang Sutrisno';
 $bMother = !empty($event['bride_mother']) ? $event['bride_mother'] : 'Ibu Rina Marlina';
 
-$guestDisplayName = !empty($guestName) ? $guestName : 'Tamu Undangan';
+$guestDisplayName = !empty($guestName) ? $guestName : (!empty($_GET['to']) ? htmlspecialchars(trim($_GET['to'])) : 'Tamu Undangan');
+$guestAddress = !empty($_GET['addr']) ? htmlspecialchars(trim($_GET['addr'])) : 'Di Tempat';
+
 $musicUrl = !empty($event['music_url']) ? media_url($event['music_url']) : 'https://cdn.freesound.org/previews/469/469009_9518146-lq.mp3';
 
 $eventDateTimestamp = strtotime($event['event_date'] ?? '2027-06-20');
@@ -43,6 +45,11 @@ $akadAddress = !empty($event['akad_address']) ? $event['akad_address'] : 'Jl. Si
 $resepsiTime = !empty($event['resepsi_time']) ? $event['resepsi_time'] : '11.00 - 15.00 WIB';
 $resepsiLocation = !empty($event['resepsi_location']) ? $event['resepsi_location'] : 'Pendopo Agung Kartini';
 $resepsiAddress = !empty($event['resepsi_address']) ? $event['resepsi_address'] : 'Jl. Siliwangi No. 88, Kejaksan, Kota Cirebon, Jawa Barat 45123';
+
+$venueMapQuery = urlencode(($resepsiLocation ?: $akadLocation) . ', ' . ($resepsiAddress ?: $akadAddress));
+$googleMapsLink = !empty($event['google_maps_url']) 
+    ? htmlspecialchars($event['google_maps_url']) 
+    : ('https://maps.google.com/?q=' . $venueMapQuery);
 
 $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
 ?>
@@ -249,32 +256,50 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
             pointer-events: none;
         }
 
-        /* PROFESSIONAL MONOGRAM CREST (D & N) */
+        /* PROFESSIONAL ENLARGED MONOGRAM CREST (CENTERED & PROPORTIONATE) */
+        .book-top-crest-area {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 6px;
+        }
+
         .book-monogram-crest {
             position: relative;
-            width: 108px;
-            height: 108px;
+            width: 136px;
+            height: 136px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-top: 6px;
-            margin-bottom: 8px;
+            margin: 0 auto;
         }
 
         .crest-outer-ring {
             position: absolute;
             inset: 0;
-            border: 2px solid var(--color-gold);
+            border: 2.5px solid var(--color-gold);
             border-radius: 50%;
-            box-shadow: 0 0 16px rgba(212, 175, 55, 0.45), inset 0 0 12px rgba(212, 175, 55, 0.25);
-            background: radial-gradient(circle, rgba(212, 175, 55, 0.18) 0%, transparent 75%);
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.55), inset 0 0 16px rgba(212, 175, 55, 0.3);
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.22) 0%, transparent 75%);
         }
 
         .crest-inner-ring {
             position: absolute;
-            inset: 6px;
-            border: 1.5px dashed rgba(247, 233, 183, 0.65);
+            inset: 7px;
+            border: 1.5px dashed rgba(247, 233, 183, 0.7);
             border-radius: 50%;
+        }
+
+        .crest-crown-accent {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.1rem;
+            color: var(--color-gold-light);
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.8);
+            z-index: 3;
         }
 
         .crest-letters {
@@ -290,63 +315,125 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
 
         .crest-char {
             font-family: var(--font-heading);
-            font-size: 2.2rem;
+            font-size: 2.7rem;
             font-weight: 700;
-            color: var(--color-gold-light);
-            text-shadow: 0 2px 10px rgba(0,0,0,0.7), 0 0 15px rgba(212, 175, 55, 0.4);
+            color: #fff9ea;
+            text-shadow: 0 3px 12px rgba(0,0,0,0.8), 0 0 22px rgba(212, 175, 55, 0.55);
         }
 
         .crest-amp {
             font-family: var(--font-script);
-            font-size: 2.3rem;
+            font-size: 2.85rem;
             color: var(--color-gold);
-            margin-top: -4px;
-            text-shadow: 0 0 12px rgba(212, 175, 55, 0.6);
+            margin-top: -6px;
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.7);
+        }
+
+        /* LOWER MIDDLE SECTION: TITLE, NAMES & DATE */
+        .book-mid-title-area {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 14px;
+            margin-bottom: 8px;
         }
 
         .book-title-tag {
             font-family: var(--font-body);
-            font-size: 0.8rem;
-            letter-spacing: 4px;
+            font-size: 0.82rem;
+            letter-spacing: 5px;
             text-transform: uppercase;
             color: var(--color-gold-light);
-            margin-top: 4px;
-            font-weight: 500;
+            font-weight: 600;
+            margin-bottom: 6px;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.6);
         }
 
         .book-couple-names {
             font-family: var(--font-heading);
-            font-size: 2.25rem;
+            font-size: 2.35rem;
             font-weight: 700;
-            color: #fff;
-            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.65), 0 0 25px rgba(212, 175, 55, 0.45);
-            line-height: 1.2;
-            margin: 6px 0;
+            color: #ffffff;
+            text-shadow: 0 3px 14px rgba(0, 0, 0, 0.8), 0 0 28px rgba(212, 175, 55, 0.5);
+            line-height: 1.22;
+            margin: 4px 0 10px 0;
         }
 
         .book-date-stamp {
             font-family: var(--font-body);
             font-size: 0.88rem;
-            letter-spacing: 2px;
+            letter-spacing: 2.5px;
             color: var(--color-gold-light);
-            border-top: 1px solid rgba(212, 175, 55, 0.4);
-            border-bottom: 1px solid rgba(212, 175, 55, 0.4);
-            padding: 5px 16px;
+            border-top: 1px solid rgba(212, 175, 55, 0.45);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.45);
+            padding: 6px 20px;
+            display: inline-block;
+            margin: 0 auto;
+        }
+
+        /* BOTTOM SECTION: ELEGANT RECIPIENT INVITATION PLAQUE */
+        .book-recipient-card {
+            position: relative;
+            width: calc(100% - 12px);
+            margin: 12px auto 4px auto;
+            background: linear-gradient(135deg, rgba(40, 6, 14, 0.65) 0%, rgba(20, 3, 7, 0.75) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.55);
+            border-radius: 14px;
+            padding: 14px 16px 12px 16px;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), inset 0 0 15px rgba(212, 175, 55, 0.15);
+            text-align: center;
+        }
+
+        .recipient-crest-icon {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 26px;
+            height: 26px;
+            background: #50101d;
+            border: 1.5px solid var(--color-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-gold-light);
+            font-size: 0.75rem;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.5);
         }
 
         .book-guest-label {
-            font-size: 0.78rem;
-            color: #f7dcd5;
-            letter-spacing: 1px;
-            margin-top: 12px;
+            font-family: var(--font-body);
+            font-size: 0.7rem;
+            color: rgba(247, 233, 183, 0.85);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-top: 2px;
+            margin-bottom: 4px;
         }
 
         .book-guest-name {
             font-family: var(--font-heading);
             font-size: 1.25rem;
-            color: #fff;
-            font-weight: 600;
-            margin-top: 2px;
+            color: #ffffff;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.7);
+            line-height: 1.3;
+        }
+
+        .book-guest-address {
+            font-size: 0.78rem;
+            color: var(--color-gold-light);
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            letter-spacing: 0.5px;
         }
 
         /* 3D Rose Flower and Jasmine Surrounding the Book */
@@ -395,27 +482,29 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(45, 10, 18, 0.88);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: radial-gradient(circle at center, #2e0813 0%, #150207 100%);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             z-index: 99998;
-            display: none;
+            display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
             opacity: 0;
-            transition: opacity 0.7s ease, transform 0.7s ease;
+            pointer-events: none;
+            transition: opacity 0.6s ease, transform 0.7s ease;
         }
 
         #royalScrollRevealOverlay.show {
-            display: flex;
             opacity: 1;
+            pointer-events: auto;
         }
 
         #royalScrollRevealOverlay.fade-away {
             opacity: 0;
             transform: scale(1.06);
             pointer-events: none;
+            transition: opacity 0.8s ease, transform 0.8s ease;
         }
 
         .scroll-wrapper {
@@ -1579,22 +1668,35 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
             <div class="book-cover">
                 <div class="book-inner-border"></div>
 
-                <!-- Professional Interlocking Monogram Crest (D & N) -->
-                <div class="book-monogram-crest">
-                    <div class="crest-outer-ring"></div>
-                    <div class="crest-inner-ring"></div>
-                    <div class="crest-letters">
-                        <span class="crest-char"><?= htmlspecialchars($gInitial) ?></span> <span class="crest-amp">&amp;</span> <span class="crest-char"><?= htmlspecialchars($bInitial) ?></span>
+                <!-- Top Area: Professional Enlarged Monogram Crest (Centered) -->
+                <div class="book-top-crest-area">
+                    <div class="book-monogram-crest">
+                        <div class="crest-crown-accent"><i class="bi bi-gem"></i></div>
+                        <div class="crest-outer-ring"></div>
+                        <div class="crest-inner-ring"></div>
+                        <div class="crest-letters">
+                            <span class="crest-char"><?= htmlspecialchars($gInitial) ?></span> <span class="crest-amp">&amp;</span> <span class="crest-char"><?= htmlspecialchars($bInitial) ?></span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="book-title-tag">The Royal Wedding Book</div>
-                <div class="book-couple-names"><?= htmlspecialchars($gNick) ?> &amp; <?= htmlspecialchars($bNick) ?></div>
-                <div class="book-date-stamp">20 . 06 . 2027</div>
+                <!-- Lower Middle Area: Royal Wedding Book, Names & Date Stamp -->
+                <div class="book-mid-title-area">
+                    <div class="book-title-tag">The Royal Wedding Book</div>
+                    <div class="book-couple-names"><?= htmlspecialchars($gNick) ?> &amp; <?= htmlspecialchars($bNick) ?></div>
+                    <div class="book-date-stamp">♦ 20 . 06 . 2027 ♦</div>
+                </div>
 
-                <div style="margin-top: auto; padding-bottom: 12px; width: 100%;">
+                <!-- Bottom Area: Professional Recipient Invitation Plaque with Address -->
+                <div class="book-recipient-card">
+                    <div class="recipient-crest-icon">
+                        <i class="bi bi-envelope-paper-heart"></i>
+                    </div>
                     <div class="book-guest-label">Kepada Yth. Bapak/Ibu/Saudara/i:</div>
-                    <div class="book-guest-name" id="bookGuestNameDisplay">Bpk. Andre &amp; Keluarga</div>
+                    <div class="book-guest-name" id="bookGuestNameDisplay"><?= htmlspecialchars($guestDisplayName) ?></div>
+                    <div class="book-guest-address" id="bookGuestAddressDisplay">
+                        <i class="bi bi-geo-alt-fill"></i> Di Tempat
+                    </div>
                 </div>
             </div>
         </div>
@@ -1938,24 +2040,33 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
             <h2 class="section-heading" data-aos="fade-up">Lokasi Acara</h2>
             <div class="section-desc" data-aos="fade-up">Kemudahan rute menuju lokasi pesta kami</div>
 
-            <!-- Location Card -->
+            <!-- Location Card with Close-Up Street Map -->
             <div class="location-card mt-4" data-aos="fade-up" data-aos-duration="1000">
-                <i class="bi bi-building" style="font-size: 2.2rem; color: var(--color-wine); margin-bottom: 10px; display: inline-block;"></i>
-                <div class="venue-name-bold">Pendopo Agung Kartini</div>
-                <div class="venue-address-full" id="venueAddressText">
-                    Jl. Siliwangi No. 88, Kejaksan, Kota Cirebon, Jawa Barat 45123
+                <div class="venue-icon-badge">
+                    <i class="bi bi-building"></i>
+                </div>
+                <div class="venue-name-bold"><?= htmlspecialchars($resepsiLocation ?: $akadLocation) ?></div>
+                <div class="venue-address-full" id="venueAddressText"><?= htmlspecialchars($resepsiAddress ?: $akadAddress) ?></div>
+
+                <!-- Professional Close-Up Venue Street Map Container -->
+                <div class="venue-map-wrapper">
+                    <div class="map-badge-tag"><i class="bi bi-geo-alt-fill"></i> <?= htmlspecialchars($resepsiLocation ?: $akadLocation) ?></div>
+                    <iframe 
+                        class="venue-map-iframe" 
+                        src="https://maps.google.com/maps?q=<?= $venueMapQuery ?>&t=&z=16&ie=UTF8&iwloc=&output=embed" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade"
+                        title="Peta Lokasi Pendopo Agung Kartini Cirebon">
+                    </iframe>
+                    <div class="map-venue-pin-badge">
+                        <span class="pin-dot"></span>
+                        <span class="pin-label"><?= htmlspecialchars($resepsiLocation ?: $akadLocation) ?></span>
+                    </div>
                 </div>
 
-                <!-- Stylized Interactive Map Mockup with Pin -->
-                <a href="https://maps.google.com/?q=Pendopo+Agung+Kartini+Cirebon" target="_blank" class="map-interactive-box" title="Klik untuk membuka Google Maps">
-                    <div class="map-pin-pulse">
-                        <i class="bi bi-geo-alt-fill"></i>
-                    </div>
-                </a>
-
                 <div class="btn-action-group">
-                    <a href="https://maps.google.com/?q=Pendopo+Agung+Kartini+Cirebon" target="_blank" class="btn-primary-wine">
-                        <i class="bi bi-map-fill"></i>
+                    <a href="<?= $googleMapsLink ?>" target="_blank" class="btn-primary-wine">
+                        <i class="bi bi-cursor-fill"></i>
                         <span>Petunjuk Arah</span>
                     </a>
                     <button type="button" class="btn-outline-gold" onclick="copyAddressToClipboard()">
@@ -2196,7 +2307,13 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
             if (isOpeningHandled) return;
             isOpeningHandled = true;
 
-            // Step 1: 3D Book Cover Open Animation
+            // ZERO-GLITCH ARCHITECTURE:
+            // 1. Immediately activate the scroll overlay behind the book cover (z-index 99998)
+            // This ensures when the book cover fades out, ONLY the royal scroll is visible,
+            // with 0% chance of the main invitation content flashing underneath!
+            scrollOverlay.classList.add('show');
+
+            // 2. 3D Book Cover Open Animation & Fade (z-index 99999)
             page1.classList.add('book-opened');
 
             // Soft Music Fade-In Playback
@@ -2222,36 +2339,50 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
             // Launch falling petals celebration
             launchPetals();
 
-            // Step 2: Show Golden Scroll Overlay after book cover begins opening (500ms)
+            // 3. Trigger unrolling of the royal golden scroll smoothly as cover opens
             setTimeout(() => {
-                scrollOverlay.classList.add('show');
-
-                // Step 3: Trigger slow smooth unrolling of the royal scroll
-                setTimeout(() => {
-                    scrollParchment.classList.add('unrolled');
-                }, 200);
-
-                // Step 4: After unrolling completely, automatically transition to main page (or user can tap button)
-                setTimeout(() => {
-                    finishScrollTransition();
-                }, 4800);
+                scrollParchment.classList.add('unrolled');
+                // Cleanly remove page1 from layout so it doesn't block clicks or take GPU
+                page1.style.display = 'none';
             }, 600);
+
+            // 4. After guest reads proclamation, auto transition to main invitation
+            setTimeout(() => {
+                finishScrollTransition();
+            }, 5000);
         }
 
         function finishScrollTransition() {
             if (!scrollOverlay.classList.contains('show')) return;
             if (scrollOverlay.classList.contains('fade-away')) return;
 
-            // Fade out the golden scroll overlay
+            // Smoothly fade out the golden scroll overlay to reveal main invitation for the first time
             scrollOverlay.classList.add('fade-away');
 
-            // Smoothly glide into main invitation content
+            // Reveal main content cleanly
             setTimeout(() => {
                 scrollOverlay.style.display = 'none';
                 document.getElementById('page2Undangan').scrollIntoView({ behavior: 'smooth' });
-                AOS.refresh();
-            }, 700);
+                if (typeof AOS !== 'undefined') {
+                    AOS.refresh();
+                }
+            }, 750);
         }
+
+        // Support URL parameters ?to=Nama&addr=Alamat
+        (function parseGuestFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            const to = params.get('to');
+            const addr = params.get('addr');
+            if (to) {
+                const el = document.getElementById('bookGuestNameDisplay');
+                if (el) el.textContent = to;
+            }
+            if (addr) {
+                const elAddr = document.getElementById('bookGuestAddressDisplay');
+                if (elAddr) elAddr.innerHTML = '<i class="bi bi-geo-alt-fill"></i> ' + addr;
+            }
+        })();
 
         if (bookTrigger) bookTrigger.addEventListener('click', openTheBook);
         if (tapBtn) tapBtn.addEventListener('click', openTheBook);
