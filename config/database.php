@@ -388,6 +388,14 @@ class Database {
             }
         } catch (Exception $e) {}
 
+        // Ensure Buku Nusantara Luxury template is registered
+        try {
+            $checkBuku = $this->pdo->query("SELECT COUNT(*) FROM `templates` WHERE `view_file` = 'buku_nusantara_luxury'")->fetchColumn();
+            if ($checkBuku == 0) {
+                $this->pdo->exec("INSERT INTO `templates` (`category_id`, `name`, `slug`, `thumbnail`, `tier`, `view_file`, `is_active`) VALUES (1, 'Buku Undangan Mewah Nusantara (Wine & Gold)', 'buku-nusantara-luxury', 'https://images.unsplash.com/photo-1519741497674-611481863552?w=600&auto=format&fit=crop&q=80', 'premium', 'buku_nusantara_luxury', 1)");
+            }
+        } catch (Exception $e) {}
+
 
 
     }
