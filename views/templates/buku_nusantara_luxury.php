@@ -1,6 +1,6 @@
 <?php
 // views/templates/buku_nusantara_luxury.php
-// Buku Undangan Pernikahan Mewah Khas Nusantara (Mobile-First 3D Velvet Book)
+// Buku Undangan Pernikahan Mewah Khas Nusantara (Mobile-First 3D Velvet Book + Royal Unrolling Scroll)
 // Colors: Wine Red (#6e1f2f), Ivory, Blush Pink & Champagne Gold
 
 $bankAccounts = json_decode($event['bank_accounts_json'] ?? '[]', true) ?: [];
@@ -18,6 +18,9 @@ if (empty($galleries)) {
 
 $gNick = !empty($event['groom_nickname']) ? trim($event['groom_nickname']) : 'Dimas';
 $bNick = !empty($event['bride_nickname']) ? trim($event['bride_nickname']) : 'Nadia';
+$gInitial = mb_substr($gNick, 0, 1, 'UTF-8');
+$bInitial = mb_substr($bNick, 0, 1, 'UTF-8');
+
 $gName = !empty($event['groom_name']) ? trim($event['groom_name']) : 'Dimas Pratama, S.Kom.';
 $bName = !empty($event['bride_name']) ? trim($event['bride_name']) : 'Nadia Kusuma Putri, S.E.';
 
@@ -71,11 +74,11 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
             --color-blush-border: #edd5d7;
             --color-ivory: #fffff8;
             --color-gold: #d4af37;
-            --color-gold-light: #f3e5ab;
+            --color-gold-light: #f7e9b7;
             --color-gold-deep: #aa8220;
             --gold-gradient: linear-gradient(135deg, #fceec5 0%, #d4af37 50%, #997316 100%);
             --gold-border: rgba(212, 175, 55, 0.45);
-            --wine-gradient: linear-gradient(145deg, #85263a 0%, #6e1f2f 50%, #420f1a 100%);
+            --wine-gradient: linear-gradient(145deg, #85263a 0%, #6e1f2f 55%, #3d0a14 100%);
             
             --text-dark: #3a1e23;
             --text-muted: #73595e;
@@ -87,7 +90,7 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
             --font-script: 'Great Vibes', cursive;
             --font-serif-accent: 'Cormorant Garamond', serif;
 
-            --shadow-book: 0 25px 60px rgba(77, 18, 31, 0.4), 0 10px 25px rgba(0, 0, 0, 0.2);
+            --shadow-book: 0 30px 75px rgba(61, 10, 20, 0.5), 0 12px 30px rgba(0, 0, 0, 0.25);
             --transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
@@ -119,8 +122,8 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
             width: 100vw;
             height: 100vh;
             background-image: 
-                radial-gradient(circle at 10% 20%, rgba(212, 175, 55, 0.04) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(110, 31, 47, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 10% 20%, rgba(212, 175, 55, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(110, 31, 47, 0.06) 0%, transparent 40%),
                 url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23d4af37' fill-opacity='0.04' fill-rule='evenodd'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");
             pointer-events: none;
             z-index: 1;
@@ -141,20 +144,6 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
             overflow: hidden;
         }
 
-        /* Golden Floral Corner Accents */
-        .floral-corner {
-            position: absolute;
-            width: 90px;
-            height: auto;
-            pointer-events: none;
-            z-index: 3;
-            opacity: 0.9;
-        }
-        .corner-tl { top: 0; left: 0; }
-        .corner-tr { top: 0; right: 0; transform: scaleX(-1); }
-        .corner-bl { bottom: 0; left: 0; transform: scaleY(-1); }
-        .corner-br { bottom: 0; right: 0; transform: scale(-1); }
-
         /* Ronce Melati (Jasmine Garlands) Floating Top/Bottom */
         .jasmine-garland {
             width: 100%;
@@ -165,7 +154,7 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
         }
 
         /* -------------------------------------------------------------
-           HALAMAN 1: BUKU PEMBUKA (OPENING BOOK) OVERLAY
+           HALAMAN 1: BUKU PEMBUKA (OPENING BOOK) - ENLARGED & PROFESSIONAL
         ------------------------------------------------------------- */
         #page1OpeningBook {
             position: fixed;
@@ -173,37 +162,37 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: radial-gradient(circle at center, #fff0f3 0%, #fad5db 60%, #e8bcc4 100%);
+            background: radial-gradient(circle at center, #fff2f5 0%, #fad7de 60%, #e5b8c1 100%);
             z-index: 99999;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px;
-            perspective: 1200px;
-            transition: opacity 0.9s cubic-bezier(0.77, 0, 0.175, 1), transform 0.9s ease;
+            padding: 16px;
+            perspective: 1400px;
+            transition: opacity 0.8s cubic-bezier(0.77, 0, 0.175, 1), transform 0.8s ease;
         }
 
         #page1OpeningBook.book-opened {
             opacity: 0;
-            transform: scale(1.1);
+            transform: scale(1.08);
             pointer-events: none;
         }
 
-        /* 3D Velvet Book */
+        /* Enlarged, Professional 3D Velvet Book */
         .velvet-book {
-            width: 300px;
-            height: 440px;
+            width: min(88vw, 360px);
+            height: min(76vh, 560px);
             position: relative;
             transform-style: preserve-3d;
             cursor: pointer;
             transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
             box-shadow: var(--shadow-book);
-            border-radius: 6px 18px 18px 6px;
+            border-radius: 6px 20px 20px 6px;
         }
 
         .velvet-book:hover {
-            transform: rotateY(-10deg) scale(1.02);
+            transform: rotateY(-8deg) scale(1.02);
         }
 
         /* Book Spine */
@@ -213,11 +202,12 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
             left: 0;
             top: 0;
             bottom: 0;
-            width: 22px;
-            background: linear-gradient(90deg, #3d0a14 0%, #541120 50%, #6e1f2f 100%);
+            width: 24px;
+            background: linear-gradient(90deg, #2b060d 0%, #4a0d19 50%, #6e1f2f 100%);
             border-radius: 6px 0 0 6px;
-            border-right: 2px solid rgba(212, 175, 55, 0.5);
+            border-right: 2px solid rgba(212, 175, 55, 0.6);
             z-index: 5;
+            box-shadow: inset -2px 0 6px rgba(0, 0, 0, 0.4);
         }
 
         /* Book Cover Front */
@@ -228,22 +218,22 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
             width: 100%;
             height: 100%;
             background: var(--wine-gradient);
-            border-radius: 6px 18px 18px 6px;
+            border-radius: 6px 20px 20px 6px;
             border: 3px solid #b38b22;
-            padding: 28px 20px;
+            padding: 30px 22px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
             text-align: center;
-            box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(212, 175, 55, 0.4);
+            box-shadow: inset 0 0 45px rgba(0, 0, 0, 0.5), inset 0 0 12px rgba(212, 175, 55, 0.45);
             transform-origin: left center;
             transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1);
             z-index: 4;
         }
 
         .book-opened .book-cover {
-            transform: rotateY(-130deg);
+            transform: rotateY(-135deg);
         }
 
         /* Book Gold Foil Embossed Border */
@@ -251,93 +241,133 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
             position: absolute;
             top: 14px;
             bottom: 14px;
-            left: 28px;
+            left: 32px;
             right: 14px;
             border: 2px solid var(--color-gold);
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3), inset 0 0 10px rgba(212, 175, 55, 0.2);
+            border-radius: 12px;
+            box-shadow: 0 0 12px rgba(212, 175, 55, 0.35), inset 0 0 12px rgba(212, 175, 55, 0.25);
             pointer-events: none;
         }
 
-        .book-monogram {
-            width: 90px;
-            height: 90px;
-            border: 2px solid var(--color-gold);
-            border-radius: 50%;
+        /* PROFESSIONAL MONOGRAM CREST (D & N) */
+        .book-monogram-crest {
+            position: relative;
+            width: 108px;
+            height: 108px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: var(--font-heading);
-            font-size: 2.3rem;
-            color: var(--color-gold-light);
-            background: radial-gradient(circle, rgba(212, 175, 55, 0.2) 0%, transparent 70%);
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
-            margin-top: 15px;
+            margin-top: 6px;
+            margin-bottom: 8px;
+        }
+
+        .crest-outer-ring {
+            position: absolute;
+            inset: 0;
+            border: 2px solid var(--color-gold);
+            border-radius: 50%;
+            box-shadow: 0 0 16px rgba(212, 175, 55, 0.45), inset 0 0 12px rgba(212, 175, 55, 0.25);
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.18) 0%, transparent 75%);
+        }
+
+        .crest-inner-ring {
+            position: absolute;
+            inset: 6px;
+            border: 1.5px dashed rgba(247, 233, 183, 0.65);
+            border-radius: 50%;
+        }
+
+        .crest-letters {
             position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            line-height: 1;
+            width: 100%;
+        }
+
+        .crest-char {
+            font-family: var(--font-heading);
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--color-gold-light);
+            text-shadow: 0 2px 10px rgba(0,0,0,0.7), 0 0 15px rgba(212, 175, 55, 0.4);
+        }
+
+        .crest-amp {
+            font-family: var(--font-script);
+            font-size: 2.3rem;
+            color: var(--color-gold);
+            margin-top: -4px;
+            text-shadow: 0 0 12px rgba(212, 175, 55, 0.6);
         }
 
         .book-title-tag {
             font-family: var(--font-body);
-            font-size: 0.78rem;
+            font-size: 0.8rem;
             letter-spacing: 4px;
             text-transform: uppercase;
             color: var(--color-gold-light);
-            margin-top: 12px;
+            margin-top: 4px;
+            font-weight: 500;
         }
 
         .book-couple-names {
             font-family: var(--font-heading);
-            font-size: 2rem;
+            font-size: 2.25rem;
             font-weight: 700;
             color: #fff;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6), 0 0 20px rgba(212, 175, 55, 0.4);
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.65), 0 0 25px rgba(212, 175, 55, 0.45);
             line-height: 1.2;
-            margin: 10px 0;
+            margin: 6px 0;
         }
 
         .book-date-stamp {
             font-family: var(--font-body);
-            font-size: 0.82rem;
+            font-size: 0.88rem;
             letter-spacing: 2px;
             color: var(--color-gold-light);
             border-top: 1px solid rgba(212, 175, 55, 0.4);
             border-bottom: 1px solid rgba(212, 175, 55, 0.4);
-            padding: 4px 14px;
+            padding: 5px 16px;
         }
 
         .book-guest-label {
-            font-size: 0.75rem;
+            font-size: 0.78rem;
             color: #f7dcd5;
             letter-spacing: 1px;
-            margin-top: 10px;
+            margin-top: 12px;
         }
 
         .book-guest-name {
             font-family: var(--font-heading);
-            font-size: 1.15rem;
+            font-size: 1.25rem;
             color: #fff;
             font-weight: 600;
+            margin-top: 2px;
         }
 
         /* 3D Rose Flower and Jasmine Surrounding the Book */
         .book-roses-decor {
             position: absolute;
             pointer-events: none;
-            width: 100px;
+            width: 110px;
             height: auto;
-            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.35));
+            filter: drop-shadow(0 10px 18px rgba(0,0,0,0.4));
             z-index: 6;
         }
-        .rose-top-right { top: -25px; right: -30px; }
-        .rose-bottom-left { bottom: -25px; left: -25px; transform: rotate(180deg); }
+        .rose-top-right { top: -28px; right: -32px; }
+        .rose-bottom-left { bottom: -28px; left: -28px; transform: rotate(180deg); }
 
         /* Tap Instruction Pulsing Pill */
         .tap-instruction-pill {
-            margin-top: 25px;
+            margin-top: 22px;
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            padding: 12px 26px;
+            padding: 13px 28px;
             background: var(--gold-gradient);
             color: var(--color-wine-dark);
             font-family: var(--font-heading);
@@ -357,6 +387,211 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
         }
 
         /* -------------------------------------------------------------
+           ROYAL GOLDEN SCROLL UNROLLING OVERLAY (INTERACTION STEP 3)
+        ------------------------------------------------------------- */
+        #royalScrollRevealOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(45, 10, 18, 0.88);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 99998;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        #royalScrollRevealOverlay.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        #royalScrollRevealOverlay.fade-away {
+            opacity: 0;
+            transform: scale(1.06);
+            pointer-events: none;
+        }
+
+        .scroll-wrapper {
+            width: min(92vw, 420px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            filter: drop-shadow(0 25px 50px rgba(0, 0, 0, 0.8));
+        }
+
+        /* Golden Roller Rods */
+        .scroll-rod {
+            width: 100%;
+            height: 16px;
+            background: var(--gold-gradient);
+            border-radius: 8px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 4px;
+            z-index: 10;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        .rod-knob {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #fff 10%, #d4af37 60%, #855f08 100%);
+            border: 2px solid #fff;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.7);
+        }
+
+        .scroll-rod.rod-top {
+            margin-bottom: -2px;
+        }
+        .scroll-rod.rod-bottom {
+            margin-top: -2px;
+        }
+
+        /* Hanging Tassel on Bottom Rod */
+        .scroll-hanging-tassel {
+            position: absolute;
+            left: 50%;
+            bottom: -32px;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            pointer-events: none;
+        }
+
+        .tassel-string {
+            width: 3px;
+            height: 14px;
+            background: var(--color-gold);
+        }
+
+        .tassel-fringe {
+            width: 14px;
+            height: 20px;
+            background: var(--gold-gradient);
+            clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        /* Parchment Paper Unrolling Animation */
+        .scroll-parchment {
+            width: 94%;
+            height: 0px;
+            background: linear-gradient(135deg, #fffdf8 0%, #fff7eb 50%, #fbf1e0 100%);
+            border-left: 2px solid var(--color-gold);
+            border-right: 2px solid var(--color-gold);
+            overflow: hidden;
+            box-shadow: inset 0 0 35px rgba(212, 175, 55, 0.25), inset 0 0 15px rgba(110, 31, 47, 0.1);
+            transition: height 1.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .scroll-parchment.unrolled {
+            height: 420px;
+        }
+
+        .parchment-inner {
+            padding: 30px 22px 25px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 420px;
+            box-sizing: border-box;
+        }
+
+        .parchment-bismillah {
+            font-family: 'Amiri', 'Cormorant Garamond', serif;
+            font-size: 1.6rem;
+            color: var(--color-wine);
+            direction: rtl;
+            margin-bottom: 6px;
+        }
+
+        .parchment-tagline {
+            font-family: var(--font-body);
+            font-size: 0.72rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--color-gold-deep);
+            font-weight: 600;
+        }
+
+        .parchment-divider {
+            width: 110px;
+            height: 2px;
+            background: var(--gold-gradient);
+            margin: 10px auto 14px;
+        }
+
+        .parchment-couple {
+            font-family: var(--font-heading);
+            font-size: 2.3rem;
+            font-weight: 700;
+            color: var(--color-wine);
+            line-height: 1.15;
+            margin-bottom: 8px;
+        }
+
+        .parchment-date {
+            font-family: var(--font-heading);
+            font-size: 1.15rem;
+            color: var(--color-gold-deep);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .parchment-venue {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .parchment-prose {
+            font-size: 0.82rem;
+            color: var(--text-dark);
+            line-height: 1.6;
+            max-width: 320px;
+            font-style: italic;
+        }
+
+        /* Skip / Open Invitation Action Button in Scroll */
+        .btn-scroll-continue {
+            margin-top: 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 22px;
+            background: var(--wine-gradient);
+            color: #fff;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border: 1px solid var(--color-gold);
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(110, 31, 47, 0.4);
+            transition: var(--transition-smooth);
+        }
+
+        .btn-scroll-continue:hover {
+            transform: scale(1.04);
+            background: var(--color-wine-dark);
+        }
+
+        /* -------------------------------------------------------------
            PETALS & CONFETTI CANVAS
         ------------------------------------------------------------- */
         #petalCanvas {
@@ -366,7 +601,7 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
             width: 100vw;
             height: 100vh;
             pointer-events: none;
-            z-index: 999;
+            z-index: 999999;
         }
 
         /* -------------------------------------------------------------
@@ -405,13 +640,6 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
             font-size: 0.88rem;
             color: var(--text-muted);
             line-height: 1.7;
-        }
-
-        .royal-divider {
-            width: 150px;
-            height: auto;
-            margin: 18px auto 26px;
-            display: block;
         }
 
         /* -------------------------------------------------------------
@@ -472,7 +700,6 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
             margin: 0 auto 30px;
         }
 
-        /* Couple Card in Page 2 */
         .couple-box {
             position: relative;
             z-index: 2;
@@ -485,7 +712,6 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
             font-weight: 700;
             color: var(--color-wine);
             line-height: 1.2;
-            min-height: 2.8rem;
         }
 
         .couple-parents-text {
@@ -504,14 +730,13 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
         }
 
         /* -------------------------------------------------------------
-           HALAMAN 3: SIMPAN TANGGAL (GOLDEN SCROLL & TASSEL)
+           HALAMAN 3: SIMPAN TANGGAL (SAVE THE DATE)
         ------------------------------------------------------------- */
         #page3SaveTheDate {
             background: linear-gradient(180deg, #fffaf6 0%, #fff0f3 100%);
             text-align: center;
         }
 
-        /* Golden Scroll Container */
         .golden-scroll-card {
             background: linear-gradient(135deg, #fffdfa 0%, #fff7eb 100%);
             border: 2px solid var(--color-gold);
@@ -530,37 +755,6 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
             border-radius: 6px;
             margin-bottom: 20px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-        }
-
-        .scroll-tassel-hint {
-            display: inline-flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: pointer;
-            margin-bottom: 20px;
-        }
-
-        .tassel-icon {
-            font-size: 2.2rem;
-            color: var(--color-gold);
-            animation: bounceFinger 1.8s infinite;
-        }
-
-        @keyframes bounceFinger {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(8px); }
-        }
-
-        .tassel-hint-text {
-            font-size: 0.78rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: var(--color-wine);
-            font-weight: 600;
-        }
-
-        .scroll-unfolded-content {
-            transition: all 0.6s ease;
         }
 
         .date-display-big {
@@ -636,7 +830,7 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
         }
 
         /* -------------------------------------------------------------
-           HALAMAN 4: RANGKAIAN ACARA (SWIPEABLE 3D CAROUSEL)
+           HALAMAN 4: RANGKAIAN ACARA (CAROUSEL)
         ------------------------------------------------------------- */
         #page4Events {
             background: linear-gradient(180deg, #fff0f3 0%, #fff 100%);
@@ -823,7 +1017,7 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
         }
 
         /* -------------------------------------------------------------
-           HALAMAN 6: RESEPSI PERNIKAHAN (GRAND RECEPTION - WINE BACKGROUND)
+           HALAMAN 6: RESEPSI PERNIKAHAN (GRAND RECEPTION)
         ------------------------------------------------------------- */
         #page6Reception {
             background: var(--color-wine);
@@ -866,13 +1060,6 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
             margin-bottom: 6px;
         }
 
-        /* Sparkle dots in CSS */
-        .sparkle-decor {
-            font-size: 1.5rem;
-            color: var(--color-gold-light);
-            animation: pulseTap 1.5s infinite;
-        }
-
         /* -------------------------------------------------------------
            HALAMAN 7: LOKASI ACARA
         ------------------------------------------------------------- */
@@ -905,7 +1092,6 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
             margin-bottom: 24px;
         }
 
-        /* Stylized Interactive Map Mockup */
         .map-interactive-box {
             width: 100%;
             height: 200px;
@@ -919,6 +1105,7 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
             justify-content: center;
             margin-bottom: 22px;
             box-shadow: inset 0 0 30px rgba(0,0,0,0.5);
+            text-decoration: none;
         }
 
         .map-pin-pulse {
@@ -935,6 +1122,11 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
             box-shadow: 0 0 20px rgba(110, 31, 47, 0.8);
             animation: bounceFinger 2s infinite ease-in-out;
             cursor: pointer;
+        }
+
+        @keyframes bounceFinger {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(8px); }
         }
 
         .btn-action-group {
@@ -995,7 +1187,6 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
             text-align: center;
         }
 
-        /* Luxury Wine & Gold ATM Cards */
         .bank-atm-card {
             background: linear-gradient(135deg, #4d121f 0%, #6e1f2f 50%, #300811 100%);
             border: 2px solid var(--color-gold);
@@ -1076,7 +1267,7 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
         }
 
         /* -------------------------------------------------------------
-           HALAMAN 9: RSVP & BUKU TAMU (UCAPAN DOA)
+           HALAMAN 9: RSVP & BUKU TAMU
         ------------------------------------------------------------- */
         #page9RsvpWishes {
             background: #fff;
@@ -1147,7 +1338,6 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
             box-shadow: 0 12px 30px rgba(110, 31, 47, 0.6);
         }
 
-        /* Wishes Stream Box */
         .wishes-stream-box {
             max-height: 420px;
             overflow-y: auto;
@@ -1170,7 +1360,6 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
             border-radius: 12px;
             padding: 16px;
             margin-bottom: 14px;
-            animation: fadeIn 0.5s ease;
         }
 
         .wish-header-row {
@@ -1336,7 +1525,7 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
             border-radius: 30px;
             font-size: 0.85rem;
             box-shadow: 0 10px 25px rgba(0,0,0,0.6);
-            z-index: 999999;
+            z-index: 9999999;
             opacity: 0;
             transition: all 0.4s ease;
             pointer-events: none;
@@ -1372,32 +1561,40 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
     <div class="ambient-pattern"></div>
     <canvas id="petalCanvas"></canvas>
 
-    <!-- Background Music Audio (Soft Romantic Wedding Instrumental) -->
+    <!-- Background Music Audio -->
     <audio id="weddingBgm" loop preload="auto">
         <source src="<?= htmlspecialchars($musicUrl) ?>" type="audio/mpeg">
     </audio>
 
     <!-- -------------------------------------------------------------
-       HALAMAN 1: BUKU PEMBUKA (OPENING BOOK)
+       HALAMAN 1: BUKU PEMBUKA (OPENING BOOK) - ENLARGED & PROFESSIONAL
     ------------------------------------------------------------- -->
     <div id="page1OpeningBook">
-        <!-- 3D Velvet Book Container -->
+        <!-- 3D Velvet Book Container (Enlarged Responsive Size) -->
         <div class="velvet-book" id="bookTrigger">
-            <!-- 3D Rose Accents -->
+            <!-- 3D Floral Corner Bouquets -->
             <img src="https://undanganvideocirebon.com/wp-content/uploads/2026/09/sf-e1790341628715.png" alt="Rose Decor" class="book-roses-decor rose-top-right">
             <img src="https://undanganvideocirebon.com/wp-content/uploads/2026/09/sf-e1790341628715.png" alt="Rose Decor" class="book-roses-decor rose-bottom-left">
 
             <div class="book-cover">
                 <div class="book-inner-border"></div>
 
-                <div class="book-monogram">D &amp; N</div>
+                <!-- Professional Interlocking Monogram Crest (D & N) -->
+                <div class="book-monogram-crest">
+                    <div class="crest-outer-ring"></div>
+                    <div class="crest-inner-ring"></div>
+                    <div class="crest-letters">
+                        <span class="crest-char"><?= htmlspecialchars($gInitial) ?></span> <span class="crest-amp">&amp;</span> <span class="crest-char"><?= htmlspecialchars($bInitial) ?></span>
+                    </div>
+                </div>
+
                 <div class="book-title-tag">The Royal Wedding Book</div>
                 <div class="book-couple-names"><?= htmlspecialchars($gNick) ?> &amp; <?= htmlspecialchars($bNick) ?></div>
                 <div class="book-date-stamp">20 . 06 . 2027</div>
 
-                <div style="margin-top: auto; padding-bottom: 10px;">
+                <div style="margin-top: auto; padding-bottom: 12px; width: 100%;">
                     <div class="book-guest-label">Kepada Yth. Bapak/Ibu/Saudara/i:</div>
-                    <div class="book-guest-name" id="bookGuestNameDisplay"><?= htmlspecialchars($guestDisplayName) ?></div>
+                    <div class="book-guest-name" id="bookGuestNameDisplay">Bpk. Andre &amp; Keluarga</div>
                 </div>
             </div>
         </div>
@@ -1406,6 +1603,50 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
         <div class="tap-instruction-pill" id="tapInstructionBtn">
             <i class="bi bi-book-half"></i>
             <span>Ketuk Buku untuk Membuka</span>
+        </div>
+    </div>
+
+    <!-- -------------------------------------------------------------
+       ROYAL GOLDEN SCROLL UNROLLING OVERLAY (STEP 3 TRANSITION)
+    ------------------------------------------------------------- -->
+    <div id="royalScrollRevealOverlay">
+        <div class="scroll-wrapper" id="scrollWrapper">
+            <!-- Top Golden Roller Rod -->
+            <div class="scroll-rod rod-top">
+                <div class="rod-knob"></div>
+                <div style="flex: 1; height: 3px; background: rgba(255,255,255,0.4); margin: 0 8px; border-radius: 999px;"></div>
+                <div class="rod-knob"></div>
+            </div>
+
+            <!-- Parchment Paper that Unrolls Slowly -->
+            <div class="scroll-parchment" id="scrollParchment">
+                <div class="parchment-inner">
+                    <div class="parchment-bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+                    <div class="parchment-tagline">Royal Wedding Announcement</div>
+                    <div class="parchment-divider"></div>
+                    <div class="parchment-couple">Dimas &amp; Nadia</div>
+                    <div class="parchment-date">Minggu, 20 Juni 2027</div>
+                    <div class="parchment-venue">Pendopo Agung Kartini, Cirebon</div>
+                    <p class="parchment-prose">
+                        "Dengan memohon rahmat dan ridho Allah SWT, kami mengundang Bapak/Ibu/Saudara/i untuk hadir memberikan doa restu pada hari bahagia kami."
+                    </p>
+                    <button type="button" class="btn-scroll-continue" id="btnScrollContinue">
+                        <span>Buka Lembaran Undangan</span>
+                        <i class="bi bi-arrow-down-short"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Bottom Golden Roller Rod with Hanging Tassel -->
+            <div class="scroll-rod rod-bottom">
+                <div class="rod-knob"></div>
+                <div style="flex: 1; height: 3px; background: rgba(255,255,255,0.4); margin: 0 8px; border-radius: 999px;"></div>
+                <div class="rod-knob"></div>
+                <div class="scroll-hanging-tassel">
+                    <div class="tassel-string"></div>
+                    <div class="tassel-fringe"></div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1431,10 +1672,10 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
 
             <!-- Mempelai Pria -->
             <div class="couple-box" data-aos="fade-up" data-aos-duration="1000">
-                <h2 class="couple-name-typed" id="typedGroomName"><?= htmlspecialchars($gName) ?></h2>
+                <h2 class="couple-name-typed" id="typedGroomName">Dimas Pratama, S.Kom.</h2>
                 <div class="couple-parents-text">
                     Putra tercinta dari:<br>
-                    <strong><?= htmlspecialchars($gFather) ?> &amp; <?= htmlspecialchars($gMother) ?></strong>
+                    <strong>Bapak H. Hendra Wijaya &amp; Ibu Hj. Siti Aminah</strong>
                 </div>
             </div>
 
@@ -1443,10 +1684,10 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
 
             <!-- Mempelai Wanita -->
             <div class="couple-box" data-aos="fade-up" data-aos-duration="1000">
-                <h2 class="couple-name-typed" id="typedBrideName"><?= htmlspecialchars($bName) ?></h2>
+                <h2 class="couple-name-typed" id="typedBrideName">Nadia Kusuma Putri, S.E.</h2>
                 <div class="couple-parents-text">
                     Putri tercinta dari:<br>
-                    <strong><?= htmlspecialchars($bFather) ?> &amp; <?= htmlspecialchars($bMother) ?></strong>
+                    <strong>Bapak Drs. Bambang Sutrisno &amp; Ibu Rina Marlina</strong>
                 </div>
             </div>
 
@@ -1463,13 +1704,6 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
             <div class="golden-scroll-card mt-4" data-aos="zoom-in" data-aos-duration="1000">
                 <div class="scroll-rod-top"></div>
 
-                <!-- Tassel Pull Hint -->
-                <div class="scroll-tassel-hint" id="tasselTrigger" title="Ketuk atau tarik rumbai">
-                    <i class="bi bi-hand-index-thumb tassel-icon"></i>
-                    <span class="tassel-hint-text">Tarik / Ketuk Rumbai Emas</span>
-                </div>
-
-                <!-- Unfolded Scroll Content -->
                 <div class="scroll-unfolded-content" id="scrollContentArea">
                     <div style="font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; color: var(--color-wine); font-weight: 600;">
                         Hari Bahagia Kami
@@ -1677,9 +1911,8 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
             </div>
         </section>
 
-        <!-- HALAMAN 6: RESEPSI PERNIKAHAN (GRAND RECEPTION - WINE BACKGROUND) -->
+        <!-- HALAMAN 6: RESEPSI PERNIKAHAN (GRAND RECEPTION) -->
         <section class="invitation-page" id="page6Reception">
-            <span class="sparkle-decor">✦ &nbsp; ✦ &nbsp; ✦</span>
             <div class="page-badge-gold" style="background: rgba(255,255,255,0.15); color: var(--color-gold-light); border-color: var(--color-gold-light);" data-aos="fade-up">
                 The Celebration
             </div>
@@ -1941,18 +2174,29 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
         }
 
         // -------------------------------------------------------------
-        // HALAMAN 1: INTERACTIVE 3D OPENING BOOK & MUSIC START
+        // HALAMAN 1 & TRANSITION STEP:
+        // 1. User taps book -> 3D book opens
+        // 2. Music starts playing
+        // 3. Golden Scroll appears and UNROLLS SLOWLY
+        // 4. Scroll fades out smoothly, showing main invitation
         // -------------------------------------------------------------
         const bookTrigger = document.getElementById('bookTrigger');
         const tapBtn = document.getElementById('tapInstructionBtn');
         const page1 = document.getElementById('page1OpeningBook');
+        const scrollOverlay = document.getElementById('royalScrollRevealOverlay');
+        const scrollParchment = document.getElementById('scrollParchment');
+        const btnScrollContinue = document.getElementById('btnScrollContinue');
         const bgm = document.getElementById('weddingBgm');
         const musicBtn = document.getElementById('musicBtn');
         const musicIcon = document.getElementById('musicIcon');
         let isMusicPlaying = false;
+        let isOpeningHandled = false;
 
         function openTheBook() {
-            // Trigger 3D Book Open Animation
+            if (isOpeningHandled) return;
+            isOpeningHandled = true;
+
+            // Step 1: 3D Book Cover Open Animation
             page1.classList.add('book-opened');
 
             // Soft Music Fade-In Playback
@@ -1963,7 +2207,6 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
                     musicBtn.classList.add('playing');
                     musicIcon.className = 'bi bi-disc';
 
-                    // Smooth fade-in volume
                     let vol = 0;
                     const fade = setInterval(() => {
                         if (vol < 0.75) {
@@ -1979,15 +2222,40 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
             // Launch falling petals celebration
             launchPetals();
 
-            // Smooth scroll to Halaman 2
+            // Step 2: Show Golden Scroll Overlay after book cover begins opening (500ms)
             setTimeout(() => {
+                scrollOverlay.classList.add('show');
+
+                // Step 3: Trigger slow smooth unrolling of the royal scroll
+                setTimeout(() => {
+                    scrollParchment.classList.add('unrolled');
+                }, 200);
+
+                // Step 4: After unrolling completely, automatically transition to main page (or user can tap button)
+                setTimeout(() => {
+                    finishScrollTransition();
+                }, 4800);
+            }, 600);
+        }
+
+        function finishScrollTransition() {
+            if (!scrollOverlay.classList.contains('show')) return;
+            if (scrollOverlay.classList.contains('fade-away')) return;
+
+            // Fade out the golden scroll overlay
+            scrollOverlay.classList.add('fade-away');
+
+            // Smoothly glide into main invitation content
+            setTimeout(() => {
+                scrollOverlay.style.display = 'none';
                 document.getElementById('page2Undangan').scrollIntoView({ behavior: 'smooth' });
                 AOS.refresh();
-            }, 500);
+            }, 700);
         }
 
         if (bookTrigger) bookTrigger.addEventListener('click', openTheBook);
         if (tapBtn) tapBtn.addEventListener('click', openTheBook);
+        if (btnScrollContinue) btnScrollContinue.addEventListener('click', finishScrollTransition);
 
         // Music Play/Pause Toggle
         function toggleMusic() {
@@ -2023,10 +2291,10 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
 
         function launchPetals() {
             petals = [];
-            for (let i = 0; i < 35; i++) {
+            for (let i = 0; i < 40; i++) {
                 petals.push({
                     x: Math.random() * canvas.width,
-                    y: -20 - Math.random() * 50,
+                    y: -20 - Math.random() * 60,
                     size: Math.random() * 6 + 5,
                     speedY: Math.random() * 1.8 + 0.8,
                     speedX: (Math.random() - 0.5) * 1.2,
@@ -2057,7 +2325,6 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
                 ctx.globalAlpha = p.opacity;
                 ctx.fillStyle = p.color;
 
-                // Petal leaf shape
                 ctx.beginPath();
                 ctx.ellipse(0, 0, p.size, p.size * 1.4, Math.PI / 4, 0, Math.PI * 2);
                 ctx.fill();
@@ -2070,7 +2337,7 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
         }
 
         // -------------------------------------------------------------
-        // HALAMAN 3: COUNTDOWN TIMER & TASSEL PULL
+        // HALAMAN 3: COUNTDOWN TIMER
         // -------------------------------------------------------------
         const targetEventDate = new Date('2027-06-20T08:00:00').getTime();
 
@@ -2098,18 +2365,6 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
         }
         setInterval(updateCountdown, 1000);
         updateCountdown();
-
-        // Tassel Interactive Click / Pull Animation
-        const tasselTrigger = document.getElementById('tasselTrigger');
-        if (tasselTrigger) {
-            tasselTrigger.addEventListener('click', () => {
-                tasselTrigger.style.transform = 'translateY(15px) scale(0.95)';
-                showToast('✦ Gulungan emas dibuka!');
-                setTimeout(() => {
-                    tasselTrigger.style.transform = 'translateY(0) scale(1)';
-                }, 300);
-            });
-        }
 
         // -------------------------------------------------------------
         // HALAMAN 4: SWIPEABLE EVENT CAROUSEL
@@ -2243,7 +2498,7 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
                 name: 'Bpk. Ir. Suryadi & Keluarga',
                 status: 'Hadir',
                 pax: 2,
-                message: 'Selamat menempuh hidup baru <?= htmlspecialchars($gNick) ?> & <?= htmlspecialchars($bNick) ?>! Semoga menjadi keluarga yang sakinah, mawaddah, warahmah serta senantiasa dalam limpahan berkah Allah SWT.',
+                message: 'Selamat menempuh hidup baru Dimas & Nadia! Semoga menjadi keluarga yang sakinah, mawaddah, warahmah serta senantiasa dalam limpahan berkah Allah SWT.',
                 time: '10 menit yang lalu'
             },
             {
@@ -2303,7 +2558,6 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
             }[s]));
         }
 
-        // Form Submit
         const rsvpForm = document.getElementById('rsvpBukuForm');
         if (rsvpForm) {
             rsvpForm.addEventListener('submit', function(e) {
@@ -2331,7 +2585,6 @@ $rsvpTargetUrl = base_url('u/' . ($event['slug'] ?? 'demo') . '/rsvp');
             });
         }
 
-        // Initialize Render
         document.addEventListener('DOMContentLoaded', () => {
             renderWishes();
         });
